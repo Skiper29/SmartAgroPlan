@@ -1,4 +1,6 @@
-﻿using SmartAgroPlan.WebAPI.Utils;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartAgroPlan.DAL.Persistence;
+using SmartAgroPlan.WebAPI.Utils;
 
 namespace SmartAgroPlan.WebAPI.Extensions
 {
@@ -8,6 +10,12 @@ namespace SmartAgroPlan.WebAPI.Extensions
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
+            services.AddDbContext<SmartAgroPlanDbContext>(options =>
+                options.UseNpgsql(connectionString, npgsqlOptions =>
+                {
+                    npgsqlOptions.UseNetTopologySuite();
+                    npgsqlOptions.MigrationsAssembly(typeof(SmartAgroPlanDbContext).Assembly.GetName().Name);
+                }));
 
             var corsSettings = SettingsExtractor.GetCorsSettings(configuration);
             services.AddCors(options =>
