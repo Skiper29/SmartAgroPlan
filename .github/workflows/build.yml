@@ -20,11 +20,11 @@ jobs:
           java-version: 17
           distribution: temurin
           
-      # Встановлюємо інструменти для SonarScanner та Coverlet
+      # Встановлюємо інструмент для SonarScanner та dotnet-coverage
       - name: Install .NET tools
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          dotnet tool install --global coverlet.console
+          dotnet tool install --global dotnet-coverage
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4
@@ -38,12 +38,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          # Запускаємо аналіз, вказуючи повний шлях до coverage report
+          # Запускаємо аналіз, вказуючи шлях до cobertura coverage report
           dotnet-sonarscanner begin `
             /k:"Skiper29_SmartAgroPlan" `
             /o:"skiper29" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.cs.opencover.reportsPaths="SmartAgroPlan.XUnitTest/coverage.opencover.xml" `
+            /d:sonar.cs.cobertura.reportsPaths="coverage.cobertura.xml" `
             /d:sonar.host.url="https://sonarcloud.io"
 
       - name: Build solution
@@ -51,14 +51,12 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          # Запускаємо тести і генеруємо звіт про покриття у папці з тестами
-          dotnet test "SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj" `
-            --configuration Release `
-            --no-build `
-            --no-restore `
-            /p:CollectCoverage=true `
-            /p:CoverletOutput=coverage.opencover.xml `
-            /p:CoverletOutputFormat=opencover
+          # Використовуємо dotnet-coverage для збору покриття
+          # Результат буде збережено у файл coverage.cobertura.xml у кореневому каталозі
+          dotnet-coverage collect `
+            --output-format cobertura `
+            --output-file coverage.cobertura.xml `
+            "dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --no-build"
 
       - name: End SonarQube analysis
         env:
