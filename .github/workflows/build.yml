@@ -51,13 +51,16 @@ jobs:
             /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
 
-      - name: Build & Test with Coverage
+      - name: Build
+        run: dotnet build SmartAgroPlan.sln --configuration Release
+
+      - name: Run Tests with Coverage
         run: |
-          dotnet build SmartAgroPlan.sln --configuration Release
           dotnet-coverage collect `
             --output-format opencover `
             --output-file coverage.opencover.xml `
-            -- "dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release --logger \"trx;LogFileName=test_results.trx\""
+            -- "dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release --logger 'trx;LogFileName=test_results.trx'"
+
 
       - name: SonarScanner End
         if: always()
