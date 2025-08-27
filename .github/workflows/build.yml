@@ -38,12 +38,12 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          # Запускаємо аналіз, вказуючи шлях до coverage report
+          # Запускаємо аналіз, вказуючи повний шлях до coverage report
           dotnet-sonarscanner begin `
             /k:"Skiper29_SmartAgroPlan" `
             /o:"skiper29" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.cs.opencover.reportsPaths="coverage.opencover.xml" `
+            /d:sonar.cs.opencover.reportsPaths="SmartAgroPlan.XUnitTest/coverage.opencover.xml" `
             /d:sonar.host.url="https://sonarcloud.io"
 
       - name: Build solution
@@ -51,7 +51,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          # Запускаємо тести і генеруємо звіт про покриття
+          # Запускаємо тести і генеруємо звіт про покриття у папці з тестами
           dotnet test "SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj" `
             --configuration Release `
             --no-build `
