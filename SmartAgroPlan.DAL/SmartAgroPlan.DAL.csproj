@@ -26,4 +26,10 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="9.0.4" />
   </ItemGroup>
 
+
+  <ItemGroup>
+  	<SonarQubeSetting Include="sonar.exclusions">
+  		<Value>**/Migrations/*</Value>
+  	</SonarQubeSetting>
+  </ItemGroup>
 </Project>
