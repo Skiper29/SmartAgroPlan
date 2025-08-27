@@ -41,25 +41,6 @@ jobs:
       - name: Add dotnet tools to PATH
         run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
-      - name: Build
-        run: dotnet build SmartAgroPlan.sln --configuration Release
-
-      - name: Run Tests with Coverage
-        run: |
-          dotnet-coverage collect --output-format "opencover" --output "coverage.opencover.xml" -- dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release --logger "trx;LogFileName=test_results.trx"
-
-      - name: Check coverage file content
-        id: check_coverage
-        run: |
-          if (Test-Path coverage.opencover.xml) {
-            Write-Host "Coverage file created successfully."
-            Get-Content coverage.opencover.xml | Select-Object -First 20
-          } else {
-            Write-Host "Error: coverage.opencover.xml file was not created. SonarScanner will fail."
-            exit 1
-          }
-        shell: pwsh
-
       - name: SonarScanner Begin
         shell: pwsh
         run: |
@@ -69,6 +50,13 @@ jobs:
             /d:sonar.token="${{ env.SONAR_TOKEN }}" `
             /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.cs.opencover.reportsPaths="coverage.opencover.xml"
+
+      - name: Build
+        run: dotnet build SmartAgroPlan.sln --configuration Release
+
+      - name: Run Tests with Coverage
+        run: |
+          dotnet-coverage collect --output-format "opencover" --output "coverage.opencover.xml" -- dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release --logger "trx;LogFileName=test_results.trx"
 
       - name: SonarScanner End
         if: always()
