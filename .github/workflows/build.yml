@@ -72,6 +72,7 @@ jobs:
             coverage.opencover.xml
             SmartAgroPlan.XUnitTest/TestResults/test_results.trx
 
+
   test-report:
     name: Publish Test Report
     runs-on: windows-latest
@@ -92,9 +93,10 @@ jobs:
         uses: dorny/test-reporter@v2
         with:
           name: Unit Tests
-          path: test_results.trx
+          path: SmartAgroPlan.XUnitTest/TestResults/test_results.trx
           reporter: dotnet-trx
           list-suites: failed
           list-tests: failed
           fail-on-error: true
+
 
