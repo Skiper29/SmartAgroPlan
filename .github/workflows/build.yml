@@ -78,6 +78,11 @@ jobs:
     needs: build
     if: always()
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # щоб був доступний git history
+
       - name: Download reports
         uses: actions/download-artifact@v4
         with:
@@ -92,3 +97,4 @@ jobs:
           list-suites: failed
           list-tests: failed
           fail-on-error: true
+
