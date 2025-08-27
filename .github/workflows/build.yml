@@ -56,11 +56,7 @@ jobs:
 
       - name: Run Tests with Coverage
         run: |
-          dotnet-coverage collect `
-            --output-format opencover `
-            --output-file coverage.opencover.xml `
-            -- "dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release --logger 'trx;LogFileName=test_results.trx'"
-
+          dotnet-coverage collect --output-format opencover --output-file coverage.opencover.xml -- dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release --logger "trx;LogFileName=test_results.trx"
 
       - name: SonarScanner End
         if: always()
