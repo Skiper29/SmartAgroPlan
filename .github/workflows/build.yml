@@ -37,9 +37,6 @@ jobs:
           dotnet tool install --global dotnet-coverage
           dotnet tool install --global dotnet-sonarscanner
 
-      - name: Restore and Build Solution
-        run: dotnet build SmartAgroPlan.sln --configuration Release
-
       - name: SonarScanner Begin
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -53,14 +50,14 @@ jobs:
             /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
 
-      - name: Test and Code Coverage (VSCoverage XML)
+      # Оновлені кроки Build and Test
+      - name: Restore, Build, and Test with Coverage
         run: |
-          # Використовуємо dotnet-coverage для збору покриття
-          # Результат буде збережено у файл coverage.xml в кореневому каталозі
+          dotnet build SmartAgroPlan.sln --configuration Release
           dotnet-coverage collect `
             --output-format xml `
             --output-file coverage.xml `
-            "dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release"
+            -- "dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release"
 
       - name: SonarScanner End
         if: always()
@@ -77,7 +74,7 @@ jobs:
           name: coverage-report
           path: coverage.xml
 
-      # Окремий job для звіту, що показує результати тестування
+  # Окремий job для звіту, що показує результати тестування
   test-report:
     name: Test Results
     runs-on: windows-latest
