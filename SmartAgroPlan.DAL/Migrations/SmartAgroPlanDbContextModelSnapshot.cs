@@ -133,15 +133,15 @@ namespace SmartAgroPlan.DAL.Migrations
                     b.Property<int>("FieldId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime?>("HarvestedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly?>("HarvestedDate")
+                        .HasColumnType("date");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(300)
                         .HasColumnType("character varying(300)");
 
-                    b.Property<DateTime>("PlantedDate")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("PlantedDate")
+                        .HasColumnType("date");
 
                     b.Property<double?>("Yield")
                         .HasColumnType("double precision");

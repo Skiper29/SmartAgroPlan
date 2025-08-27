@@ -26,6 +26,8 @@ else
     app.UseHsts();
 }
 
+// await app.SeedDataAsync();
+
 app.UseCors();
 app.UseHttpsRedirection();
 app.UseRouting();

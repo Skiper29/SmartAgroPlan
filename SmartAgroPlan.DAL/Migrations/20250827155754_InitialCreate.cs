@@ -103,8 +103,8 @@ namespace SmartAgroPlan.DAL.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FieldId = table.Column<int>(type: "integer", nullable: false),
                     CropId = table.Column<int>(type: "integer", nullable: false),
-                    PlantedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    HarvestedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    PlantedDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    HarvestedDate = table.Column<DateOnly>(type: "date", nullable: true),
                     Yield = table.Column<double>(type: "double precision", nullable: true),
                     Notes = table.Column<string>(type: "character varying(300)", maxLength: 300, nullable: true)
                 },

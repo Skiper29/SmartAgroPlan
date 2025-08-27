@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.VisualBasic.FileIO;
 using NetTopologySuite.Geometries;
 using SmartAgroPlan.DAL.Entities.Crops;
+using SmartAgroPlan.DAL.Enums;
 
 namespace SmartAgroPlan.DAL.Entities.Fields;
 

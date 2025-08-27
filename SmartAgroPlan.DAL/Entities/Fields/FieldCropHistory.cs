@@ -14,8 +14,8 @@ public class FieldCropHistory
     [Required]
     public int CropId { get; set; }
     [Required]
-    public DateTime PlantedDate { get; set; }
-    public DateTime? HarvestedDate { get; set; }
+    public DateOnly PlantedDate { get; set; }
+    public DateOnly? HarvestedDate { get; set; }
     public double? Yield { get; set; }
     [StringLength(300)]
     public string? Notes { get; set; }
