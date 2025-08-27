@@ -5,73 +5,65 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
-
 jobs:
   build:
     name: Build and analyze
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Обов'язково для коректного аналізу SonarQube
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: 17
           distribution: temurin
           
-      - name: Install tools
+      # Встановлюємо інструменти для SonarScanner та Coverlet
+      - name: Install .NET tools
         run: |
-          dotnet tool install --global coverlet.console
           dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global coverlet.console
 
-      - name: Cache SonarQube Cloud packages
+      - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Cache SonarQube Cloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v4
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-
-      - name: Install SonarQube Cloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-
-      - name: Build and analyze (begin)
+      - name: Start SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin `
+          # Запускаємо аналіз, вказуючи шлях до coverage report
+          dotnet-sonarscanner begin `
             /k:"Skiper29_SmartAgroPlan" `
             /o:"skiper29" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.cs.opencover.reportsPaths="coverage.xml"
+            /d:sonar.cs.opencover.reportsPaths="SmartAgroPlan.XUnitTest/coverage.opencover.xml" `
+            /d:sonar.host.url="https://sonarcloud.io"
 
       - name: Build solution
         run: dotnet build --configuration Release --no-incremental
 
       - name: Run tests with coverage
-        run: dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj `
-          --configuration Release `
-          --no-build `
-          /p:CollectCoverage=true `
-          /p:CoverletOutput=opencover.xml `
-          /p:CoverletOutputFormat=opencover
+        run: |
+          # Запускаємо тести і генеруємо звіт про покриття
+          dotnet test "SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj" `
+            --configuration Release `
+            --no-build `
+            --no-restore `
+            /p:CollectCoverage=true `
+            /p:CoverletOutput=coverage.opencover.xml `
+            /p:CoverletOutputFormat=opencover
 
       - name: End SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          # Завершуємо аналіз SonarQube. Звіт про покриття буде завантажено автоматично.
+          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
