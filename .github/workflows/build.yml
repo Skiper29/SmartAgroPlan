@@ -1,97 +1,94 @@
-name: SonarCloud
+name: Build & SonarCloud
+
 on:
   push:
-    branches: master
+    branches: [ master ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
   workflow_dispatch:
+
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  DOTNET_VERSION: '9.0.x'
+  JAVA_VERSION: '17'
 
 jobs:
   build:
-    name: Build and analyze
+    name: Build, Test & Analyze
     runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Обов'язково для коректного аналізу SonarQube
+          fetch-depth: 0
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: ${{ env.JAVA_VERSION }}
 
-      - name: Setup .NET 9
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Додаємо шлях до глобальних dotnet tools у PATH, щоб їх можна було викликати за іменем.
-      - name: Ensure dotnet tools PATH
-        run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
-      # Встановлюємо необхідні інструменти
       - name: Install tools
         run: |
           dotnet tool install --global dotnet-coverage
           dotnet tool install --global dotnet-sonarscanner
 
+      - name: Add dotnet tools to PATH
+        run: echo "$env:USERPROFILE\.dotnet\tools" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
       - name: SonarScanner Begin
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
+        shell: pwsh
         run: |
-          # Запускаємо аналіз SonarCloud, вказуючи шлях до coverage report
           dotnet-sonarscanner begin `
             /k:"Skiper29_SmartAgroPlan" `
             /o:"skiper29" `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.token="${{ env.SONAR_TOKEN }}" `
             /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml"
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml"
 
-      # Оновлені кроки Build and Test
-      - name: Restore, Build, and Test with Coverage
+      - name: Build & Test with Coverage
         run: |
           dotnet build SmartAgroPlan.sln --configuration Release
           dotnet-coverage collect `
-            --output-format xml `
-            --output-file coverage.xml `
-            -- "dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release"
+            --output-format opencover `
+            --output-file coverage.opencover.xml `
+            -- "dotnet test SmartAgroPlan.XUnitTest/SmartAgroPlan.XUnitTest.csproj --configuration Release --logger \"trx;LogFileName=test_results.trx\""
 
       - name: SonarScanner End
         if: always()
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          # Завершуємо аналіз SonarCloud. Звіт про покриття буде завантажено автоматично.
-          dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        shell: pwsh
+        run: dotnet-sonarscanner end /d:sonar.token="${{ env.SONAR_TOKEN }}"
 
-      - name: Save Coverage Report as Artifact
+      - name: Upload Coverage & Test Results
         uses: actions/upload-artifact@v4
         with:
-          name: coverage-report
-          path: coverage.xml
+          name: reports
+          path: |
+            coverage.opencover.xml
+            SmartAgroPlan.XUnitTest/TestResults/test_results.trx
 
-  # Окремий job для звіту, що показує результати тестування
   test-report:
-    name: Test Results
+    name: Publish Test Report
     runs-on: windows-latest
     needs: build
     if: always()
     steps:
-      - name: Get Test Results Artifact
+      - name: Download reports
         uses: actions/download-artifact@v4
         with:
-          name: coverage-report
+          name: reports
 
-      - name: Publish Test Report
+      - name: Publish Test Results
         uses: dorny/test-reporter@v2
         with:
-          name: Test results
-          path: coverage.xml
-          reporter: 'vstest' # v2.x supports vstest format
+          name: Unit Tests
+          path: test_results.trx
+          reporter: dotnet-trx
           list-suites: failed
           list-tests: failed
           fail-on-error: true
