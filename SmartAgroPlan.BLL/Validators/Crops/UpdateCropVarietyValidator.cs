@@ -7,6 +7,6 @@ public class UpdateCropVarietyValidator : AbstractValidator<CropVarietyUpdateDto
 {
     public UpdateCropVarietyValidator(BaseCropVarietyValidator baseCropVarietyValidator)
     {
-        RuleFor(dto => dto).SetValidator(baseCropVarietyValidator);
+        Include(baseCropVarietyValidator);
     }
 }

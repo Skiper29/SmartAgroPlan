@@ -7,6 +7,6 @@ public class CreateCropVarietyValidator : AbstractValidator<CropVarietyCreateDto
 {
     public CreateCropVarietyValidator(BaseCropVarietyValidator baseCropVarietyValidator)
     {
-        RuleFor(dto => dto).SetValidator(baseCropVarietyValidator);
+        Include(baseCropVarietyValidator);
     }
 }
