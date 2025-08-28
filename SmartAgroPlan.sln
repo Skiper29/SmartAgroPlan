@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartAgroPlan.DAL", "SmartA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartAgroPlan.XUnitTest", "SmartAgroPlan.XUnitTest\SmartAgroPlan.XUnitTest.csproj", "{AABFF4BE-1700-419F-91D1-EB159E22BDCB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartAgroPlan.BLL", "SmartAgroPlan.BLL\SmartAgroPlan.BLL.csproj", "{D735EF95-6D8E-44F7-A1C5-EE8301E2B42E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{AABFF4BE-1700-419F-91D1-EB159E22BDCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AABFF4BE-1700-419F-91D1-EB159E22BDCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AABFF4BE-1700-419F-91D1-EB159E22BDCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D735EF95-6D8E-44F7-A1C5-EE8301E2B42E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D735EF95-6D8E-44F7-A1C5-EE8301E2B42E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D735EF95-6D8E-44F7-A1C5-EE8301E2B42E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D735EF95-6D8E-44F7-A1C5-EE8301E2B42E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

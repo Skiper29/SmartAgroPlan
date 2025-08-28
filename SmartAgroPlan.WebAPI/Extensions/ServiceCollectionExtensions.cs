@@ -1,11 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartAgroPlan.DAL.Persistence;
+using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
+using SmartAgroPlan.DAL.Repositories.Repositories.Realizations.Base;
 using SmartAgroPlan.WebAPI.Utils;
 
 namespace SmartAgroPlan.WebAPI.Extensions
 {
     public static class ServiceCollectionExtensions
     {
+        public static void AddCustomServices(this IServiceCollection services)
+        {
+            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+
+            var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(currentAssemblies));
+        }
+
         public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
