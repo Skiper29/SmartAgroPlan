@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using SmartAgroPlan.BLL.Validators.Crops;
 using SmartAgroPlan.DAL.Persistence;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
 using SmartAgroPlan.DAL.Repositories.Repositories.Realizations.Base;
@@ -13,8 +15,9 @@ namespace SmartAgroPlan.WebAPI.Extensions
             services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
             var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-
+            services.AddAutoMapper(cfg => cfg.AddMaps(currentAssemblies));
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(currentAssemblies));
+            services.AddValidatorsFromAssemblyContaining<BaseCropVarietyValidator>();
         }
 
         public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
