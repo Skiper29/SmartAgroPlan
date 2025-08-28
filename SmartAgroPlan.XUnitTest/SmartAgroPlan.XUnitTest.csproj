@@ -34,6 +34,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartAgroPlan.DAL\SmartAgroPlan.DAL.csproj" />
+    <ProjectReference Include="..\SmartAgroPlan.BLL\SmartAgroPlan.BLL.csproj" />
   </ItemGroup>
 
   <ItemGroup>
