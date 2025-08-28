@@ -22,9 +22,9 @@ public class BaseFieldCropHistoryValidator : AbstractValidator<FieldCropHistoryC
             .WithMessage("PlantedDate is required.");
 
         RuleFor(fch => fch.HarvestedDate)
-            .GreaterThanOrEqualTo(fch => fch.PlantedDate)
+            .GreaterThan(fch => fch.PlantedDate)
             .When(fch => fch.HarvestedDate.HasValue)
-            .WithMessage("HarvestedDate must be after or equal to PlantedDate.");
+            .WithMessage("HarvestedDate must be after PlantedDate.");
 
         RuleFor(fch => fch.Yield)
             .GreaterThanOrEqualTo(0)
