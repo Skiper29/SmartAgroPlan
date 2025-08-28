@@ -5,7 +5,7 @@ namespace SmartAgroPlan.BLL.Validators.Fields.FieldCropHistory;
 
 public class BaseFieldCropHistoryValidator : AbstractValidator<FieldCropHistoryCreateUpdateDto>
 {
-    private const int MaxNotesLength = 300;
+    public const int MaxNotesLength = 300;
 
     public BaseFieldCropHistoryValidator()
     {

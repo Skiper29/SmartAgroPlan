@@ -7,8 +7,8 @@ namespace SmartAgroPlan.BLL.Validators.Fields.Field;
 
 public class BaseFieldValidator : AbstractValidator<FieldCreateUpdateDto>
 {
-    private const int MaxNameLength = 100;
-    private const int MaxLocationLength = 200;
+    public const int MaxNameLength = 100;
+    public const int MaxLocationLength = 200;
 
     public BaseFieldValidator()
     {

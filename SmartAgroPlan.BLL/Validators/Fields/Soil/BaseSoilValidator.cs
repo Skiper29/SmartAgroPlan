@@ -5,10 +5,10 @@ namespace SmartAgroPlan.BLL.Validators.Fields.Soil;
 
 public class BaseSoilValidator : AbstractValidator<SoilCreateUpdateDto>
 {
-    private const double MinAcidity = 3.5;
-    private const double MaxAcidity = 9.5;
-    private const int MaxPercentage = 100;
-    private const int MinPercentage = 0;
+    public const double MinAcidity = 3.5;
+    public const double MaxAcidity = 9.5;
+    public const int MaxPercentage = 100;
+    public const int MinPercentage = 0;
 
     public BaseSoilValidator()
     {

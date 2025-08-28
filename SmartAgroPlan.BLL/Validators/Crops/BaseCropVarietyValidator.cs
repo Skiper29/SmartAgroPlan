@@ -7,8 +7,8 @@ namespace SmartAgroPlan.BLL.Validators.Crops;
 
 public class BaseCropVarietyValidator : AbstractValidator<CropVarietyCreateUpdateDto>
 {
-    private const int MaxNameLength = 100;
-    private const int MaxAdditionalNotesLength = 500;
+    public const int MaxNameLength = 100;
+    public const int MaxAdditionalNotesLength = 500;
 
     public BaseCropVarietyValidator(DayMonthValidator dayMonthValidator)
     {
