@@ -180,7 +180,8 @@ public static class SeedingDataExtension
                     Boundary = new Polygon(new LinearRing(new[] { new Coordinate(0,0), new Coordinate(0,1), new Coordinate(1,1), new Coordinate(1,0), new Coordinate(0,0) })),
                     FieldType = FieldType.Arable,
                     CurrentCropId = 1,
-                    SoilId = 3
+                    SoilId = 3,
+                    SowingDate = new DateTime(2024, 9, 20,0,0,0,DateTimeKind.Utc)
                 },
                 new Field {
                     Name = "Field B",
@@ -188,7 +189,8 @@ public static class SeedingDataExtension
                     Boundary = new Polygon(new LinearRing(new[] { new Coordinate(2,2), new Coordinate(2,3), new Coordinate(3,3), new Coordinate(3,2), new Coordinate(2,2) })),
                     FieldType = FieldType.Pasture,
                     CurrentCropId = 2,
-                    SoilId = 1
+                    SoilId = 1,
+                    SowingDate = new DateTime(2024, 5, 5,0,0,0,DateTimeKind.Utc)
                 },
                 new Field {
                     Name = "Field C",
@@ -196,7 +198,8 @@ public static class SeedingDataExtension
                     Boundary = new Polygon(new LinearRing(new[] { new Coordinate(4,4), new Coordinate(4,5), new Coordinate(5,5), new Coordinate(5,4), new Coordinate(4,4) })),
                     FieldType = FieldType.Orchard,
                     CurrentCropId = 3,
-                    SoilId = 2
+                    SoilId = 2,
+                    SowingDate = new DateTime(2024, 4, 15,0,0,0,DateTimeKind.Utc)
                 }
             };
             dbContext.Fields.AddRange(fields);

@@ -16,6 +16,7 @@ public class Field
     public string? Name { get; set; }
     [StringLength(200)]
     public string? Location { get; set; }
+    public DateTime? SowingDate { get; set; }
     [Required]
     public Polygon? Boundary { get; set; }
     public FieldType FieldType { get; set; }
