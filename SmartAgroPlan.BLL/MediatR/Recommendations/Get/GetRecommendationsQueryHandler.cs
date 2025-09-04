@@ -22,13 +22,13 @@ public class GetRecommendationsQueryHandler : IRequestHandler<GetRecommendations
         _recommendationService = recommendationService;
     }
 
-    public async Task<RecommendationResponseDto> Handle(GetRecommendationsQuery request, CancellationToken cancellationToken)
+    public Task<RecommendationResponseDto> Handle(GetRecommendationsQuery request, CancellationToken cancellationToken)
     {
-        var field = await _repositoryWrapper.FieldRepository.FindAll(
+        var field = _repositoryWrapper.FieldRepository.FindAll(
             predicate: f => f.Id == request.RecommendationRequest.FieldId,
             include: f => f
                 .Include(field => field.CurrentCrop)!)
-            .FirstOrDefaultAsync();
+            .FirstOrDefault();
 
         if (field == null)
         {
@@ -42,6 +42,6 @@ public class GetRecommendationsQueryHandler : IRequestHandler<GetRecommendations
 
         var currentGrowthStage = _growthStageService.GetStage((DateTime)field.SowingDate!, request.RecommendationRequest.CurrentDate, field.CurrentCrop.GrowingDuration);
 
-        return _recommendationService.GenerateWeekly(field, field.CurrentCrop, currentGrowthStage, request.RecommendationRequest.CurrentDate);
+        return Task.FromResult(_recommendationService.GenerateWeekly(field, field.CurrentCrop, currentGrowthStage, request.RecommendationRequest.CurrentDate));
     }
 }
