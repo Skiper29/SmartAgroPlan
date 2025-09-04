@@ -5,6 +5,15 @@ namespace SmartAgroPlan.BLL.Services.Recommendations;
 
 public class GrowthStageService : IGrowthStageService
 {
+    public static readonly IReadOnlyDictionary<GrowthStage, double> StageDurations = new Dictionary<GrowthStage, double>
+    {
+        { GrowthStage.Germination, 0.1 },
+        { GrowthStage.Vegetative, 0.3 },
+        { GrowthStage.Flowering, 0.20 },
+        { GrowthStage.GrainFilling, 0.25 },
+        { GrowthStage.Maturity, 0.15 }
+    };
+
     private static readonly Dictionary<double, GrowthStage> _stages = new()
     {
         { 0.0, GrowthStage.Sowing },
@@ -28,5 +37,4 @@ public class GrowthStageService : IGrowthStageService
             .FirstOrDefault(s => progress - s.Key <= Epsilon)
             .Value;
     }
-
 }
