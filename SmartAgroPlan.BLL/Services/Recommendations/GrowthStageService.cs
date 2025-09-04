@@ -16,6 +16,8 @@ public class GrowthStageService : IGrowthStageService
         { double.MaxValue, GrowthStage.Harvest }
     };
 
+    private const double Epsilon = 1e-6;
+
     public GrowthStage GetStage(DateTime plantingDate, DateTime currentDate, int growingDuration)
     {
         var growingDays = (currentDate - plantingDate).Days;
@@ -23,7 +25,7 @@ public class GrowthStageService : IGrowthStageService
 
         return _stages
             .OrderBy(s => s.Key)
-            .FirstOrDefault(s => progress < s.Key)
+            .FirstOrDefault(s => progress - s.Key <= Epsilon)
             .Value;
     }
 
