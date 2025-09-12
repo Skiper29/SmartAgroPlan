@@ -1,4 +1,3 @@
-using SmartAgroPlan.BLL.DTO.Fields.Soil;
 using SmartAgroPlan.DAL.Entities.Calendar;
 using SmartAgroPlan.DAL.Enums;
 
@@ -18,5 +17,5 @@ public class CropVarietyDto
     public double MaxTemperature { get; set; }
     public double HarvestYield { get; set; }
     public string? AdditionalNotes { get; set; }
-    public SoilDto? OptimalSoil { get; set; }
+    public SoilType OptimalSoil { get; set; }
 }

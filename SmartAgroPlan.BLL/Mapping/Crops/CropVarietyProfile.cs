@@ -8,7 +8,8 @@ public class CropVarietyProfile : Profile
 {
     public CropVarietyProfile()
     {
-        CreateMap<CropVariety, CropVarietyDto>().ReverseMap();
+        CreateMap<CropVariety, CropVarietyDto>()
+            .ForMember(c => c.OptimalSoil, opt => opt.MapFrom(src => src.OptimalSoil!.Type));
         CreateMap<CropVariety, CropVarietyCreateDto>().ReverseMap();
         CreateMap<CropVariety, CropVarietyUpdateDto>().ReverseMap();
         CreateMap<CropVariety, CropVarietyCreateUpdateDto>().ReverseMap();

@@ -18,4 +18,8 @@
     <ProjectReference Include="..\SmartAgroPlan.DAL\SmartAgroPlan.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="MediatR\Crops\GetById\" />
+  </ItemGroup>
+
 </Project>
