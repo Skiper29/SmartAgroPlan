@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartAgroPlan.BLL.DTO.Crops;
 using SmartAgroPlan.BLL.MediatR.Crops.Create;
+using SmartAgroPlan.BLL.MediatR.Crops.Delete;
 using SmartAgroPlan.BLL.MediatR.Crops.GetAll;
 using SmartAgroPlan.BLL.MediatR.Crops.GetById;
 using SmartAgroPlan.BLL.MediatR.Crops.Update;
@@ -43,5 +44,15 @@ public class CropController : BaseApiController
     public async Task<IActionResult> Update(CropVarietyUpdateDto cropVariety)
     {
         return HandleResult(await Mediator.Send(new UpdateCropCommand(cropVariety)));
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
+    public async Task<IActionResult> Delete(int id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteCropCommand(id)));
     }
 }
