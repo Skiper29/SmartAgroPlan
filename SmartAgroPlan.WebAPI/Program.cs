@@ -1,4 +1,5 @@
 using Scalar.AspNetCore;
+using Serilog;
 using SmartAgroPlan.WebAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,6 +29,8 @@ else
 }
 
 // await app.SeedDataAsync();
+
+app.UseSerilogRequestLogging();
 
 app.UseCors();
 app.UseHttpsRedirection();

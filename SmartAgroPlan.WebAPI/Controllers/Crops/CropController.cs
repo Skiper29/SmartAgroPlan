@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmartAgroPlan.BLL.DTO.Crops;
+using SmartAgroPlan.BLL.MediatR.Crops.Create;
 using SmartAgroPlan.BLL.MediatR.Crops.GetAll;
 using SmartAgroPlan.BLL.MediatR.Crops.GetById;
 
@@ -16,5 +18,11 @@ public class CropController : BaseApiController
     public async Task<IActionResult> GetById(int id)
     {
         return HandleResult(await Mediator.Send(new GetCropByIdQuery(id)));
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CropVarietyCreateDto cropVariety)
+    {
+        return HandleResult(await Mediator.Send(new CreateCropCommand(cropVariety)));
     }
 }

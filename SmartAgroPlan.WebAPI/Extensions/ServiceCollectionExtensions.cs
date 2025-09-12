@@ -8,57 +8,57 @@ using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
 using SmartAgroPlan.DAL.Repositories.Repositories.Realizations.Base;
 using SmartAgroPlan.WebAPI.Utils;
 
-namespace SmartAgroPlan.WebAPI.Extensions
+namespace SmartAgroPlan.WebAPI.Extensions;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static void AddCustomServices(this IServiceCollection services)
     {
-        public static void AddCustomServices(this IServiceCollection services)
-        {
-            services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+        services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
 
-            var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
-            services.AddAutoMapper(cfg => cfg.AddMaps(currentAssemblies));
-            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(currentAssemblies));
-            services.AddValidatorsFromAssemblyContaining<BaseCropVarietyValidator>();
-            
-            services.AddScoped<IGrowthStageService, GrowthStageService>();
-            services.AddScoped<IRecommendationService, RecommendationService>();
-        }
+        var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+        services.AddAutoMapper(cfg => cfg.AddMaps(currentAssemblies));
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(currentAssemblies));
+        services.AddValidatorsFromAssemblyContaining<BaseCropVarietyValidator>();
 
-        public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
-        {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+        services.AddScoped<IGrowthStageService, GrowthStageService>();
+        services.AddScoped<IRecommendationService, RecommendationService>();
+    }
 
-            services.AddDbContext<SmartAgroPlanDbContext>(options =>
-                options.UseNpgsql(connectionString, npgsqlOptions =>
-                {
-                    npgsqlOptions.UseNetTopologySuite();
-                    npgsqlOptions.MigrationsAssembly(typeof(SmartAgroPlanDbContext).Assembly.GetName().Name);
-                }));
+    public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
+    {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            var corsSettings = SettingsExtractor.GetCorsSettings(configuration);
-            services.AddCors(options =>
+        services.AddDbContext<SmartAgroPlanDbContext>(options =>
+            options.UseNpgsql(connectionString, npgsqlOptions =>
             {
-                options.AddDefaultPolicy(policy =>
-                {
-                    policy.WithOrigins(corsSettings.AllowedOrigins)
-                        .WithHeaders(corsSettings.AllowedHeaders)
-                        .WithMethods(corsSettings.AllowedMethods)
-                        .WithExposedHeaders(corsSettings.ExposedHeaders)
-                        .SetPreflightMaxAge(TimeSpan.FromSeconds(corsSettings.PreflightMaxAgeInSeconds));
-                });
-            });
+                npgsqlOptions.UseNetTopologySuite();
+                npgsqlOptions.MigrationsAssembly(typeof(SmartAgroPlanDbContext).Assembly.GetName().Name);
+            }));
 
-            services.AddHsts(options =>
+        var corsSettings = SettingsExtractor.GetCorsSettings(configuration);
+        services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
             {
-                options.Preload = true;
-                options.IncludeSubDomains = true;
-                options.MaxAge = TimeSpan.FromDays(30);
+                policy.WithOrigins(corsSettings.AllowedOrigins)
+                    .WithHeaders(corsSettings.AllowedHeaders)
+                    .WithMethods(corsSettings.AllowedMethods)
+                    .WithExposedHeaders(corsSettings.ExposedHeaders)
+                    .SetPreflightMaxAge(TimeSpan.FromSeconds(corsSettings.PreflightMaxAgeInSeconds));
             });
+        });
 
-            services.AddLogging();
+        services.AddHsts(options =>
+        {
+            options.Preload = true;
+            options.IncludeSubDomains = true;
+            options.MaxAge = TimeSpan.FromDays(30);
+        });
 
-            services.AddControllers(options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
-        }
+        services.AddLogging();
+
+        services.AddControllers(options =>
+            options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
     }
 }
