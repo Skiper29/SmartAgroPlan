@@ -1,5 +1,7 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using SmartAgroPlan.BLL.Interfaces.Recommendations;
+using SmartAgroPlan.BLL.Services.Recommendations;
 using SmartAgroPlan.BLL.Validators.Crops;
 using SmartAgroPlan.DAL.Persistence;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
@@ -18,6 +20,9 @@ namespace SmartAgroPlan.WebAPI.Extensions
             services.AddAutoMapper(cfg => cfg.AddMaps(currentAssemblies));
             services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(currentAssemblies));
             services.AddValidatorsFromAssemblyContaining<BaseCropVarietyValidator>();
+            
+            services.AddScoped<IGrowthStageService, GrowthStageService>();
+            services.AddScoped<IRecommendationService, RecommendationService>();
         }
 
         public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)

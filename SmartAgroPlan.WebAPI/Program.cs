@@ -8,6 +8,7 @@ builder.Host.ConfigureApplication(builder);
 // Add services to the container.
 
 builder.Services.AddApplicationServices(builder.Configuration);
+builder.Services.AddCustomServices();
 builder.Services.ConfigureSerilog(builder);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
