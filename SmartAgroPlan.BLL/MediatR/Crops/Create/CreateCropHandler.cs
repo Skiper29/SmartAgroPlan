@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentResults;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using SmartAgroPlan.BLL.DTO.Crops;
 using SmartAgroPlan.DAL.Entities.Crops;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
@@ -9,13 +10,18 @@ namespace SmartAgroPlan.BLL.MediatR.Crops.Create;
 
 public class CreateCropHandler : IRequestHandler<CreateCropCommand, Result<CropVarietyDto>>
 {
+    private readonly ILogger<CreateCropHandler> _logger;
     private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
 
-    public CreateCropHandler(IMapper mapper, IRepositoryWrapper repositoryWrapper)
+    public CreateCropHandler(
+        IMapper mapper,
+        IRepositoryWrapper repositoryWrapper,
+        ILogger<CreateCropHandler> logger)
     {
         _mapper = mapper;
         _repositoryWrapper = repositoryWrapper;
+        _logger = logger;
     }
 
     public async Task<Result<CropVarietyDto>> Handle(CreateCropCommand request, CancellationToken cancellationToken)
@@ -24,6 +30,7 @@ public class CreateCropHandler : IRequestHandler<CreateCropCommand, Result<CropV
         if (cropEntity is null)
         {
             const string errorMsg = "Не вдалося відобразити DTO в сутність сорту культури";
+            _logger.LogError(errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
@@ -33,6 +40,7 @@ public class CreateCropHandler : IRequestHandler<CreateCropCommand, Result<CropV
         if (!resultIsSuccess)
         {
             const string errorMsg = "Не вдалося створити сорт культури";
+            _logger.LogError(errorMsg);
             return Result.Fail(new Error(errorMsg));
         }
 
