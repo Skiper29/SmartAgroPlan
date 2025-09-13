@@ -1,0 +1,16 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using SmartAgroPlan.BLL.DTO.Fields.Field;
+using SmartAgroPlan.BLL.MediatR.Fields.Field.GetAll;
+
+namespace SmartAgroPlan.WebAPI.Controllers.Fields.Field;
+
+public class FieldController : BaseApiController
+{
+    [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FieldDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetAll()
+    {
+        return HandleResult(await Mediator.Send(new GetAllFieldsQuery()));
+    }
+}
