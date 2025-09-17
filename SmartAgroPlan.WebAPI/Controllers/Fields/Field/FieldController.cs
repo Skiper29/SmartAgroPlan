@@ -3,6 +3,7 @@ using SmartAgroPlan.BLL.DTO.Fields.Field;
 using SmartAgroPlan.BLL.MediatR.Fields.Field.Create;
 using SmartAgroPlan.BLL.MediatR.Fields.Field.GetAll;
 using SmartAgroPlan.BLL.MediatR.Fields.Field.GetById;
+using SmartAgroPlan.BLL.MediatR.Fields.Field.Update;
 
 namespace SmartAgroPlan.WebAPI.Controllers.Fields.Field;
 
@@ -30,5 +31,13 @@ public class FieldController : BaseApiController
     public async Task<IActionResult> Create([FromBody] FieldCreateDto newField)
     {
         return HandleResult(await Mediator.Send(new CreateFieldCommand(newField)));
+    }
+
+    [HttpPut]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(FieldDto))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Update([FromBody] FieldUpdateDto updatedField)
+    {
+        return HandleResult(await Mediator.Send(new UpdateFieldCommand(updatedField)));
     }
 }
