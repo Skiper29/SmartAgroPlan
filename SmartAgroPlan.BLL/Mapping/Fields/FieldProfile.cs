@@ -39,7 +39,14 @@ public class FieldProfile : Profile
                         ? geoJsonReader.Read<Polygon>(src.BoundaryGeoJson)
                         : null));
 
-        CreateMap<Field, FieldCreateDto>().ReverseMap();
-        CreateMap<Field, FieldUpdateDto>().ReverseMap();
+        CreateMap<Field, FieldCreateDto>()
+            .IncludeBase<Field, FieldCreateUpdateDto>()
+            .ReverseMap()
+            .IncludeBase<FieldCreateUpdateDto, Field>();
+
+        CreateMap<Field, FieldUpdateDto>()
+            .IncludeBase<Field, FieldCreateUpdateDto>()
+            .ReverseMap()
+            .IncludeBase<FieldCreateUpdateDto, Field>();
     }
 }
