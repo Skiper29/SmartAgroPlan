@@ -1,6 +1,8 @@
 ﻿using FluentValidation;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SmartAgroPlan.BLL.Interfaces.Recommendations;
+using SmartAgroPlan.BLL.PipelineBehaviour;
 using SmartAgroPlan.BLL.Services.Recommendations;
 using SmartAgroPlan.BLL.Validators.Crops;
 using SmartAgroPlan.DAL.Persistence;
@@ -19,6 +21,7 @@ public static class ServiceCollectionExtensions
         var currentAssemblies = AppDomain.CurrentDomain.GetAssemblies();
         services.AddAutoMapper(cfg => cfg.AddMaps(currentAssemblies));
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(currentAssemblies));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddValidatorsFromAssemblyContaining<BaseCropVarietyValidator>();
 
         services.AddScoped<IGrowthStageService, GrowthStageService>();
