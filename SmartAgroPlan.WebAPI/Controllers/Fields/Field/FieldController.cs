@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartAgroPlan.BLL.DTO.Fields.Field;
 using SmartAgroPlan.BLL.MediatR.Fields.Field.Create;
+using SmartAgroPlan.BLL.MediatR.Fields.Field.Delete;
 using SmartAgroPlan.BLL.MediatR.Fields.Field.GetAll;
 using SmartAgroPlan.BLL.MediatR.Fields.Field.GetById;
 using SmartAgroPlan.BLL.MediatR.Fields.Field.Update;
@@ -39,5 +40,13 @@ public class FieldController : BaseApiController
     public async Task<IActionResult> Update([FromBody] FieldUpdateDto updatedField)
     {
         return HandleResult(await Mediator.Send(new UpdateFieldCommand(updatedField)));
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Delete(int id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteFieldCommand(id)));
     }
 }
