@@ -15,6 +15,7 @@ public class SmartAgroPlanDbContext : DbContext
     public DbSet<Soil> Soils { get; set; }
     public DbSet<FieldCropHistory> FieldCropHistories { get; set; }
     public DbSet<CropVariety> Crops { get; set; }
+    public DbSet<FieldCondition> FieldConditions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

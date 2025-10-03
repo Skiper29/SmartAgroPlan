@@ -11,15 +11,19 @@ namespace SmartAgroPlan.DAL.Repositories.Repositories.Realizations.Base;
 public class RepositoryWrapper : IRepositoryWrapper
 {
     private readonly SmartAgroPlanDbContext _dbContext;
-    private IFieldRepository? _fieldRepository;
     private ICropVarietyRepository? _cropVarietyRepository;
-    private ISoilRepository? _soilRepository;
+    private IFieldConditionRepository? _fieldConditionRepository;
     private IFieldCropHistoryRepository? _fieldCropHistoryRepository;
+    private IFieldRepository? _fieldRepository;
+    private ISoilRepository? _soilRepository;
 
     public RepositoryWrapper(SmartAgroPlanDbContext dbContext)
     {
         _dbContext = dbContext;
     }
+
+    public IFieldConditionRepository FieldConditionRepository =>
+        _fieldConditionRepository ??= new FieldConditionRepository(_dbContext);
 
     public IFieldRepository FieldRepository =>
         _fieldRepository ??= new FieldRepository(_dbContext);
