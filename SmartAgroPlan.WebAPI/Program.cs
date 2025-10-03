@@ -18,17 +18,18 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
-else
+if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
 }
 
-// await app.SeedDataAsync();
+// Register OpenAPI + Scalar always
+app.MapOpenApi();
+app.MapScalarApiReference();
+
+await app.ApplyMigrations();
+
+await app.SeedDataAsync();
 
 app.UseSerilogRequestLogging();
 

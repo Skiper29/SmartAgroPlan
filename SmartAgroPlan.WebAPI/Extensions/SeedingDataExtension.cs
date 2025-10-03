@@ -221,7 +221,7 @@ public static class SeedingDataExtension
                 },
                 new FieldCropHistory {
                     FieldId = 2,
-                    CropId = 5,
+                    CropId = 2,
                     PlantedDate = new DateOnly(2023, 5, 5),
                     HarvestedDate = new DateOnly(2023, 9, 1),
                     Yield = 7.8,
