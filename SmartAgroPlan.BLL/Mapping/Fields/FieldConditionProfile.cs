@@ -13,10 +13,5 @@ public class FieldConditionProfile : Profile
 
         CreateMap<FieldCondition, FieldConditionCreateDto>()
             .ReverseMap();
-
-        CreateMap<FieldCondition, FieldConditionCreateDto>()
-            .IncludeBase<FieldCondition, FieldConditionCreateDto>()
-            .ReverseMap()
-            .IncludeBase<FieldConditionCreateDto, FieldCondition>();
     }
 }
