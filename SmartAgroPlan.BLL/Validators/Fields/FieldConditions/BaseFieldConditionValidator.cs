@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using SmartAgroPlan.BLL.DTO.Fields.FieldCondition;
+using SmartAgroPlan.BLL.DTO.Fields.FieldConditions;
 
-namespace SmartAgroPlan.BLL.Validators.Fields.FieldCondition;
+namespace SmartAgroPlan.BLL.Validators.Fields.FieldConditions;
 
 public class BaseFieldConditionValidator : AbstractValidator<FieldConditionCreateDto>
 {

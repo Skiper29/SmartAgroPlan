@@ -1,8 +1,7 @@
-﻿namespace SmartAgroPlan.BLL.DTO.Fields.FieldCondition;
+﻿namespace SmartAgroPlan.BLL.DTO.Fields.FieldConditions;
 
-public class FieldConditionDto
+public class FieldConditionCreateDto
 {
-    public int Id { get; set; }
     public int FieldId { get; set; }
     public DateTime RecordedAt { get; set; }
     public double? SoilMoisture { get; set; }

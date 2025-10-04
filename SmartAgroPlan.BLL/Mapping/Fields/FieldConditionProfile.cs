@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using SmartAgroPlan.BLL.DTO.Fields.FieldCondition;
+using SmartAgroPlan.BLL.DTO.Fields.FieldConditions;
 using SmartAgroPlan.DAL.Entities.Fields;
 
 namespace SmartAgroPlan.BLL.Mapping.Fields;
