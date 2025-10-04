@@ -11,17 +11,12 @@ public class FieldConditionProfile : Profile
         CreateMap<FieldCondition, FieldConditionDto>()
             .ReverseMap();
 
-        CreateMap<FieldCondition, FieldConditionCreateUpdateDto>()
+        CreateMap<FieldCondition, FieldConditionCreateDto>()
             .ReverseMap();
 
         CreateMap<FieldCondition, FieldConditionCreateDto>()
-            .IncludeBase<FieldCondition, FieldConditionCreateUpdateDto>()
+            .IncludeBase<FieldCondition, FieldConditionCreateDto>()
             .ReverseMap()
-            .IncludeBase<FieldConditionCreateUpdateDto, FieldCondition>();
-
-        CreateMap<FieldCondition, FieldConditionUpdateDto>()
-            .IncludeBase<FieldCondition, FieldConditionCreateUpdateDto>()
-            .ReverseMap()
-            .IncludeBase<FieldConditionCreateUpdateDto, FieldCondition>();
+            .IncludeBase<FieldConditionCreateDto, FieldCondition>();
     }
 }

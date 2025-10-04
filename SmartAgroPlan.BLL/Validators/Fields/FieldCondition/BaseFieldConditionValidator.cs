@@ -3,7 +3,7 @@ using SmartAgroPlan.BLL.DTO.Fields.FieldCondition;
 
 namespace SmartAgroPlan.BLL.Validators.Fields.FieldCondition;
 
-public class BaseFieldConditionValidator : AbstractValidator<FieldConditionCreateUpdateDto>
+public class BaseFieldConditionValidator : AbstractValidator<FieldConditionCreateDto>
 {
     public const int MaxNotesLength = 300;
     public const double MinSoilMoisture = 0;
