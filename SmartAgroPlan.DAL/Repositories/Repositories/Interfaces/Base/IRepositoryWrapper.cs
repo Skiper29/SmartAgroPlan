@@ -10,6 +10,7 @@ public interface IRepositoryWrapper
     ICropVarietyRepository CropVarietyRepository { get; }
     ISoilRepository SoilRepository { get; }
     IFieldCropHistoryRepository FieldCropHistoryRepository { get; }
+    IFieldConditionRepository FieldConditionRepository { get; }
     void SaveChanges();
     Task<int> SaveChangesAsync();
     TransactionScope BeginTransaction();

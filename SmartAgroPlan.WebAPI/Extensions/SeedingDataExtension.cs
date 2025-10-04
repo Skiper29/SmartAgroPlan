@@ -22,7 +22,8 @@ public static class SeedingDataExtension
         {
             var soils = new List<Soil>
             {
-                new Soil {
+                new()
+                {
                     Type = SoilType.Clay,
                     WaterRetention = 55.0,
                     Acidity = 7,
@@ -31,7 +32,8 @@ public static class SeedingDataExtension
                     SoilDensity = 1.9,
                     ErosionRisk = 15.0
                 },
-                new Soil {
+                new()
+                {
                     Type = SoilType.Sandy,
                     WaterRetention = 10.0,
                     Acidity = 6.0,
@@ -40,7 +42,8 @@ public static class SeedingDataExtension
                     SoilDensity = 1.6,
                     ErosionRisk = 70.0
                 },
-                new Soil {
+                new()
+                {
                     Type = SoilType.Loamy,
                     WaterRetention = 35.0,
                     Acidity = 6.5,
@@ -49,7 +52,8 @@ public static class SeedingDataExtension
                     SoilDensity = 1.35,
                     ErosionRisk = 30.0
                 },
-                new Soil {
+                new()
+                {
                     Type = SoilType.Peaty,
                     WaterRetention = 75.0,
                     Acidity = 5,
@@ -58,7 +62,8 @@ public static class SeedingDataExtension
                     SoilDensity = 1.0,
                     ErosionRisk = 80
                 },
-                new Soil {
+                new()
+                {
                     Type = SoilType.Saline,
                     WaterRetention = 25.0,
                     Acidity = 8.0,
@@ -67,7 +72,8 @@ public static class SeedingDataExtension
                     SoilDensity = 1.2,
                     ErosionRisk = 45.0
                 },
-                new Soil {
+                new()
+                {
                     Type = SoilType.Chalky,
                     WaterRetention = 20.0,
                     Acidity = 8.5,
@@ -76,7 +82,8 @@ public static class SeedingDataExtension
                     SoilDensity = 1.4,
                     ErosionRisk = 50.0
                 },
-                new Soil {
+                new()
+                {
                     Type = SoilType.Silty,
                     WaterRetention = 40.0,
                     Acidity = 6.8,
@@ -85,7 +92,8 @@ public static class SeedingDataExtension
                     SoilDensity = 1.3,
                     ErosionRisk = 60.0
                 },
-                new Soil {
+                new()
+                {
                     Type = SoilType.Rocky,
                     WaterRetention = 5.0,
                     Acidity = 7,
@@ -121,7 +129,8 @@ public static class SeedingDataExtension
                 var soilSandy = dbContext.Soils.First(s => s.Type == SoilType.Sandy);
                 crops = new List<CropVariety>
                 {
-                    new CropVariety {
+                    new()
+                    {
                         Name = "Wheat",
                         CropType = CropType.Wheat,
                         WaterRequirement = 500,
@@ -135,7 +144,8 @@ public static class SeedingDataExtension
                         OptimalSoilId = soilLoamy.Id,
                         AdditionalNotes = "Common wheat variety."
                     },
-                    new CropVariety {
+                    new()
+                    {
                         Name = "Corn",
                         CropType = CropType.Corn,
                         WaterRequirement = 600,
@@ -149,7 +159,8 @@ public static class SeedingDataExtension
                         OptimalSoilId = soilClay.Id,
                         AdditionalNotes = "High-yield corn."
                     },
-                    new CropVariety {
+                    new()
+                    {
                         Name = "Sunflower",
                         CropType = CropType.Sunflower,
                         WaterRequirement = 400,
@@ -165,6 +176,7 @@ public static class SeedingDataExtension
                     }
                 };
             }
+
             dbContext.Crops.AddRange(crops);
             await dbContext.SaveChangesAsync();
         }
@@ -174,32 +186,47 @@ public static class SeedingDataExtension
         {
             var fields = new List<Field>
             {
-                new Field {
+                new()
+                {
                     Name = "Field A",
                     Location = "North Farm",
-                    Boundary = new Polygon(new LinearRing(new[] { new Coordinate(0,0), new Coordinate(0,1), new Coordinate(1,1), new Coordinate(1,0), new Coordinate(0,0) })),
+                    Boundary = new Polygon(new LinearRing(new[]
+                    {
+                        new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(1, 0),
+                        new Coordinate(0, 0)
+                    })),
                     FieldType = FieldType.Arable,
                     CurrentCropId = 1,
                     SoilId = 3,
-                    SowingDate = new DateTime(2024, 9, 20,0,0,0,DateTimeKind.Utc)
+                    SowingDate = new DateTime(2024, 9, 20, 0, 0, 0, DateTimeKind.Utc)
                 },
-                new Field {
+                new()
+                {
                     Name = "Field B",
                     Location = "East Farm",
-                    Boundary = new Polygon(new LinearRing(new[] { new Coordinate(2,2), new Coordinate(2,3), new Coordinate(3,3), new Coordinate(3,2), new Coordinate(2,2) })),
+                    Boundary = new Polygon(new LinearRing(new[]
+                    {
+                        new Coordinate(2, 2), new Coordinate(2, 3), new Coordinate(3, 3), new Coordinate(3, 2),
+                        new Coordinate(2, 2)
+                    })),
                     FieldType = FieldType.Pasture,
                     CurrentCropId = 2,
                     SoilId = 1,
-                    SowingDate = new DateTime(2024, 5, 5,0,0,0,DateTimeKind.Utc)
+                    SowingDate = new DateTime(2024, 5, 5, 0, 0, 0, DateTimeKind.Utc)
                 },
-                new Field {
+                new()
+                {
                     Name = "Field C",
                     Location = "South Farm",
-                    Boundary = new Polygon(new LinearRing(new[] { new Coordinate(4,4), new Coordinate(4,5), new Coordinate(5,5), new Coordinate(5,4), new Coordinate(4,4) })),
+                    Boundary = new Polygon(new LinearRing(new[]
+                    {
+                        new Coordinate(4, 4), new Coordinate(4, 5), new Coordinate(5, 5), new Coordinate(5, 4),
+                        new Coordinate(4, 4)
+                    })),
                     FieldType = FieldType.Orchard,
                     CurrentCropId = 3,
                     SoilId = 2,
-                    SowingDate = new DateTime(2024, 4, 15,0,0,0,DateTimeKind.Utc)
+                    SowingDate = new DateTime(2024, 4, 15, 0, 0, 0, DateTimeKind.Utc)
                 }
             };
             dbContext.Fields.AddRange(fields);
@@ -211,7 +238,8 @@ public static class SeedingDataExtension
         {
             var histories = new List<FieldCropHistory>
             {
-                new FieldCropHistory {
+                new()
+                {
                     FieldId = 1,
                     CropId = 1,
                     PlantedDate = new DateOnly(2023, 9, 20),
@@ -219,7 +247,8 @@ public static class SeedingDataExtension
                     Yield = 6.2,
                     Notes = "Good season."
                 },
-                new FieldCropHistory {
+                new()
+                {
                     FieldId = 2,
                     CropId = 2,
                     PlantedDate = new DateOnly(2023, 5, 5),
@@ -229,6 +258,55 @@ public static class SeedingDataExtension
                 }
             };
             dbContext.FieldCropHistories.AddRange(histories);
+            await dbContext.SaveChangesAsync();
+        }
+
+        // Seed FieldConditions
+        if (!dbContext.FieldConditions.Any())
+        {
+            var conditions = new List<FieldCondition>
+            {
+                new()
+                {
+                    FieldId = 1,
+                    RecordedAt = DateTime.UtcNow.AddDays(-10),
+                    SoilMoisture = 30.5,
+                    SoilPh = 6.8,
+                    Nitrogen = 100,
+                    Phosphorus = 50,
+                    Potassium = 70,
+                    Temperature = 22.5,
+                    Rainfall = 15.0,
+                    Notes = "Normal conditions."
+                },
+                new()
+                {
+                    FieldId = 1,
+                    RecordedAt = DateTime.UtcNow.AddDays(-5),
+                    SoilMoisture = 28.0,
+                    SoilPh = 6.7,
+                    Nitrogen = 95,
+                    Phosphorus = 48,
+                    Potassium = 68,
+                    Temperature = 24.0,
+                    Rainfall = 5.0,
+                    Notes = "Slightly dry."
+                },
+                new()
+                {
+                    FieldId = 2,
+                    RecordedAt = DateTime.UtcNow.AddDays(-7),
+                    SoilMoisture = 35.0,
+                    SoilPh = 7.0,
+                    Nitrogen = 110,
+                    Phosphorus = 55,
+                    Potassium = 75,
+                    Temperature = 20.0,
+                    Rainfall = 20.0,
+                    Notes = "Good moisture levels."
+                }
+            };
+            dbContext.FieldConditions.AddRange(conditions);
             await dbContext.SaveChangesAsync();
         }
     }
