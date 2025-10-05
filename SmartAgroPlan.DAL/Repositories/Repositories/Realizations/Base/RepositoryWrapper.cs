@@ -11,6 +11,7 @@ namespace SmartAgroPlan.DAL.Repositories.Repositories.Realizations.Base;
 public class RepositoryWrapper : IRepositoryWrapper
 {
     private readonly SmartAgroPlanDbContext _dbContext;
+    private ICropCoefficientDefinitionRepository? _cropCoefficientDefinitionRepository;
     private ICropVarietyRepository? _cropVarietyRepository;
     private IFieldConditionRepository? _fieldConditionRepository;
     private IFieldCropHistoryRepository? _fieldCropHistoryRepository;
@@ -36,6 +37,9 @@ public class RepositoryWrapper : IRepositoryWrapper
 
     public IFieldCropHistoryRepository FieldCropHistoryRepository =>
         _fieldCropHistoryRepository ??= new FieldCropHistoryRepository(_dbContext);
+
+    public ICropCoefficientDefinitionRepository CropCoefficientDefinitionRepository =>
+        _cropCoefficientDefinitionRepository ??= new CropCoefficientDefinitionRepository(_dbContext);
 
     public void SaveChanges()
     {
