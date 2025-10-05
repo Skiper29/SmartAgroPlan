@@ -1,35 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
-using SmartAgroPlan.BLL.Interfaces.Crops;
-using SmartAgroPlan.DAL.Enums;
-using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
+﻿using SmartAgroPlan.BLL.Interfaces.Crops;
+using SmartAgroPlan.DAL.Entities.Crops;
 
 namespace SmartAgroPlan.BLL.Services.Crops;
 
 public class CropCoefficientService : ICropCoefficientService
 {
-    private readonly ILogger<CropCoefficientService> _logger;
-    private readonly IRepositoryWrapper _repositoryWrapper;
-
-    public CropCoefficientService(
-        IRepositoryWrapper repositoryWrapper,
-        ILogger<CropCoefficientService> logger)
+    public double GetKc(CropCoefficientDefinition definition, DateTime plantingDate, DateTime targetDate)
     {
-        _repositoryWrapper = repositoryWrapper;
-        _logger = logger;
-    }
-
-    public double GetKc(CropType cropType, DateTime plantingDate, DateTime targetDate)
-    {
-        var definition = _repositoryWrapper.CropCoefficientDefinitionRepository
-            .GetFirstOrDefaultAsync(ccd => ccd.CropType == cropType).Result;
-
-        if (definition == null)
-        {
-            var errorMsg = $"Не вдалося знайти визначення коефіцієнта культури для типу культури {cropType}";
-            _logger.LogError(errorMsg);
-            throw new ArgumentException(errorMsg);
-        }
-
         var daysSincePlanting = (int)(targetDate - plantingDate).TotalDays;
 
         var lIni = definition.LIni;
