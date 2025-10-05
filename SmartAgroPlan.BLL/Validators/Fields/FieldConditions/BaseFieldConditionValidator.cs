@@ -21,11 +21,13 @@ public class BaseFieldConditionValidator : AbstractValidator<FieldConditionCreat
             .GreaterThan(0)
             .WithMessage("Field ID must be greater than 0.");
 
-        RuleFor(fc => fc.RecordedAt)
-            .NotEmpty()
-            .WithMessage("Recorded date and time is required.")
-            .LessThanOrEqualTo(DateTime.Now)
-            .WithMessage("Recorded date and time cannot be in the future.");
+        // RecordedAt is optional
+        When(fc => fc.RecordedAt != default, () =>
+        {
+            RuleFor(fc => fc.RecordedAt)
+                .LessThanOrEqualTo(DateTime.Now)
+                .WithMessage("Recorded date and time cannot be in the future.");
+        });
 
         RuleFor(fc => fc.SoilMoisture)
             .InclusiveBetween(MinSoilMoisture, MaxSoilMoisture)

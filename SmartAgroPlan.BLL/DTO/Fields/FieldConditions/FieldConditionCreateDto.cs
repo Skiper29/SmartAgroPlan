@@ -3,7 +3,7 @@
 public class FieldConditionCreateDto
 {
     public int FieldId { get; set; }
-    public DateTime RecordedAt { get; set; }
+    public DateTime? RecordedAt { get; set; }
     public double? SoilMoisture { get; set; }
     public double? SoilPh { get; set; }
     public double? Nitrogen { get; set; }
