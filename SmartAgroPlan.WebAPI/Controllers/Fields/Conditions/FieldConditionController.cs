@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartAgroPlan.BLL.DTO.Fields.FieldConditions;
 using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.Create;
+using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.Delete;
 using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.GetAll;
 using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.GetById;
 
@@ -30,5 +31,13 @@ public class FieldConditionController : BaseApiController
     public async Task<IActionResult> Create([FromBody] FieldConditionCreateDto newFieldCondition)
     {
         return HandleResult(await Mediator.Send(new CreateFieldConditionCommand(newFieldCondition)));
+    }
+
+    [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> Delete(int id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteFieldConditionCommand(id)));
     }
 }
