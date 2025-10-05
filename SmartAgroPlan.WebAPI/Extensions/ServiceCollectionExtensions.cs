@@ -2,8 +2,10 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using SmartAgroPlan.BLL.Interfaces.Crops;
 using SmartAgroPlan.BLL.Interfaces.Recommendations;
 using SmartAgroPlan.BLL.PipelineBehaviour;
+using SmartAgroPlan.BLL.Services.Crops;
 using SmartAgroPlan.BLL.Services.Recommendations;
 using SmartAgroPlan.BLL.Validators.Crops;
 using SmartAgroPlan.DAL.Persistence;
@@ -27,6 +29,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IGrowthStageService, GrowthStageService>();
         services.AddScoped<IRecommendationService, RecommendationService>();
+        services.AddScoped<ICropCoefficientService, CropCoefficientService>();
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
