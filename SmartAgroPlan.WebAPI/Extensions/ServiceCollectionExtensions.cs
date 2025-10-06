@@ -4,9 +4,11 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SmartAgroPlan.BLL.Interfaces.Crops;
 using SmartAgroPlan.BLL.Interfaces.Recommendations;
+using SmartAgroPlan.BLL.Interfaces.Weather;
 using SmartAgroPlan.BLL.PipelineBehaviour;
 using SmartAgroPlan.BLL.Services.Crops;
 using SmartAgroPlan.BLL.Services.Recommendations;
+using SmartAgroPlan.BLL.Services.Weather;
 using SmartAgroPlan.BLL.Validators.Crops;
 using SmartAgroPlan.DAL.Persistence;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
@@ -30,6 +32,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IGrowthStageService, GrowthStageService>();
         services.AddScoped<IRecommendationService, RecommendationService>();
         services.AddScoped<ICropCoefficientService, CropCoefficientService>();
+        services.AddHttpClient<IWeatherService, OpenMeteoService>(client =>
+        {
+            client.Timeout = TimeSpan.FromSeconds(30);
+        });
     }
 
     public static void AddApplicationServices(this IServiceCollection services, ConfigurationManager configuration)
