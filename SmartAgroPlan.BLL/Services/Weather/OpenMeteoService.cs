@@ -14,7 +14,7 @@ public class OpenMeteoService : IWeatherService
         "temperature_2m_max,temperature_2m_min,precipitation_sum,shortwave_radiation_sum";
 
     private const string HourlyParams =
-        "temperature_2m,relativehumidity_2m,windspeed_10m,surface_pressure";
+        "temperature_2m,relativehumidity_2m,windspeed_10m,surface_pressure,soil_moisture_3_to_9cm";
 
     private readonly HttpClient _httpClient;
     private readonly ILogger<OpenMeteoService> _logger;
@@ -138,18 +138,22 @@ public class OpenMeteoService : IWeatherService
         var hourlyHumidity = simpleResponse.Hourly.RelativeHumidity_2m.Skip(startHour).Take(24).ToList();
         var hourlyWind = simpleResponse.Hourly.WindSpeed_10m.Skip(startHour).Take(24).ToList();
         var hourlyPressure = simpleResponse.Hourly.Surface_Pressure.Skip(startHour).Take(24).ToList();
+        var hourlySoilMoisture = simpleResponse.Hourly.Soil_Moisture_3_To_9cm.Skip(startHour).Take(24).ToList();
 
         return new WeatherData
         {
             Date = DateTime.Parse(simpleResponse.Daily.Time[dayIndex]),
-            Temperature = hourlyTemp.Any() ? hourlyTemp.Average() : 0,
+            Temperature = hourlyTemp.Count != 0 ? hourlyTemp.Average() : 0,
+            Elevation = simpleResponse.Elevation,
             MinTemperature = simpleResponse.Daily.Temperature_2m_min[dayIndex],
             MaxTemperature = simpleResponse.Daily.Temperature_2m_max[dayIndex],
-            RelativeHumidity = hourlyHumidity.Any() ? hourlyHumidity.Average() : 0,
-            WindSpeed = hourlyWind.Any() ? hourlyWind.Average() : 0,
+            RelativeHumidity = hourlyHumidity.Count != 0 ? hourlyHumidity.Average() : 0,
+            WindSpeed = hourlyWind.Count != 0 ? hourlyWind.Average() : 0,
             Precipitation = simpleResponse.Daily.Precipitation_sum[dayIndex],
             SolarRadiation = simpleResponse.Daily.Shortwave_radiation_sum[dayIndex], //MJ/m²/day
-            AtmosphericPressure = hourlyPressure.Any() ? hourlyPressure.Average() / 1000 : null // Convert Pa to kPa
+            AtmosphericPressure =
+                hourlyPressure.Count != 0 ? hourlyPressure.Average() / 1000 : null, // Convert Pa to kPa
+            SoilMoisture = hourlySoilMoisture.Count != 0 ? hourlySoilMoisture.Average() : 0 // m³/m³
         };
     }
 
@@ -159,9 +163,11 @@ public class OpenMeteoService : IWeatherService
         {
             Date = DateTime.Parse(currentResponse.Current.Time),
             Temperature = currentResponse.Current.Temperature_2m,
+            Elevation = currentResponse.Elevation,
             RelativeHumidity = currentResponse.Current.RelativeHumidity_2m,
             WindSpeed = currentResponse.Current.WindSpeed_10m,
             AtmosphericPressure = currentResponse.Current.Surface_Pressure / 1000, // Convert Pa to kPa
+            SoilMoisture = currentResponse.Current.Soil_Moisture_3_To_9cm,
             MinTemperature = currentResponse.Daily.Temperature_2m_min.FirstOrDefault(),
             MaxTemperature = currentResponse.Daily.Temperature_2m_max.FirstOrDefault(),
             Precipitation = currentResponse.Daily.Precipitation_sum.FirstOrDefault(),

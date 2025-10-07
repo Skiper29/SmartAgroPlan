@@ -3,6 +3,7 @@
 public class WeatherData
 {
     public double Temperature { get; set; } // °C
+    public double Elevation { get; set; } // meters
     public double MinTemperature { get; set; } // °C
     public double MaxTemperature { get; set; } // °C
     public double RelativeHumidity { get; set; } // %
@@ -11,4 +12,5 @@ public class WeatherData
     public double Precipitation { get; set; } // mm
     public DateTime Date { get; set; }
     public double? AtmosphericPressure { get; set; } // kPa
+    public double SoilMoisture { get; set; } // m³/m³
 }
