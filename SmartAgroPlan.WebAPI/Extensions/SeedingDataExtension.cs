@@ -309,5 +309,147 @@ public static class SeedingDataExtension
             dbContext.FieldConditions.AddRange(conditions);
             await dbContext.SaveChangesAsync();
         }
+
+        // Seed CropCoefficientDefinitions
+        if (!dbContext.CropCoefficientDefinitions.Any())
+        {
+            var definitions = new List<CropCoefficientDefinition>
+            {
+                new()
+                {
+                    CropType = CropType.Wheat,
+                    KcIni = 0.4,
+                    KcMid = 1.15,
+                    KcEnd = 0.25,
+                    LIni = 30,
+                    LDev = 140,
+                    LMid = 40,
+                    LLate = 30
+                },
+                new()
+                {
+                    CropType = CropType.Corn,
+                    KcIni = 0.3,
+                    KcMid = 1.2,
+                    KcEnd = 0.35,
+                    LIni = 30,
+                    LDev = 40,
+                    LMid = 50,
+                    LLate = 40
+                },
+                new()
+                {
+                    CropType = CropType.Sunflower,
+                    KcIni = 0.35,
+                    KcMid = 1.0,
+                    KcEnd = 0.35,
+                    LIni = 25,
+                    LDev = 35,
+                    LMid = 45,
+                    LLate = 25
+                },
+                new()
+                {
+                    CropType = CropType.Soy,
+                    KcIni = 0.4,
+                    KcMid = 1.15,
+                    KcEnd = 0.5,
+                    LIni = 20,
+                    LDev = 35,
+                    LMid = 60,
+                    LLate = 25
+                },
+                new()
+                {
+                    CropType = CropType.Potato,
+                    KcIni = 0.5,
+                    KcMid = 1.15,
+                    KcEnd = 0.75,
+                    LIni = 30,
+                    LDev = 35,
+                    LMid = 50,
+                    LLate = 30
+                },
+                new()
+                {
+                    CropType = CropType.Rapeseed,
+                    KcIni = 0.35,
+                    KcMid = 1.05,
+                    KcEnd = 0.35,
+                    LIni = 20,
+                    LDev = 40,
+                    LMid = 60,
+                    LLate = 30
+                },
+                new()
+                {
+                    CropType = CropType.SugarBeet,
+                    KcIni = 0.35,
+                    KcMid = 1.2,
+                    KcEnd = 0.7,
+                    LIni = 30,
+                    LDev = 40,
+                    LMid = 50,
+                    LLate = 50
+                },
+                new()
+                {
+                    CropType = CropType.Barley,
+                    KcIni = 0.3,
+                    KcMid = 1.15,
+                    KcEnd = 0.25,
+                    LIni = 20,
+                    LDev = 110,
+                    LMid = 40,
+                    LLate = 30
+                },
+                new()
+                {
+                    CropType = CropType.Oats,
+                    KcIni = 0.3,
+                    KcMid = 1.15,
+                    KcEnd = 0.25,
+                    LIni = 40,
+                    LDev = 30,
+                    LMid = 40,
+                    LLate = 20
+                },
+                new()
+                {
+                    CropType = CropType.Rye,
+                    KcIni = 1.05,
+                    KcMid = 1.2,
+                    KcEnd = 0.9,
+                    LIni = 30,
+                    LDev = 30,
+                    LMid = 60,
+                    LLate = 30
+                },
+                new()
+                {
+                    CropType = CropType.Tomato,
+                    KcIni = 0.6,
+                    KcMid = 1.15,
+                    KcEnd = 0.9,
+                    LIni = 30,
+                    LDev = 40,
+                    LMid = 45,
+                    LLate = 30
+                },
+                new()
+                {
+                    CropType = CropType.Another,
+                    KcIni = 0.5,
+                    KcMid = 1.0,
+                    KcEnd = 0.5,
+                    LIni = 30,
+                    LDev = 50,
+                    LMid = 50,
+                    LLate = 30
+                }
+            };
+            dbContext.CropCoefficientDefinitions.AddRange(definitions);
+            await dbContext.SaveChangesAsync();
+        }
     }
 }
