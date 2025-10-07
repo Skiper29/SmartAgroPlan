@@ -1,24 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartAgroPlan.BLL.Interfaces.Weather;
-using SmartAgroPlan.BLL.Models.Weather;
+using SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
 
 namespace SmartAgroPlan.WebAPI.Controllers.Irrigation;
 
+[Route("api/[controller]")]
 public class IrrigationController : BaseApiController
 {
-    private readonly IWeatherService _weatherService;
-
-    public IrrigationController(IWeatherService weatherService)
-    {
-        _weatherService = weatherService;
-    }
-
-    [HttpGet("weather/forecast")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(WeatherData))]
+    /// <summary>
+    ///     Get irrigation recommendation for a specific field
+    /// </summary>
+    [HttpGet("recommendation/{fieldId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> GetWeatherForecast(double lat, double lon)
+    public async Task<IActionResult> GetIrrigationRecommendation(
+        int fieldId,
+        [FromQuery] bool includeForecast = false,
+        [FromQuery] int forecastDays = 7)
     {
-        var weather = await _weatherService.GetCurrentWeatherAsync(lat, lon);
-        return Ok(weather);
+        return HandleResult(await Mediator.Send(new GetIrrigationRecommendationCommand
+        {
+            FieldId = fieldId,
+            IncludeForecast = includeForecast,
+            ForecastDays = forecastDays
+        }));
     }
 }

@@ -4,7 +4,7 @@ using SmartAgroPlan.BLL.DTO.Irrigation;
 
 namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
 
-public class GetIrrigationRecommendationCommand : IRequest<Result<IrrigationRecommendationDto>>
+public record GetIrrigationRecommendationCommand : IRequest<Result<IrrigationRecommendationDto>>
 {
     public int FieldId { get; set; }
     public DateTime? Date { get; set; } // Optional, defaults to today
