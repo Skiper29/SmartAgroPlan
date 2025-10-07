@@ -1,9 +1,12 @@
-﻿using FluentResults;
+﻿using AutoMapper;
+using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using NetTopologySuite.Geometries;
 using SmartAgroPlan.BLL.DTO.Irrigation;
-using SmartAgroPlan.BLL.Interfaces.Crops;
+using SmartAgroPlan.BLL.Interfaces.Irrigation;
+using SmartAgroPlan.BLL.Interfaces.Weather;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
 
 namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
@@ -11,18 +14,24 @@ namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
 public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationRecommendationCommand,
     Result<IrrigationRecommendationDto>>
 {
-    private readonly ICropCoefficientService _cropCoefficientService;
+    private readonly IFAO56Calculator _fao56Calculator;
     private readonly ILogger<GetIrrigationRecommendationHandler> _logger;
+    private readonly IMapper _mapper;
     private readonly IRepositoryWrapper _repositoryWrapper;
+    private readonly IWeatherService _weatherService;
 
     public GetIrrigationRecommendationHandler(
         IRepositoryWrapper repositoryWrapper,
-        ICropCoefficientService cropCoefficientService,
-        ILogger<GetIrrigationRecommendationHandler> logger)
+        ILogger<GetIrrigationRecommendationHandler> logger,
+        IFAO56Calculator fao56Calculator,
+        IWeatherService weatherService,
+        IMapper mapper)
     {
         _repositoryWrapper = repositoryWrapper;
-        _cropCoefficientService = cropCoefficientService;
         _logger = logger;
+        _fao56Calculator = fao56Calculator;
+        _weatherService = weatherService;
+        _mapper = mapper;
     }
 
     public async Task<Result<IrrigationRecommendationDto>> Handle(GetIrrigationRecommendationCommand request,
@@ -53,9 +62,42 @@ public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationR
             throw new ArgumentException(errorMsg);
         }
 
-        var targetDate = request.Date ?? DateTime.UtcNow.Date;
-        var kc = _cropCoefficientService.GetKc(definition, (DateTime)field.SowingDate!, targetDate);
+        // Get field coordinates (assuming you have a method to extract from Polygon)
+        var coords = GetFieldCoordinates(field.Boundary!
+        );
 
-        throw new NotImplementedException();
+        // Get current weather data
+        var currentWeather = await _weatherService.GetCurrentWeatherAsync(
+            coords.Latitude,
+            coords.Longitude);
+
+        // Get latest soil moisture if available
+        var latestCondition = field.Conditions?
+            .Where(c => c.SoilMoisture.HasValue)
+            .OrderByDescending(c => c.RecordedAt)
+            .FirstOrDefault();
+
+        var soilMoisture = currentWeather.SoilMoisture;
+        if (latestCondition != null && latestCondition.RecordedAt.Date > DateTime.UtcNow.Date.AddDays(-7))
+            soilMoisture = latestCondition.SoilMoisture!.Value;
+
+        // Calculate irrigation recommendation
+        var recommendation = _fao56Calculator.CalculateIrrigationRequirement(
+            field,
+            definition,
+            currentWeather,
+            soilMoisture);
+
+        var weatherDto = _mapper.Map<WeatherConditionsDto>(currentWeather);
+
+        var recommendationDto = _mapper.Map<IrrigationRecommendationDto>(recommendation);
+        recommendationDto.WeatherConditions = weatherDto;
+        return Result.Ok(recommendationDto);
+    }
+
+    private (double Latitude, double Longitude) GetFieldCoordinates(Polygon boundary)
+    {
+        var centroid = boundary.Centroid;
+        return (centroid.Y, centroid.X); // Latitude, Longitude
     }
 }
