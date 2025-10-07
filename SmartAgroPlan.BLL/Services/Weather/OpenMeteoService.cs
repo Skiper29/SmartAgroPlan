@@ -9,6 +9,13 @@ namespace SmartAgroPlan.BLL.Services.Weather;
 public class OpenMeteoService : IWeatherService
 {
     private const string BaseUrl = "https://api.open-meteo.com/v1";
+
+    private const string DailyParams =
+        "temperature_2m_max,temperature_2m_min,precipitation_sum,shortwave_radiation_sum";
+
+    private const string HourlyParams =
+        "temperature_2m,relativehumidity_2m,windspeed_10m,surface_pressure";
+
     private readonly HttpClient _httpClient;
     private readonly ILogger<OpenMeteoService> _logger;
 
@@ -23,9 +30,9 @@ public class OpenMeteoService : IWeatherService
         try
         {
             var url = $"{BaseUrl}/forecast?" +
-                      $"latitude={latitude.ToString(CultureInfo.InvariantCulture)}&longitude={longitude.ToString(CultureInfo.InvariantCulture)}" +
-                      "&current=temperature_2m,relativehumidity_2m,windspeed_10m,surface_pressure" +
-                      "&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,shortwave_radiation_sum" +
+                      GetCordsString(latitude, longitude) +
+                      $"&current={HourlyParams}" +
+                      $"&daily={DailyParams}" +
                       "&timezone=auto&forecast_days=1";
 
             var response = await _httpClient.GetAsync(url);
@@ -47,15 +54,79 @@ public class OpenMeteoService : IWeatherService
         }
     }
 
-    public Task<List<WeatherData>> GetWeatherForecastAsync(double latitude, double longitude, int days = 7)
+    public async Task<List<WeatherData>> GetWeatherForecastAsync(double latitude, double longitude, int days = 7)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var url = $"{BaseUrl}/forecast?" +
+                      GetCordsString(latitude, longitude) +
+                      $"&hourly={HourlyParams}" +
+                      $"&daily={DailyParams}" +
+                      $"&forecast_days={days}" +
+                      "&timezone=auto";
+
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var data = JsonSerializer.Deserialize<OpenMeteoSimpleResponse>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            var weatherList = new List<WeatherData>();
+            for (var i = 0; i < days; i++) weatherList.Add(ConvertToWeatherData(data!, i));
+
+            return weatherList;
+        }
+        catch (Exception ex)
+        {
+            var errorMsg = "Помилка під час отримання прогнозу погоди з Open-Meteo";
+            _logger.LogError(ex, errorMsg);
+            throw new ApplicationException(errorMsg, ex);
+        }
     }
 
-    public Task<List<WeatherData>> GetHistoricalWeatherAsync(double latitude, double longitude, DateTime startDate,
+    public async Task<List<WeatherData>> GetHistoricalWeatherAsync(double latitude, double longitude,
+        DateTime startDate,
         DateTime endDate)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var url = $"{BaseUrl}/forecast?" +
+                      GetCordsString(latitude, longitude) +
+                      $"&start_date={startDate:yyyy-MM-dd}" +
+                      $"&end_date={endDate:yyyy-MM-dd}" +
+                      $"&hourly={HourlyParams}" +
+                      $"&daily={DailyParams}" +
+                      "&timezone=auto";
+
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var data = JsonSerializer.Deserialize<OpenMeteoSimpleResponse>(json, new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            var historicalData = new List<WeatherData>();
+            for (var i = 0; i < data!.Daily.Time.Count; i++) historicalData.Add(ConvertToWeatherData(data, i));
+
+            return historicalData;
+        }
+        catch (Exception e)
+        {
+            var errorMsg = "Помилка під час отримання історичних даних погоди з Open-Meteo";
+            _logger.LogError(e, errorMsg);
+            throw new ApplicationException(errorMsg, e);
+        }
+    }
+
+    private string GetCordsString(double latitude, double longitude)
+    {
+        return
+            $"latitude={latitude.ToString(CultureInfo.InvariantCulture)}&longitude={longitude.ToString(CultureInfo.InvariantCulture)}";
     }
 
     private WeatherData ConvertToWeatherData(OpenMeteoSimpleResponse simpleResponse, int dayIndex)
