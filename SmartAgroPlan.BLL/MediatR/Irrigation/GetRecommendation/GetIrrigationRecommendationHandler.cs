@@ -93,10 +93,37 @@ public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationR
         var recommendationDto = _mapper.Map<IrrigationRecommendationDto>(recommendation);
         recommendationDto.WeatherConditions = weatherDto;
         recommendationDto.FieldName = field.Name!;
+
+        if (request.IncludeForecast)
+        {
+            var forecast = await _weatherService.GetWeatherForecastAsync(
+                coords.Latitude,
+                coords.Longitude,
+                request.ForecastDays);
+
+            recommendationDto.Forecast = forecast.Select(w =>
+            {
+                var rec = _fao56Calculator.CalculateIrrigationRequirement(
+                    field,
+                    definition,
+                    w,
+                    latestCondition?.SoilMoisture);
+                return new IrrigationForecastDto
+                {
+                    Date = w.Date,
+                    ET0 = rec.ET0,
+                    ETc = rec.ETc,
+                    ExpectedPrecipitation = w.Precipitation,
+                    NetIrrigationRequirement = rec.NetIrrigationRequirement,
+                    GrossIrrigationRequirement = rec.GrossIrrigationRequirement
+                };
+            }).ToList();
+        }
+
         return Result.Ok(recommendationDto);
     }
 
-    private (double Latitude, double Longitude) GetFieldCoordinates(Polygon boundary)
+    private static (double Latitude, double Longitude) GetFieldCoordinates(Polygon boundary)
     {
         var centroid = boundary.Centroid;
         return (centroid.Y, centroid.X); // Latitude, Longitude
