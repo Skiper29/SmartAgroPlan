@@ -1,6 +1,9 @@
 ﻿using System.Globalization;
+using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SmartAgroPlan.BLL.Exceptions.WeatherExceptions;
 using SmartAgroPlan.BLL.Interfaces.Weather;
 using SmartAgroPlan.BLL.Models.Weather;
 
@@ -8,82 +11,57 @@ namespace SmartAgroPlan.BLL.Services.Weather;
 
 public class OpenMeteoService : IWeatherService
 {
-    private const string BaseUrl = "https://api.open-meteo.com/v1";
+    private const double SpeedConversionFactor = 3.6;
+    private const double OpenMeteoDefaultHeight = 10.0;
 
-    private const string DailyParams =
-        "temperature_2m_max,temperature_2m_min,precipitation_sum,shortwave_radiation_sum";
-
-    private const string HourlyParams =
-        "temperature_2m,relativehumidity_2m,windspeed_10m,surface_pressure,soil_moisture_3_to_9cm";
+    private static readonly JsonSerializerOptions JsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true
+    };
 
     private readonly HttpClient _httpClient;
     private readonly ILogger<OpenMeteoService> _logger;
+    private readonly OpenMeteoOptions _options;
 
-    public OpenMeteoService(HttpClient httpClient, ILogger<OpenMeteoService> logger)
+    public OpenMeteoService(HttpClient httpClient, ILogger<OpenMeteoService> logger, IOptions<OpenMeteoOptions> options)
     {
         _httpClient = httpClient;
         _logger = logger;
-    }
-
-    public async Task<WeatherData> GetCurrentWeatherAsync(double latitude, double longitude)
-    {
-        try
-        {
-            var url = $"{BaseUrl}/forecast?" +
-                      GetCordsString(latitude, longitude) +
-                      $"&current={HourlyParams}" +
-                      $"&daily={DailyParams}" +
-                      "&timezone=auto&forecast_days=1";
-
-            var response = await _httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            var data = JsonSerializer.Deserialize<OpenMeteoCurrentResponse>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-
-            return ConvertToCurrentWeatherData(data!);
-        }
-        catch (Exception ex)
-        {
-            var errorMsg = "Помилка під час отримання поточної погоди з Open-Meteo";
-            _logger.LogError(ex, errorMsg);
-            throw new ApplicationException(errorMsg, ex);
-        }
+        _options = options.Value;
     }
 
     public async Task<List<WeatherData>> GetWeatherForecastAsync(double latitude, double longitude, int days = 7)
     {
         try
         {
-            var url = $"{BaseUrl}/forecast?" +
-                      GetCordsString(latitude, longitude) +
-                      $"&hourly={HourlyParams}" +
-                      $"&daily={DailyParams}" +
-                      $"&forecast_days={days}" +
-                      "&timezone=auto";
+            var url = BuildForecastUrl(latitude, longitude, days);
+            var data = await GetFromApiAsync<OpenMeteoSimpleResponse>(url);
 
-            var response = await _httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            var data = JsonSerializer.Deserialize<OpenMeteoSimpleResponse>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-
-            var weatherList = new List<WeatherData>();
-            for (var i = 0; i < days; i++) weatherList.Add(ConvertToWeatherData(data!, i));
-
-            return weatherList;
+            return Enumerable.Range(0, days)
+                .Select(i => MapToWeatherData(data, i))
+                .ToList();
         }
         catch (Exception ex)
         {
-            var errorMsg = "Помилка під час отримання прогнозу погоди з Open-Meteo";
+            const string errorMsg = "Помилка під час отримання прогнозу погоди з Open-Meteо.";
             _logger.LogError(ex, errorMsg);
-            throw new ApplicationException(errorMsg, ex);
+            throw new WeatherServiceException(errorMsg, ex);
+        }
+    }
+
+    public async Task<WeatherData> GetCurrentWeatherAsync(double latitude, double longitude)
+    {
+        try
+        {
+            var url = BuildForecastUrl(latitude, longitude, 1, includeCurrent: true);
+            var data = await GetFromApiAsync<OpenMeteoCurrentResponse>(url);
+            return MapToWeatherData(data);
+        }
+        catch (Exception ex)
+        {
+            const string errorMsg = "Помилка під час отримання поточної погоди з Open-Meteo.";
+            _logger.LogError(ex, errorMsg);
+            throw new WeatherServiceException(errorMsg, ex);
         }
     }
 
@@ -93,71 +71,103 @@ public class OpenMeteoService : IWeatherService
     {
         try
         {
-            var url = $"{BaseUrl}/forecast?" +
-                      GetCordsString(latitude, longitude) +
-                      $"&start_date={startDate:yyyy-MM-dd}" +
-                      $"&end_date={endDate:yyyy-MM-dd}" +
-                      $"&hourly={HourlyParams}" +
-                      $"&daily={DailyParams}" +
-                      "&timezone=auto";
+            var url = BuildForecastUrl(latitude, longitude, startDate: startDate, endDate: endDate);
+            var data = await GetFromApiAsync<OpenMeteoSimpleResponse>(url);
 
-            var response = await _httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-
-            var json = await response.Content.ReadAsStringAsync();
-            var data = JsonSerializer.Deserialize<OpenMeteoSimpleResponse>(json, new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true
-            });
-
-            var historicalData = new List<WeatherData>();
-            for (var i = 0; i < data!.Daily.Time.Count; i++) historicalData.Add(ConvertToWeatherData(data, i));
-
-            return historicalData;
+            return data.Daily.Time
+                .Select((_, i) => MapToWeatherData(data, i))
+                .ToList();
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            var errorMsg = "Помилка під час отримання історичних даних погоди з Open-Meteo";
-            _logger.LogError(e, errorMsg);
-            throw new ApplicationException(errorMsg, e);
+            const string errorMsg = "Помилка під час отримання історичних даних погоди з Open-Meteo.";
+            _logger.LogError(ex, errorMsg);
+            throw new WeatherServiceException(errorMsg, ex);
         }
     }
 
-    private string GetCordsString(double latitude, double longitude)
+    private async Task<T> GetFromApiAsync<T>(string url)
+    {
+        var response = await _httpClient.GetAsync(url);
+        response.EnsureSuccessStatusCode();
+        var json = await response.Content.ReadAsStringAsync();
+        return JsonSerializer.Deserialize<T>(json, JsonOptions)!;
+    }
+
+    private string GetCoordsString(double latitude, double longitude)
     {
         return
             $"latitude={latitude.ToString(CultureInfo.InvariantCulture)}&longitude={longitude.ToString(CultureInfo.InvariantCulture)}";
     }
 
-    private WeatherData ConvertToWeatherData(OpenMeteoSimpleResponse simpleResponse, int dayIndex)
+    private string BuildForecastUrl(
+        double latitude,
+        double longitude,
+        int? forecastDays = null,
+        DateTime? startDate = null,
+        DateTime? endDate = null,
+        bool includeCurrent = false)
     {
-        // Calculate daily averages from hourly data
+        var sb = new StringBuilder($"{_options.BaseUrl}/forecast?");
+        sb.Append(GetCoordsString(latitude, longitude));
+        sb.Append($"&hourly={_options.HourlyParams}&daily={_options.DailyParams}&timezone=auto");
+
+        if (forecastDays.HasValue)
+            sb.Append($"&forecast_days={forecastDays.Value}");
+        if (startDate.HasValue && endDate.HasValue)
+            sb.Append($"&start_date={startDate:yyyy-MM-dd}&end_date={endDate:yyyy-MM-dd}");
+        if (includeCurrent)
+            sb.Append($"&current={_options.HourlyParams}");
+
+        return sb.ToString();
+    }
+
+    private static double ConvertWindSpeedTo2M(double uInKmh, double z0Meters = 0.03)
+    {
+        // Convert km/h to m/s
+        var uInMs = uInKmh / SpeedConversionFactor;
+
+        // Apply logarithmic wind profile correction to 2m height
+        var ratio = Math.Log(2.0 / z0Meters) / Math.Log(OpenMeteoDefaultHeight / z0Meters);
+
+        // Corrected wind speed at 2m height
+        var u2InMs = uInMs * ratio;
+
+        return u2InMs;
+    }
+
+    private static WeatherData MapToWeatherData(OpenMeteoSimpleResponse response, int dayIndex)
+    {
         var startHour = dayIndex * 24;
 
-        var hourlyTemp = simpleResponse.Hourly.Temperature_2m.Skip(startHour).Take(24).ToList();
-        var hourlyHumidity = simpleResponse.Hourly.RelativeHumidity_2m.Skip(startHour).Take(24).ToList();
-        var hourlyWind = simpleResponse.Hourly.WindSpeed_10m.Skip(startHour).Take(24).ToList();
-        var hourlyPressure = simpleResponse.Hourly.Surface_Pressure.Skip(startHour).Take(24).ToList();
-        var hourlySoilMoisture = simpleResponse.Hourly.Soil_Moisture_3_To_9cm.Skip(startHour).Take(24).ToList();
+        double Average(IReadOnlyList<double> list)
+        {
+            return list.Count == 0 ? 0 : list.Average();
+        }
+
+        var hourlyTemp = response.Hourly.Temperature_2m.Skip(startHour).Take(24).ToList();
+        var hourlyHumidity = response.Hourly.RelativeHumidity_2m.Skip(startHour).Take(24).ToList();
+        var hourlyWind = response.Hourly.WindSpeed_10m.Skip(startHour).Take(24).ToList();
+        var hourlyPressure = response.Hourly.Surface_Pressure.Skip(startHour).Take(24).ToList();
+        var hourlySoilMoisture = response.Hourly.Soil_Moisture_3_To_9cm.Skip(startHour).Take(24).ToList();
 
         return new WeatherData
         {
-            Date = DateTime.Parse(simpleResponse.Daily.Time[dayIndex]),
-            Temperature = hourlyTemp.Count != 0 ? hourlyTemp.Average() : 0,
-            Elevation = simpleResponse.Elevation,
-            MinTemperature = simpleResponse.Daily.Temperature_2m_min[dayIndex],
-            MaxTemperature = simpleResponse.Daily.Temperature_2m_max[dayIndex],
-            RelativeHumidity = hourlyHumidity.Count != 0 ? hourlyHumidity.Average() : 0,
-            WindSpeed = hourlyWind.Count != 0 ? hourlyWind.Average() : 0,
-            Precipitation = simpleResponse.Daily.Precipitation_sum[dayIndex],
-            SolarRadiation = simpleResponse.Daily.Shortwave_radiation_sum[dayIndex], //MJ/m²/day
-            AtmosphericPressure =
-                hourlyPressure.Count != 0 ? hourlyPressure.Average() / 1000 : null, // Convert Pa to kPa
-            SoilMoisture = hourlySoilMoisture.Count != 0 ? hourlySoilMoisture.Average() : 0 // m³/m³
+            Date = DateTime.Parse(response.Daily.Time[dayIndex]),
+            Temperature = Average(hourlyTemp),
+            MinTemperature = response.Daily.Temperature_2m_min[dayIndex],
+            MaxTemperature = response.Daily.Temperature_2m_max[dayIndex],
+            RelativeHumidity = Average(hourlyHumidity),
+            WindSpeed = ConvertWindSpeedTo2M(Average(hourlyWind)),
+            AtmosphericPressure = Average(hourlyPressure) / 1000, // Pa → kPa
+            SoilMoisture = Average(hourlySoilMoisture),
+            Precipitation = response.Daily.Precipitation_sum[dayIndex],
+            SolarRadiation = response.Daily.Shortwave_radiation_sum[dayIndex],
+            Elevation = response.Elevation
         };
     }
 
-    private WeatherData ConvertToCurrentWeatherData(OpenMeteoCurrentResponse currentResponse)
+    private static WeatherData MapToWeatherData(OpenMeteoCurrentResponse currentResponse)
     {
         return new WeatherData
         {
@@ -165,7 +175,7 @@ public class OpenMeteoService : IWeatherService
             Temperature = currentResponse.Current.Temperature_2m,
             Elevation = currentResponse.Elevation,
             RelativeHumidity = currentResponse.Current.RelativeHumidity_2m,
-            WindSpeed = currentResponse.Current.WindSpeed_10m,
+            WindSpeed = ConvertWindSpeedTo2M(currentResponse.Current.WindSpeed_10m),
             AtmosphericPressure = currentResponse.Current.Surface_Pressure / 1000, // Convert Pa to kPa
             SoilMoisture = currentResponse.Current.Soil_Moisture_3_To_9cm,
             MinTemperature = currentResponse.Daily.Temperature_2m_min.FirstOrDefault(),
