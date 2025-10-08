@@ -8,4 +8,5 @@ public class WeatherConditionsDto
     public double RelativeHumidity { get; set; }
     public double WindSpeed { get; set; }
     public double SolarRadiation { get; set; }
+    public double Precipitation { get; set; }
 }
