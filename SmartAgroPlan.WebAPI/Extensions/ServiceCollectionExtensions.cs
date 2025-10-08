@@ -35,6 +35,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRecommendationService, RecommendationService>();
         services.AddScoped<ICropCoefficientService, CropCoefficientService>();
         services.AddScoped<IFAO56Calculator, FAO56Calculator>();
+        services.AddScoped<ISoilWaterService, SoilWaterService>();
         services.AddHttpClient<IWeatherService, OpenMeteoService>(client =>
         {
             client.Timeout = TimeSpan.FromSeconds(30);

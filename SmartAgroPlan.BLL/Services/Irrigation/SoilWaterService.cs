@@ -19,7 +19,7 @@ public class SoilWaterService : ISoilWaterService
             SoilType.Chalky => new SoilWaterParameters { FieldCapacity = 0.20, WiltingPoint = 0.07 },
             SoilType.Rocky => new SoilWaterParameters { FieldCapacity = 0.10, WiltingPoint = 0.03 },
             SoilType.Saline => new SoilWaterParameters { FieldCapacity = 0.25, WiltingPoint = 0.10 },
-            _ => new SoilWaterParameters { FieldCapacity = 0.25, WiltingPoint = 0.10 }
+            _ => GetDefaultSoilParams()
         };
 
         // Додати MAD (Management Allowed Depletion) базово або на основі культури
@@ -34,9 +34,9 @@ public class SoilWaterService : ISoilWaterService
         return crop switch
         {
             CropType.Wheat => 0.50, // дозволяється виснаження до 50 % доступної води
-            CropType.Corn => 0.50,
+            CropType.Corn => 0.60,
             CropType.Sunflower => 0.55,
-            CropType.Potato => 0.45,
+            CropType.Potato => 0.3,
             CropType.Tomato => 0.40,
             CropType.Soy => 0.50,
             CropType.Rapeseed => 0.50,
@@ -49,18 +49,9 @@ public class SoilWaterService : ISoilWaterService
         };
     }
 
-    public double GetFieldCapacity(SoilType soilType, CropType cropType)
+    public SoilWaterParameters GetDefaultSoilParams()
     {
-        return GetSoilParams(soilType, cropType).FieldCapacity;
-    }
-
-    public double GetPermanentWiltingPoint(SoilType soilType, CropType cropType)
-    {
-        return GetSoilParams(soilType, cropType).WiltingPoint;
-    }
-
-    public double GetManagementAllowedDepletion(SoilType soilType, CropType cropType)
-    {
-        return GetSoilParams(soilType, cropType).AllowableDepletionFraction;
+        // Типові значення для середнього суглинкового ґрунту
+        return new SoilWaterParameters { FieldCapacity = 0.3, WiltingPoint = 0.12, AllowableDepletionFraction = 0.5 };
     }
 }
