@@ -7,6 +7,7 @@ using NetTopologySuite.Geometries;
 using SmartAgroPlan.BLL.DTO.Irrigation;
 using SmartAgroPlan.BLL.Interfaces.Irrigation;
 using SmartAgroPlan.BLL.Interfaces.Weather;
+using SmartAgroPlan.BLL.Utils;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
 
 namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
@@ -71,15 +72,7 @@ public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationR
             coords.Latitude,
             coords.Longitude);
 
-        // Get latest soil moisture if available
-        var latestCondition = field.Conditions?
-            .Where(c => c.SoilMoisture.HasValue)
-            .OrderByDescending(c => c.RecordedAt)
-            .FirstOrDefault();
-
-        var soilMoisture = currentWeather.SoilMoisture;
-        if (latestCondition != null && latestCondition.RecordedAt.Date > DateTime.UtcNow.Date.AddDays(-7))
-            soilMoisture = latestCondition.SoilMoisture!.Value;
+        var soilMoisture = SoilMoistureHelper.GetSoilMoisture(field.Conditions, currentWeather);
 
         // Calculate irrigation recommendation
         var recommendation = _fao56Calculator.CalculateIrrigationRequirement(
@@ -107,7 +100,7 @@ public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationR
                     field,
                     definition,
                     w,
-                    latestCondition?.SoilMoisture);
+                    soilMoisture);
                 return new IrrigationForecastDto
                 {
                     Date = w.Date,
