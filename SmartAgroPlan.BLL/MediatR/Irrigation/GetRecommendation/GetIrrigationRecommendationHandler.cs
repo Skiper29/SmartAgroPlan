@@ -92,6 +92,7 @@ public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationR
 
         var recommendationDto = _mapper.Map<IrrigationRecommendationDto>(recommendation);
         recommendationDto.WeatherConditions = weatherDto;
+        recommendationDto.FieldName = field.Name!;
         return Result.Ok(recommendationDto);
     }
 

@@ -14,10 +14,12 @@ public class FAO56Calculator : IFAO56Calculator
     private const double PsychrometricConstant = 0.665e-3; // kPa/°C at sea level
 
     private readonly ICropCoefficientService _cropCoefficientService;
+    private readonly ISoilWaterService _soilWaterService;
 
-    public FAO56Calculator(ICropCoefficientService cropCoefficientService)
+    public FAO56Calculator(ICropCoefficientService cropCoefficientService, ISoilWaterService soilWaterService)
     {
         _cropCoefficientService = cropCoefficientService;
+        _soilWaterService = soilWaterService;
     }
 
     public double CalculateETc(double et0, double kc)
@@ -59,12 +61,10 @@ public class FAO56Calculator : IFAO56Calculator
         // Soil heat flux (assumed negligible for daily calculations)
         double g = 0;
 
-        // Convert wind speed from 10m to 2m height
-        var u2 = ConvertWindSpeedTo2M(weather.WindSpeed);
         // FAO-56 Penman-Monteith equation
         var numerator1 = 0.408 * delta * (rn - g);
-        var numerator2 = gamma * (900 / (tMean + 273)) * u2 * vpd;
-        var denominator = delta + gamma * (1 + 0.34 * u2);
+        var numerator2 = gamma * (900 / (tMean + 273)) * weather.WindSpeed * vpd;
+        var denominator = delta + gamma * (1 + 0.34 * weather.WindSpeed);
 
         var et0 = (numerator1 + numerator2) / denominator;
 
@@ -98,15 +98,38 @@ public class FAO56Calculator : IFAO56Calculator
         // Adjust for current soil moisture if provided
         if (currentSoilMoisture.HasValue && field.Soil != null)
         {
-            var fc = GetFieldCapacity(field.Soil.Type);
-            var pwp = GetPermanentWiltingPoint(field.Soil.Type);
-            var mad = GetManagementAllowableDepletion(field.CurrentCrop!.CropType);
+            var soilType = field.Soil.Type;
+            var crop = field.CurrentCrop!.CropType;
+            var sw = _soilWaterService.GetSoilParams(soilType, crop);
 
-            var threshold = pwp + (fc - pwp) * (1 - mad);
+            var fc = sw.FieldCapacity;
+            var pwp = sw.WiltingPoint;
+            var mad = sw.AllowableDepletionFraction;
 
-            if (currentSoilMoisture.Value > threshold)
-                // Soil moisture is adequate, reduce irrigation
-                netIrrigationRequirement *= Math.Max(0, 1 - (currentSoilMoisture.Value - threshold) / (fc - threshold));
+            const double rootDepth = 0.3;
+
+            // Total available water (TAW) у мм
+            var taw = (fc - pwp) * rootDepth * 1000.0;
+
+            // Current soil moisture deficit у мм
+            var vwc = currentSoilMoisture.Value;
+            var currentDeficit = (fc - vwc) * rootDepth * 1000.0;
+
+            // Maximum allowable depletion у мм
+            var raw = mad * taw;
+
+            if (currentDeficit > raw)
+            {
+                // If deficit exceeds allowable, increase irrigation need
+                netIrrigationRequirement += currentDeficit;
+            }
+            else
+            {
+                // Scale down irrigation need based on current deficit
+                var adequacyFactor = 1.0 - currentDeficit / raw;
+                adequacyFactor = Math.Clamp(adequacyFactor, 0.0, 1.0);
+                netIrrigationRequirement *= adequacyFactor;
+            }
         }
 
         // Application efficiency (typical 85% for drip, 75% for sprinkler)
@@ -130,7 +153,8 @@ public class FAO56Calculator : IFAO56Calculator
             CurrentSoilMoisture = currentSoilMoisture,
             RecommendedAction = GetIrrigationAction(grossIrrigation),
             CropStage = GetCropStage(daysSinceSowing, cropCoefficientDefinition),
-            Notes = GenerateRecommendationNotes(grossIrrigation, currentSoilMoisture, weather)
+            Notes = GenerateRecommendationNotes(grossIrrigation, currentSoilMoisture, weather, field.Soil!.Type,
+                field.CurrentCrop!.CropType)
         };
     }
 
@@ -150,12 +174,6 @@ public class FAO56Calculator : IFAO56Calculator
     {
         var es = CalculateSaturationVaporPressure(temperature);
         return 4098 * es / Math.Pow(temperature + 237.3, 2);
-    }
-
-    private static double ConvertWindSpeedTo2M(double u10)
-    {
-        // Convert wind speed from 10m to 2m height using logarithmic profile
-        return u10 * 4.87 / Math.Log(67.8 * 10 - 5.42);
     }
 
     private double CalculateNetRadiation(WeatherData weather, double latRad, double elevation)
@@ -196,31 +214,6 @@ public class FAO56Calculator : IFAO56Calculator
         return rns - rnl;
     }
 
-    private double GetFieldCapacity(SoilType soilType)
-    {
-        return soilType switch
-        {
-            _ => 25
-        };
-    }
-
-    private double GetPermanentWiltingPoint(SoilType soilType)
-    {
-        return soilType switch
-        {
-            _ => 12
-        };
-    }
-
-    private double GetManagementAllowableDepletion(CropType cropType)
-    {
-        // MAD varies by crop sensitivity to water stress
-        return cropType switch
-        {
-            _ => 0.50
-        };
-    }
-
     private string GetCropStage(int daysSinceSowing, CropCoefficientDefinition cropCoefficientDefinition)
     {
         var totalGrowthDays = cropCoefficientDefinition.LIni + cropCoefficientDefinition.LDev +
@@ -237,7 +230,7 @@ public class FAO56Calculator : IFAO56Calculator
     {
         return grossIrrigation switch
         {
-            <= 0 => "Не потрібно зрошення",
+            <= 1 => "Не потрібно зрошення",
             <= 5 => "Легке зрошення рекомендовано",
             <= 15 => "Середнє зрошення рекомендовано",
             <= 25 => "Інтенсивне зрошення рекомендовано",
@@ -245,7 +238,12 @@ public class FAO56Calculator : IFAO56Calculator
         };
     }
 
-    private string GenerateRecommendationNotes(double grossIrrigation, double? soilMoisture, WeatherData weather)
+    private string GenerateRecommendationNotes(
+        double grossIrrigation,
+        double? soilMoisture,
+        WeatherData weather,
+        SoilType? soilType = null,
+        CropType? cropType = null)
     {
         var notes = new List<string>();
 
@@ -254,8 +252,51 @@ public class FAO56Calculator : IFAO56Calculator
         else if (grossIrrigation > 20)
             notes.Add("Виявлено значний дефіцит води. Розгляньте можливість термінового зрошення.");
 
-        if (soilMoisture is < 20)
-            notes.Add("Низький рівень вологості ґрунту. Ретельно контролюйте.");
+        if (soilMoisture.HasValue)
+        {
+            var vwc = soilMoisture.Value; // m3/m3
+
+            // If soil and crop types are known, use them; otherwise, use default values
+            var sw = soilType.HasValue && cropType.HasValue
+                ? _soilWaterService.GetSoilParams(soilType.Value, cropType.Value)
+                : _soilWaterService.GetDefaultSoilParams();
+
+            var fc = sw.FieldCapacity;
+            var pwp = sw.WiltingPoint;
+            var mad = sw.AllowableDepletionFraction;
+
+            // Total Available Water
+            var taw = Math.Max(1e-6, fc - pwp);
+
+            // fraction of TAW already depleted: 0 => Fully charged, 1 => at PWP
+            var fractionDepleted = (fc - vwc) / taw;
+            fractionDepleted = Math.Clamp(fractionDepleted, 0.0, 1.0);
+
+            if (vwc <= pwp)
+            {
+                notes.Add($"Критично: VWC ({vwc:F3}) нижче PWP ({pwp:F3}). Імовірний водний стрес.");
+                var rootDepthM = 0.30; // дефолт 0.3 m
+                var netNeededMm = (fc - vwc) * rootDepthM * 1000.0;
+                var irrigationEfficiency = 0.8; // або конфіг
+                var grossNeededMm = netNeededMm / irrigationEfficiency;
+                notes.Add(
+                    $"Орієнтовно потрібно: {netNeededMm:F1} мм (net) ≈ {grossNeededMm:F1} мм (gross при eff={irrigationEfficiency:P0}).");
+            }
+
+            // Level-based notes
+            if (fractionDepleted >= mad)
+                notes.Add(
+                    $"Вологість ґрунту низька ({vwc:F2} m³/m³). Дефіцит ≈ {fractionDepleted:P0} від доступної вологи — рекомендується зрошення (MAD = {mad:P0}).");
+            else if (fractionDepleted >= 0.5)
+                notes.Add(
+                    $"Вологість ґрунту помірно низька ({vwc:F2} m³/m³). Слід слідкувати — дефіцит ≈ {fractionDepleted:P0}.");
+            else
+                notes.Add($"Вологість ґрунту в нормі ({vwc:F2} m³/m³).");
+        }
+        else
+        {
+            notes.Add("Дані про вологість ґрунту відсутні.");
+        }
 
         if (weather.WindSpeed > 5) notes.Add("Сильний вітер. Уникайте зрошення за допомогою розпилювачів.");
 
