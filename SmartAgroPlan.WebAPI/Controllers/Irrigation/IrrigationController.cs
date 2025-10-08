@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SmartAgroPlan.BLL.DTO.Irrigation;
+using SmartAgroPlan.BLL.MediatR.Irrigation.GetBatchRecommendations;
 using SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
+using SmartAgroPlan.BLL.MediatR.Irrigation.GetSchedule;
 
 namespace SmartAgroPlan.WebAPI.Controllers.Irrigation;
 
@@ -23,5 +26,30 @@ public class IrrigationController : BaseApiController
             IncludeForecast = includeForecast,
             ForecastDays = forecastDays
         }));
+    }
+
+    /// <summary>
+    ///     Get irrigation recommendations for multiple fields
+    /// </summary>
+    [HttpPost("recommendations/batch")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetBatchIrrigationRecommendations(
+        [FromBody] GetBatchIrrigationRecommendationsCommand command)
+    {
+        return HandleResult(await Mediator.Send(command));
+    }
+
+    /// <summary>
+    ///     Get weekly irrigation schedule for a field
+    /// </summary>
+    [HttpGet("schedule/weekly/{fieldId}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult<WeeklyIrrigationScheduleDto>> GetWeeklySchedule(
+        int fieldId,
+        [FromQuery] DateTime? startDate = null)
+    {
+        return HandleResult(await Mediator.Send(new GetWeeklyIrrigationScheduleCommand(fieldId, startDate)));
     }
 }
