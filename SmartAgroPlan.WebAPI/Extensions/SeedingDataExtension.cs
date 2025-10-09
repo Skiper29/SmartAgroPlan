@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using NetTopologySuite.Geometries;
 using SmartAgroPlan.DAL.Entities.Calendar;
 using SmartAgroPlan.DAL.Entities.Crops;
@@ -110,75 +111,84 @@ public static class SeedingDataExtension
         // Seed Crops
         if (!dbContext.Crops.Any())
         {
-            // Read CSV file
-            var baseDir = AppContext.BaseDirectory;
-            var solutionDir = Directory.GetParent(baseDir)!.Parent!.Parent!.Parent!.FullName;
-            var csvPath = Path.Combine(solutionDir, "Data", "crop_varieties_dataset.csv");
             List<CropVariety> crops;
-            if (File.Exists(csvPath))
+            // Attempt to load from CSV
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var resourceName = assembly.GetManifestResourceNames()
+                .FirstOrDefault(name => name.EndsWith("crop_varieties_dataset.csv", StringComparison.OrdinalIgnoreCase));
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
             {
-                var csvContent = await File.ReadAllTextAsync(csvPath);
-                var soils = dbContext.Soils.ToList();
-                crops = CropVarietyCsvParser.Parse(csvContent, soils);
-            }
-            else
-            {
-                // fallback to default crops if CSV not found
-                var soilLoamy = dbContext.Soils.First(s => s.Type == SoilType.Loamy);
-                var soilClay = dbContext.Soils.First(s => s.Type == SoilType.Clay);
-                var soilSandy = dbContext.Soils.First(s => s.Type == SoilType.Sandy);
-                crops = new List<CropVariety>
+                if (stream == null)
                 {
-                    new()
+                    // Fallback to default crops if embedded resource not found
+                    var soilLoamy = dbContext.Soils.First(s => s.Type == SoilType.Loamy);
+                    var soilClay = dbContext.Soils.First(s => s.Type == SoilType.Clay);
+                    var soilSandy = dbContext.Soils.First(s => s.Type == SoilType.Sandy);
+                    crops = new List<CropVariety>
                     {
-                        Name = "Wheat",
-                        CropType = CropType.Wheat,
-                        WaterRequirement = 500,
-                        FertilizerRequirement = 120,
-                        GrowingDuration = 120,
-                        SowingStart = new DayMonth(15, 9),
-                        SowingEnd = new DayMonth(30, 9),
-                        MinTemperature = 5,
-                        MaxTemperature = 30,
-                        HarvestYield = 6.5,
-                        OptimalSoilId = soilLoamy.Id,
-                        AdditionalNotes = "Common wheat variety."
-                    },
-                    new()
-                    {
-                        Name = "Corn",
-                        CropType = CropType.Corn,
-                        WaterRequirement = 600,
-                        FertilizerRequirement = 150,
-                        GrowingDuration = 100,
-                        SowingStart = new DayMonth(1, 5),
-                        SowingEnd = new DayMonth(15, 5),
-                        MinTemperature = 10,
-                        MaxTemperature = 35,
-                        HarvestYield = 8.0,
-                        OptimalSoilId = soilClay.Id,
-                        AdditionalNotes = "High-yield corn."
-                    },
-                    new()
-                    {
-                        Name = "Sunflower",
-                        CropType = CropType.Sunflower,
-                        WaterRequirement = 400,
-                        FertilizerRequirement = 100,
-                        GrowingDuration = 90,
-                        SowingStart = new DayMonth(10, 4),
-                        SowingEnd = new DayMonth(25, 4),
-                        MinTemperature = 8,
-                        MaxTemperature = 32,
-                        HarvestYield = 3.2,
-                        OptimalSoilId = soilSandy.Id,
-                        AdditionalNotes = "Oilseed sunflower."
-                    }
-                };
+                        new()
+                        {
+                            Name = "Wheat",
+                            CropType = CropType.Wheat,
+                            WaterRequirement = 500,
+                            FertilizerRequirement = 120,
+                            GrowingDuration = 120,
+                            SowingStart = new DayMonth(15, 9),
+                            SowingEnd = new DayMonth(30, 9),
+                            MinTemperature = 5,
+                            MaxTemperature = 30,
+                            HarvestYield = 6.5,
+                            OptimalSoilId = soilLoamy.Id,
+                            AdditionalNotes = "Common wheat variety."
+                        },
+                        new()
+                        {
+                            Name = "Corn",
+                            CropType = CropType.Corn,
+                            WaterRequirement = 600,
+                            FertilizerRequirement = 150,
+                            GrowingDuration = 100,
+                            SowingStart = new DayMonth(1, 5),
+                            SowingEnd = new DayMonth(15, 5),
+                            MinTemperature = 10,
+                            MaxTemperature = 35,
+                            HarvestYield = 8.0,
+                            OptimalSoilId = soilClay.Id,
+                            AdditionalNotes = "High-yield corn."
+                        },
+                        new()
+                        {
+                            Name = "Sunflower",
+                            CropType = CropType.Sunflower,
+                            WaterRequirement = 400,
+                            FertilizerRequirement = 100,
+                            GrowingDuration = 90,
+                            SowingStart = new DayMonth(10, 4),
+                            SowingEnd = new DayMonth(25, 4),
+                            MinTemperature = 8,
+                            MaxTemperature = 32,
+                            HarvestYield = 3.2,
+                            OptimalSoilId = soilSandy.Id,
+                            AdditionalNotes = "Oilseed sunflower."
+                        }
+                    };
+                }
+                else
+                {
+                    using var reader = new StreamReader(stream);
+                    var csvContent = await reader.ReadToEndAsync();
+                    var soils = dbContext.Soils.ToList();
+                    crops = CropVarietyCsvParser.Parse(csvContent, soils);
+                }
             }
 
-            dbContext.Crops.AddRange(crops);
-            await dbContext.SaveChangesAsync();
+            if (crops.Count != 0)
+            {
+                dbContext.Crops.AddRange(crops);
+                await dbContext.SaveChangesAsync();
+            }
         }
 
         // Seed Fields
