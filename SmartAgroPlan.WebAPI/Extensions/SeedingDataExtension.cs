@@ -216,17 +216,72 @@ public static class SeedingDataExtension
                 },
                 new()
                 {
-                    Name = "Field C",
-                    Location = "South Farm",
+                    Name = "Сад під Черешнею",
+                    Location = "Україна, с. Реклинець",
                     Boundary = new Polygon(new LinearRing(new[]
                     {
-                        new Coordinate(4, 4), new Coordinate(4, 5), new Coordinate(5, 5), new Coordinate(5, 4),
-                        new Coordinate(4, 4)
+                        new Coordinate(24.225911, 50.217076),
+                        new Coordinate(24.228916, 50.21698),
+                        new Coordinate(24.231363, 50.216651),
+                        new Coordinate(24.234884, 50.21698),
+                        new Coordinate(24.235356, 50.218106),
+                        new Coordinate(24.23381, 50.218957),
+                        new Coordinate(24.231471, 50.218751),
+                        new Coordinate(24.229002, 50.219493),
+                        new Coordinate(24.227091, 50.219918),
+                        new Coordinate(24.225911, 50.217076)
                     })),
-                    FieldType = FieldType.Orchard,
-                    CurrentCropId = 3,
-                    SoilId = 2,
-                    SowingDate = new DateTime(2024, 4, 15, 0, 0, 0, DateTimeKind.Utc)
+                    FieldType = FieldType.Arable,
+                    CurrentCropId = 2,
+                    SoilId = 3,
+                },
+                new()
+                {
+                    Name = "За лугом",
+                    Location = "Реклинець",
+                    Boundary = new Polygon(new LinearRing(new[]
+                    {
+                        new Coordinate(24.193461, 50.222225),
+                        new Coordinate(24.193955, 50.221291),
+                        new Coordinate(24.19636, 50.221127),
+                        new Coordinate(24.197731, 50.22033),
+                        new Coordinate(24.199022, 50.219809),
+                        new Coordinate(24.201855, 50.2186),
+                        new Coordinate(24.204002, 50.216623),
+                        new Coordinate(24.20522, 50.216328),
+                        new Coordinate(24.206125, 50.216431),
+                        new Coordinate(24.208249, 50.216239),
+                        new Coordinate(24.211169, 50.216651),
+                        new Coordinate(24.212671, 50.217255),
+                        new Coordinate(24.212714, 50.218106),
+                        new Coordinate(24.21111, 50.218628),
+                        new Coordinate(24.209451, 50.220275),
+                        new Coordinate(24.209709, 50.221209),
+                        new Coordinate(24.212585, 50.220879),
+                        new Coordinate(24.212642, 50.222499),
+                        new Coordinate(24.212371, 50.223763),
+                        new Coordinate(24.208721, 50.223735),
+                        new Coordinate(24.208192, 50.223756),
+                        new Coordinate(24.208589, 50.223914),
+                        new Coordinate(24.213014, 50.224078),
+                        new Coordinate(24.212648, 50.225122),
+                        new Coordinate(24.203933, 50.226865),
+                        new Coordinate(24.201765, 50.224051),
+                        new Coordinate(24.200488, 50.223852),
+                        new Coordinate(24.199167, 50.223859),
+                        new Coordinate(24.196548, 50.223941),
+                        new Coordinate(24.196551, 50.22438),
+                        new Coordinate(24.196578, 50.224662),
+                        new Coordinate(24.196331, 50.22483),
+                        new Coordinate(24.19481, 50.224888),
+                        new Coordinate(24.194616, 50.224614),
+                        new Coordinate(24.194638, 50.22309),
+                        new Coordinate(24.1932, 50.223145),
+                        new Coordinate(24.193461, 50.222225)
+                    })),
+                    FieldType = FieldType.Arable,
+                    CurrentCropId = 49,
+                    SoilId = 1
                 }
             };
             dbContext.Fields.AddRange(fields);
