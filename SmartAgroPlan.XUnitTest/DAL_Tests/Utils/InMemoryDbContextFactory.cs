@@ -12,10 +12,7 @@ public static class InMemoryDbContextFactory
 {
     public static SmartAgroPlanDbContext CreateInMemoryDbContext(string databaseName = "")
     {
-        if (string.IsNullOrEmpty(databaseName))
-        {
-            databaseName = Guid.NewGuid().ToString();
-        }
+        if (string.IsNullOrEmpty(databaseName)) databaseName = Guid.NewGuid().ToString();
 
         var options = new DbContextOptionsBuilder<SmartAgroPlanDbContext>()
             .UseInMemoryDatabase(databaseName)
@@ -23,7 +20,7 @@ public static class InMemoryDbContextFactory
 
         var context = new SmartAgroPlanDbContext(options);
         context.Database.EnsureCreated();
-        
+
         return context;
     }
 
@@ -95,6 +92,10 @@ public static class InMemoryDbContextFactory
                 WaterRequirement = 450.0,
                 FertilizerRequirement = 120.0,
                 GrowingDuration = 220,
+                LIni = 30,
+                LDev = 55,
+                LMid = 90,
+                LLate = 45,
                 SowingStart = new DayMonth(15, 9),
                 SowingEnd = new DayMonth(30, 10),
                 MinTemperature = -5.0,
@@ -111,6 +112,10 @@ public static class InMemoryDbContextFactory
                 WaterRequirement = 600.0,
                 FertilizerRequirement = 180.0,
                 GrowingDuration = 110,
+                LIni = 20,
+                LDev = 30,
+                LMid = 40,
+                LLate = 20,
                 SowingStart = new DayMonth(1, 5),
                 SowingEnd = new DayMonth(15, 6),
                 MinTemperature = 10.0,
@@ -127,6 +132,10 @@ public static class InMemoryDbContextFactory
                 WaterRequirement = 400.0,
                 FertilizerRequirement = 90.0,
                 GrowingDuration = 120,
+                LIni = 20,
+                LDev = 30,
+                LMid = 50,
+                LLate = 20,
                 SowingStart = new DayMonth(15, 4),
                 SowingEnd = new DayMonth(30, 5),
                 MinTemperature = 8.0,

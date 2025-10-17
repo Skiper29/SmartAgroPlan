@@ -10,8 +10,8 @@ namespace SmartAgroPlan.XUnitTest.BLL_Tests.Validators.Crops;
 
 public class BaseCropVarietyValidatorTests
 {
-    private readonly BaseCropVarietyValidator _validator;
     private readonly Mock<DayMonthValidator> _mockDayMonthValidator;
+    private readonly BaseCropVarietyValidator _validator;
 
     public BaseCropVarietyValidatorTests()
     {
@@ -30,6 +30,10 @@ public class BaseCropVarietyValidatorTests
             WaterRequirement = 500.0,
             FertilizerRequirement = 100.0,
             GrowingDuration = 120,
+            LIni = 20,
+            LDev = 30,
+            LMid = 50,
+            LLate = 20,
             SowingStart = new DayMonth(15, 3),
             SowingEnd = new DayMonth(30, 4),
             MinTemperature = 10.0,
@@ -80,7 +84,8 @@ public class BaseCropVarietyValidatorTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "Name");
-        result.Errors.Should().Contain(e => e.ErrorMessage == $"Name cannot exceed {BaseCropVarietyValidator.MaxNameLength} characters.");
+        result.Errors.Should().Contain(e =>
+            e.ErrorMessage == $"Name cannot exceed {BaseCropVarietyValidator.MaxNameLength} characters.");
     }
 
     [Theory]
@@ -200,14 +205,19 @@ public class BaseCropVarietyValidatorTests
     }
 
     [Theory]
-    [InlineData(1)]
-    [InlineData(90)]
-    [InlineData(365)]
-    public void Validate_ValidGrowingDuration_ShouldBeValid(int growingDuration)
+    [InlineData(4, 1, 1, 1, 1)]
+    [InlineData(90, 20, 30, 30, 10)]
+    [InlineData(365, 50, 100, 150, 65)]
+    public void Validate_ValidGrowingDuration_ShouldBeValid(int growingDuration, int LIni, int LDev, int LMid,
+        int LLate)
     {
         // Arrange
         var crop = CreateValidCrop();
         crop.GrowingDuration = growingDuration;
+        crop.LIni = LIni;
+        crop.LDev = LDev;
+        crop.LMid = LMid;
+        crop.LLate = LLate;
 
         // Act
         var result = _validator.Validate(crop);
@@ -230,7 +240,8 @@ public class BaseCropVarietyValidatorTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "MinTemperature");
-        result.Errors.Should().Contain(e => e.ErrorMessage == "Minimum temperature must be less than or equal to maximum temperature.");
+        result.Errors.Should().Contain(e =>
+            e.ErrorMessage == "Minimum temperature must be less than or equal to maximum temperature.");
     }
 
     [Fact]
@@ -310,7 +321,9 @@ public class BaseCropVarietyValidatorTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "AdditionalNotes");
-        result.Errors.Should().Contain(e => e.ErrorMessage == $"Additional notes cannot exceed {BaseCropVarietyValidator.MaxAdditionalNotesLength} characters.");
+        result.Errors.Should().Contain(e =>
+            e.ErrorMessage ==
+            $"Additional notes cannot exceed {BaseCropVarietyValidator.MaxAdditionalNotesLength} characters.");
     }
 
     [Theory]
@@ -334,7 +347,8 @@ public class BaseCropVarietyValidatorTests
     public void Validate_AdditionalNotesExactly500Characters_ShouldBeValid()
     {
         // Arrange
-        var exactLengthNotes = new string('a', BaseCropVarietyValidator.MaxAdditionalNotesLength); // Exactly 500 characters
+        var exactLengthNotes =
+            new string('a', BaseCropVarietyValidator.MaxAdditionalNotesLength); // Exactly 500 characters
         var crop = CreateValidCrop();
         crop.AdditionalNotes = exactLengthNotes;
 
@@ -351,7 +365,7 @@ public class BaseCropVarietyValidatorTests
         // Arrange
         var crop = CreateValidCrop();
         crop.SowingStart = new DayMonth(30, 4); // April 30
-        crop.SowingEnd = new DayMonth(15, 3);   // March 15 - before start
+        crop.SowingEnd = new DayMonth(15, 3); // March 15 - before start
 
         // Act
         var result = _validator.Validate(crop);
@@ -359,7 +373,8 @@ public class BaseCropVarietyValidatorTests
         // Assert
         result.IsValid.Should().BeFalse();
         result.Errors.Should().Contain(e => e.PropertyName == "SowingEnd");
-        result.Errors.Should().Contain(e => e.ErrorMessage == "Sowing end date must be after or equal to sowing start date.");
+        result.Errors.Should()
+            .Contain(e => e.ErrorMessage == "Sowing end date must be after or equal to sowing start date.");
     }
 
     [Fact]
@@ -368,7 +383,7 @@ public class BaseCropVarietyValidatorTests
         // Arrange
         var crop = CreateValidCrop();
         crop.SowingStart = new DayMonth(15, 3); // March 15
-        crop.SowingEnd = new DayMonth(15, 3);   // March 15 - same date
+        crop.SowingEnd = new DayMonth(15, 3); // March 15 - same date
 
         // Act
         var result = _validator.Validate(crop);
@@ -383,7 +398,7 @@ public class BaseCropVarietyValidatorTests
         // Arrange
         var crop = CreateValidCrop();
         crop.SowingStart = new DayMonth(15, 3); // March 15
-        crop.SowingEnd = new DayMonth(30, 4);   // April 30 - after start
+        crop.SowingEnd = new DayMonth(30, 4); // April 30 - after start
 
         // Act
         var result = _validator.Validate(crop);
@@ -398,7 +413,112 @@ public class BaseCropVarietyValidatorTests
         // Arrange
         var crop = CreateValidCrop();
         crop.SowingStart = new DayMonth(15, 3); // March 15
-        crop.SowingEnd = new DayMonth(25, 3);   // March 25 - later in same month
+        crop.SowingEnd = new DayMonth(25, 3); // March 25 - later in same month
+
+        // Act
+        var result = _validator.Validate(crop);
+
+        // Assert
+        result.IsValid.Should().BeTrue();
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void Validate_InvalidLIni_ShouldBeInvalid(int lIni)
+    {
+        // Arrange
+        var crop = CreateValidCrop();
+        crop.LIni = lIni;
+
+        // Act
+        var result = _validator.Validate(crop);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "LIni");
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void Validate_InvalidLDev_ShouldBeInvalid(int lDev)
+    {
+        // Arrange
+        var crop = CreateValidCrop();
+        crop.LDev = lDev;
+
+        // Act
+        var result = _validator.Validate(crop);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "LDev");
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void Validate_InvalidLMid_ShouldBeInvalid(int lMid)
+    {
+        // Arrange
+        var crop = CreateValidCrop();
+        crop.LMid = lMid;
+
+        // Act
+        var result = _validator.Validate(crop);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "LMid");
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void Validate_InvalidLLate_ShouldBeInvalid(int lLate)
+    {
+        // Arrange
+        var crop = CreateValidCrop();
+        crop.LLate = lLate;
+
+        // Act
+        var result = _validator.Validate(crop);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.PropertyName == "LLate");
+    }
+
+    [Fact]
+    public void Validate_GrowthStagesSumNotEqualToGrowingDuration_ShouldBeInvalid()
+    {
+        // Arrange
+        var crop = CreateValidCrop();
+        crop.GrowingDuration = 120;
+        crop.LIni = 20;
+        crop.LDev = 30;
+        crop.LMid = 50;
+        crop.LLate = 15; // Sum is 115, not 120
+
+        // Act
+        var result = _validator.Validate(crop);
+
+        // Assert
+        result.IsValid.Should().BeFalse();
+        result.Errors.Should().Contain(e => e.ErrorMessage.Contains("sum of all growth stage durations"));
+    }
+
+    [Fact]
+    public void Validate_GrowthStagesSumEqualsGrowingDuration_ShouldBeValid()
+    {
+        // Arrange
+        var crop = CreateValidCrop();
+        crop.GrowingDuration = 100;
+        crop.LIni = 20;
+        crop.LDev = 25;
+        crop.LMid = 35;
+        crop.LLate = 20; // Sum is 100
 
         // Act
         var result = _validator.Validate(crop);
@@ -413,16 +533,16 @@ public class BaseCropVarietyValidatorTests
         // Arrange
         var invalidCrop = new CropVarietyCreateUpdateDto
         {
-            Name = "",                        // Invalid
+            Name = "", // Invalid
             CropType = CropType.Wheat,
-            WaterRequirement = -10.0,         // Invalid
-            FertilizerRequirement = -5.0,     // Invalid
-            GrowingDuration = 0,              // Invalid
+            WaterRequirement = -10.0, // Invalid
+            FertilizerRequirement = -5.0, // Invalid
+            GrowingDuration = 0, // Invalid
             SowingStart = new DayMonth(30, 4),
-            SowingEnd = new DayMonth(15, 3),  // Invalid - before start
-            MinTemperature = 30.0,            // Invalid - greater than max
+            SowingEnd = new DayMonth(15, 3), // Invalid - before start
+            MinTemperature = 30.0, // Invalid - greater than max
             MaxTemperature = 10.0,
-            HarvestYield = -2.5,              // Invalid
+            HarvestYield = -2.5, // Invalid
             AdditionalNotes = new string('a', 501), // Invalid - too long
             OptimalSoilId = 1
         };
@@ -452,6 +572,10 @@ public class BaseCropVarietyValidatorTests
             WaterRequirement = 500.0,
             FertilizerRequirement = 100.0,
             GrowingDuration = 120,
+            LIni = 20,
+            LDev = 30,
+            LMid = 50,
+            LLate = 20,
             SowingStart = new DayMonth(15, 3),
             SowingEnd = new DayMonth(30, 4),
             MinTemperature = 10.0,
