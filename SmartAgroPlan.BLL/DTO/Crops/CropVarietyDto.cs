@@ -11,6 +11,13 @@ public class CropVarietyDto
     public double WaterRequirement { get; set; }
     public double FertilizerRequirement { get; set; }
     public int GrowingDuration { get; set; }
+
+    // Crop Growth Stages Duration (FAO-56)
+    public int LIni { get; set; }
+    public int LDev { get; set; }
+    public int LMid { get; set; }
+    public int LLate { get; set; }
+
     public DayMonth SowingStart { get; set; }
     public DayMonth SowingEnd { get; set; }
     public double MinTemperature { get; set; }
