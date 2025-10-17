@@ -201,8 +201,7 @@ public static class SeedingDataExtension
                 {
                     Name = "Сад під Черешнею",
                     Location = "Україна, с. Реклинець",
-                    Boundary = new Polygon(new LinearRing(new[]
-                    {
+                    Boundary = new Polygon(new LinearRing([
                         new Coordinate(24.225911, 50.217076),
                         new Coordinate(24.228916, 50.21698),
                         new Coordinate(24.231363, 50.216651),
@@ -213,7 +212,7 @@ public static class SeedingDataExtension
                         new Coordinate(24.229002, 50.219493),
                         new Coordinate(24.227091, 50.219918),
                         new Coordinate(24.225911, 50.217076)
-                    })),
+                    ])),
                     FieldType = FieldType.Arable,
                     CurrentCropId = 2,
                     SoilId = 3
@@ -222,8 +221,7 @@ public static class SeedingDataExtension
                 {
                     Name = "За лугом",
                     Location = "Реклинець",
-                    Boundary = new Polygon(new LinearRing(new[]
-                    {
+                    Boundary = new Polygon(new LinearRing([
                         new Coordinate(24.193461, 50.222225),
                         new Coordinate(24.193955, 50.221291),
                         new Coordinate(24.19636, 50.221127),
@@ -261,7 +259,7 @@ public static class SeedingDataExtension
                         new Coordinate(24.194638, 50.22309),
                         new Coordinate(24.1932, 50.223145),
                         new Coordinate(24.193461, 50.222225)
-                    })),
+                    ])),
                     FieldType = FieldType.Arable,
                     CurrentCropId = 49,
                     SoilId = 1
@@ -278,8 +276,8 @@ public static class SeedingDataExtension
             {
                 new()
                 {
-                    FieldId = dbContext.Fields.First().Id,
-                    CropId = dbContext.Crops.First().Id,
+                    FieldId = 1,
+                    CropId = 1,
                     PlantedDate = new DateOnly(2022, 9, 20),
                     HarvestedDate = new DateOnly(2022, 7, 10),
                     Yield = 6.2,
@@ -287,8 +285,8 @@ public static class SeedingDataExtension
                 },
                 new()
                 {
-                    FieldId = dbContext.Fields.First().Id,
-                    CropId = dbContext.Crops.Skip(1).First().Id,
+                    FieldId = 1,
+                    CropId = 2,
                     PlantedDate = new DateOnly(2023, 5, 5),
                     HarvestedDate = new DateOnly(2023, 9, 1),
                     Yield = 7.8,
@@ -306,7 +304,7 @@ public static class SeedingDataExtension
             {
                 new()
                 {
-                    FieldId = dbContext.Fields.First().Id,
+                    FieldId = 1,
                     RecordedAt = DateTime.UtcNow.AddDays(-10),
                     SoilMoisture = 0.305,
                     SoilPh = 6.8,
@@ -319,7 +317,7 @@ public static class SeedingDataExtension
                 },
                 new()
                 {
-                    FieldId = dbContext.Fields.First().Id,
+                    FieldId = 1,
                     RecordedAt = DateTime.UtcNow.AddDays(-5),
                     SoilMoisture = 0.28,
                     SoilPh = 6.7,
@@ -332,7 +330,7 @@ public static class SeedingDataExtension
                 },
                 new()
                 {
-                    FieldId = dbContext.Fields.Skip(1).First().Id,
+                    FieldId = 2,
                     RecordedAt = DateTime.UtcNow.AddDays(-7),
                     SoilMoisture = 0.35,
                     SoilPh = 7.0,
