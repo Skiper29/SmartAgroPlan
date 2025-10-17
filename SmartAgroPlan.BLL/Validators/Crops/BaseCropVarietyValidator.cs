@@ -30,6 +30,29 @@ public class BaseCropVarietyValidator : AbstractValidator<CropVarietyCreateUpdat
             .GreaterThan(0)
             .WithMessage("Growing duration must be a positive integer.");
 
+        // Validate crop growth stages (FAO-56)
+        RuleFor(x => x.LIni)
+            .GreaterThan(0)
+            .WithMessage("Initial stage duration (LIni) must be a positive integer.");
+
+        RuleFor(x => x.LDev)
+            .GreaterThan(0)
+            .WithMessage("Development stage duration (LDev) must be a positive integer.");
+
+        RuleFor(x => x.LMid)
+            .GreaterThan(0)
+            .WithMessage("Mid-Season stage duration (LMid) must be a positive integer.");
+
+        RuleFor(x => x.LLate)
+            .GreaterThan(0)
+            .WithMessage("Late-Season stage duration (LLate) must be a positive integer.");
+
+        // Validate that sum of growth stages equals growing duration
+        RuleFor(x => x)
+            .Must(x => x.LIni + x.LDev + x.LMid + x.LLate == x.GrowingDuration)
+            .WithMessage(
+                "The sum of all growth stage durations (LIni + LDev + LMid + LLate) must equal the Growing Duration.");
+
         RuleFor(x => x.SowingStart)
             .NotNull()
             .WithMessage("Sowing start date is required.")
@@ -53,20 +76,13 @@ public class BaseCropVarietyValidator : AbstractValidator<CropVarietyCreateUpdat
         RuleFor(x => x.AdditionalNotes)
             .MaximumLength(MaxAdditionalNotesLength)
             .WithMessage($"Additional notes cannot exceed {MaxAdditionalNotesLength} characters.");
-
     }
 
     private static bool IsSowingEndAfterStart(DayMonth sowingStart, DayMonth sowingEnd)
     {
-        if (sowingStart.Month < sowingEnd.Month)
-        {
-            return true;
-        }
+        if (sowingStart.Month < sowingEnd.Month) return true;
 
-        if (sowingStart.Month == sowingEnd.Month)
-        {
-            return sowingStart.Day <= sowingEnd.Day;
-        }
+        if (sowingStart.Month == sowingEnd.Month) return sowingStart.Day <= sowingEnd.Day;
 
         return false;
     }
