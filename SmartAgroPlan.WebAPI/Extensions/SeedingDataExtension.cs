@@ -212,7 +212,10 @@ public static class SeedingDataExtension
                         new Coordinate(24.229002, 50.219493),
                         new Coordinate(24.227091, 50.219918),
                         new Coordinate(24.225911, 50.217076)
-                    ])),
+                    ]))
+                    {
+                        SRID = 4326
+                    },
                     FieldType = FieldType.Arable,
                     CurrentCropId = 2,
                     SoilId = 3
@@ -259,7 +262,10 @@ public static class SeedingDataExtension
                         new Coordinate(24.194638, 50.22309),
                         new Coordinate(24.1932, 50.223145),
                         new Coordinate(24.193461, 50.222225)
-                    ])),
+                    ]))
+                    {
+                        SRID = 4326
+                    },
                     FieldType = FieldType.Arable,
                     CurrentCropId = 49,
                     SoilId = 1
