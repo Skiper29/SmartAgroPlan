@@ -116,9 +116,10 @@ public static class SeedingDataExtension
             var assembly = Assembly.GetExecutingAssembly();
 
             var resourceName = assembly.GetManifestResourceNames()
-                .FirstOrDefault(name => name.EndsWith("crop_varieties_dataset.csv", StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(name =>
+                    name.EndsWith("crop_varieties_dataset.csv", StringComparison.OrdinalIgnoreCase));
 
-            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            using (var stream = assembly.GetManifestResourceStream(resourceName!))
             {
                 if (stream == null)
                 {
@@ -198,34 +199,6 @@ public static class SeedingDataExtension
             {
                 new()
                 {
-                    Name = "Field A",
-                    Location = "North Farm",
-                    Boundary = new Polygon(new LinearRing(new[]
-                    {
-                        new Coordinate(0, 0), new Coordinate(0, 1), new Coordinate(1, 1), new Coordinate(1, 0),
-                        new Coordinate(0, 0)
-                    })),
-                    FieldType = FieldType.Arable,
-                    CurrentCropId = 1,
-                    SoilId = 3,
-                    SowingDate = new DateTime(2024, 9, 20, 0, 0, 0, DateTimeKind.Utc)
-                },
-                new()
-                {
-                    Name = "Field B",
-                    Location = "East Farm",
-                    Boundary = new Polygon(new LinearRing(new[]
-                    {
-                        new Coordinate(2, 2), new Coordinate(2, 3), new Coordinate(3, 3), new Coordinate(3, 2),
-                        new Coordinate(2, 2)
-                    })),
-                    FieldType = FieldType.Pasture,
-                    CurrentCropId = 2,
-                    SoilId = 1,
-                    SowingDate = new DateTime(2024, 5, 5, 0, 0, 0, DateTimeKind.Utc)
-                },
-                new()
-                {
                     Name = "Сад під Черешнею",
                     Location = "Україна, с. Реклинець",
                     Boundary = new Polygon(new LinearRing(new[]
@@ -243,7 +216,7 @@ public static class SeedingDataExtension
                     })),
                     FieldType = FieldType.Arable,
                     CurrentCropId = 2,
-                    SoilId = 3,
+                    SoilId = 3
                 },
                 new()
                 {
@@ -305,17 +278,17 @@ public static class SeedingDataExtension
             {
                 new()
                 {
-                    FieldId = 1,
-                    CropId = 1,
-                    PlantedDate = new DateOnly(2023, 9, 20),
-                    HarvestedDate = new DateOnly(2024, 7, 10),
+                    FieldId = dbContext.Fields.First().Id,
+                    CropId = dbContext.Crops.First().Id,
+                    PlantedDate = new DateOnly(2022, 9, 20),
+                    HarvestedDate = new DateOnly(2022, 7, 10),
                     Yield = 6.2,
                     Notes = "Good season."
                 },
                 new()
                 {
-                    FieldId = 2,
-                    CropId = 2,
+                    FieldId = dbContext.Fields.First().Id,
+                    CropId = dbContext.Crops.Skip(1).First().Id,
                     PlantedDate = new DateOnly(2023, 5, 5),
                     HarvestedDate = new DateOnly(2023, 9, 1),
                     Yield = 7.8,
@@ -333,9 +306,9 @@ public static class SeedingDataExtension
             {
                 new()
                 {
-                    FieldId = 1,
+                    FieldId = dbContext.Fields.First().Id,
                     RecordedAt = DateTime.UtcNow.AddDays(-10),
-                    SoilMoisture = 30.5,
+                    SoilMoisture = 0.305,
                     SoilPh = 6.8,
                     Nitrogen = 100,
                     Phosphorus = 50,
@@ -346,9 +319,9 @@ public static class SeedingDataExtension
                 },
                 new()
                 {
-                    FieldId = 1,
+                    FieldId = dbContext.Fields.First().Id,
                     RecordedAt = DateTime.UtcNow.AddDays(-5),
-                    SoilMoisture = 28.0,
+                    SoilMoisture = 0.28,
                     SoilPh = 6.7,
                     Nitrogen = 95,
                     Phosphorus = 48,
@@ -359,9 +332,9 @@ public static class SeedingDataExtension
                 },
                 new()
                 {
-                    FieldId = 2,
+                    FieldId = dbContext.Fields.Skip(1).First().Id,
                     RecordedAt = DateTime.UtcNow.AddDays(-7),
-                    SoilMoisture = 35.0,
+                    SoilMoisture = 0.35,
                     SoilPh = 7.0,
                     Nitrogen = 110,
                     Phosphorus = 55,

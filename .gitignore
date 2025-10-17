@@ -367,3 +367,6 @@ FodyWeavers.xsd
 *.iml
 *.iws
 out/
+
+# Azure Hosting
+profile.arm.json
