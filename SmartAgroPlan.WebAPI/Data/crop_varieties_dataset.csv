@@ -1,220 +1,51 @@
-Name,CropType,WaterRequirement,FertilizerRequirement,GrowingDuration,SowingStartDay,SowingStartMonth,SowingEndDay,SowingEndMonth,MinTemperature,MaxTemperature,HarvestYield,OptimalSoilType,AdditionalNotes
-Winter Wheat,Wheat,520,130,240,15,9,30,9,3,28,7.2,Loamy,Cold-resistant winter wheat variety suitable for temperate climates
-Spring Wheat,Wheat,480,120,120,1,4,20,4,8,32,6.8,Loamy,High-protein spring wheat for northern regions
-Durum Wheat,Wheat,450,110,130,10,3,25,3,5,35,5.9,Clay,Premium durum wheat for pasta production
-Soft White Wheat,Wheat,400,100,125,20,3,10,4,6,30,6.1,Silty,Low-protein wheat ideal for pastries and cookies
-Hard Red Wheat,Wheat,500,125,135,5,4,25,4,4,29,7.0,Loamy,High-protein wheat excellent for bread making
-Two-Row Barley,Barley,380,90,100,15,3,5,4,2,25,4.8,Sandy,Malting barley with excellent enzyme content
-Six-Row Barley,Barley,350,85,95,1,4,15,4,3,27,4.5,Loamy,Feed barley with high protein content
-Hulless Barley,Barley,420,95,110,20,3,10,4,1,24,4.2,Silty,Food-grade barley without hull for human consumption
-Winter Barley,Barley,460,100,200,10,9,25,9,0,26,5.1,Clay,Cold-hardy winter barley for extended growing season
-Spring Barley,Barley,340,80,90,25,3,15,4,4,28,4.3,Sandy,Quick-maturing spring barley for short seasons
-White Oats,Oats,320,70,85,1,4,20,4,2,24,3.8,Peaty,High-quality oats for human consumption and livestock
-Red Oats,Oats,340,75,90,10,3,25,3,1,26,3.5,Silty,Hardy oats with good disease resistance
-Hulless Oats,Oats,360,80,95,15,3,5,4,3,25,3.2,Loamy,Naked oats ideal for processing and food production
-Feed Oats,Oats,300,65,80,20,3,15,4,4,27,4.1,Sandy,High-yielding oats primarily for animal feed
-Winter Oats,Oats,450,85,180,1,9,20,9,-2,23,3.9,Clay,Winter-hardy oats for mild winter regions
-Winter Rye,Rye,350,60,220,15,8,5,9,-5,25,4.2,Sandy,Extremely cold-hardy rye for harsh climates
-Spring Rye,Rye,320,55,100,1,4,20,4,0,28,3.8,Rocky,Quick-growing rye for marginal soils
-Hybrid Rye,Rye,380,70,130,10,3,25,3,-3,26,5.1,Loamy,High-yielding hybrid rye with improved lodging resistance
-Triticale,Rye,400,75,120,15,3,10,4,-2,29,4.8,Silty,Wheat-rye hybrid combining best traits of both cereals
-Ergot-Resistant Rye,Rye,340,58,110,20,8,10,9,-4,24,4.0,Peaty,Disease-resistant rye for organic production
-Dent Corn,Corn,600,150,110,1,5,15,5,10,35,9.2,Clay,High-starch field corn for animal feed and processing
-Flint Corn,Corn,580,140,105,10,5,25,5,8,33,8.5,Loamy,Hard-kerneled corn with excellent storage qualities
-Sweet Corn,Corn,520,120,80,15,5,5,6,12,32,12.5,Silty,Table corn with high sugar content for fresh consumption
-Popcorn,Corn,480,110,95,1,5,20,5,10,30,4.8,Sandy,Specialty corn that pops when heated
-Waxy Corn,Corn,620,160,115,5,5,20,5,9,36,8.8,Clay,Industrial corn with unique starch properties for food processing
-High-Oil Corn,Corn,590,145,108,10,5,25,5,11,34,8.1,Loamy,Specialty corn with elevated oil content for premium feed
-Silage Corn,Corn,640,170,120,15,4,5,5,8,37,15.2,Silty,Whole-plant corn harvested for livestock silage
-White Corn,Corn,570,135,100,20,5,10,6,9,31,8.9,Sandy,Food-grade corn for tortillas and other products
-Oil Sunflower,Sunflower,450,100,95,10,4,25,4,8,32,2.8,Sandy,High oil content sunflower for cooking oil production
-Confection Sunflower,Sunflower,420,90,90,15,4,5,5,10,30,2.1,Loamy,Large-seeded sunflower for snack food market
-High-Oleic Sunflower,Sunflower,480,110,100,1,4,20,4,7,33,2.5,Silty,Premium sunflower oil with extended shelf life
-NuSun Sunflower,Sunflower,460,95,92,5,4,25,4,9,31,2.7,Sandy,Mid-oleic sunflower oil for food service industry
-Ornamental Sunflower,Sunflower,380,70,75,15,5,10,6,12,28,1.8,Loamy,Decorative sunflowers for cut flower market
-Red Sunflower,Sunflower,440,85,88,20,4,15,5,8,29,2.3,Clay,Specialty sunflower with red-colored seeds
-Dwarf Sunflower,Sunflower,350,75,70,1,5,20,5,10,26,2.0,Rocky,Compact sunflower variety for small spaces and containers
-Striped Sunflower,Sunflower,430,88,85,10,4,30,4,9,30,2.4,Peaty,Bird food sunflower with distinctive striped seeds
-Food-Grade Soy,Soy,480,80,120,15,5,5,6,12,30,3.2,Loamy,High-protein soybeans for human food processing
-Oil Soy,Soy,520,90,125,1,5,20,5,10,32,3.0,Clay,High oil content soybeans for vegetable oil production
-Feed Soy,Soy,460,75,115,10,5,25,5,11,29,3.5,Silty,General purpose soybeans for livestock feed
-Non-GMO Soy,Soy,500,85,118,5,5,15,5,9,31,3.1,Sandy,Identity-preserved non-GMO soybeans for premium markets
-Edamame Soy,Soy,440,70,90,15,5,10,6,13,28,8.5,Loamy,Vegetable soybeans harvested green for fresh consumption
-Black Soy,Soy,510,88,122,20,4,10,5,8,30,2.9,Peaty,Specialty black soybeans for Asian food markets
-High-Protein Soy,Soy,490,95,127,1,5,25,5,10,33,3.3,Clay,Premium soybeans with elevated protein content
-Organic Soy,Soy,470,60,120,10,5,30,5,12,29,2.8,Silty,Certified organic soybeans for health food market
-Winter Rapeseed,Rapeseed,420,110,240,15,8,5,9,2,28,3.8,Loamy,Winter-hardy rapeseed for biodiesel and cooking oil
-Spring Rapeseed,Rapeseed,380,100,100,1,4,20,4,5,30,3.2,Clay,Quick-maturing canola for northern growing regions
-High-Erucic Rapeseed,Rapeseed,450,120,120,10,3,25,3,3,32,3.5,Silty,Industrial rapeseed for lubricants and surfactants
-Low-Erucic Rapeseed,Rapeseed,400,105,110,15,4,5,5,4,29,3.4,Sandy,Food-grade canola oil with improved nutritional profile
-High-Oleic Rapeseed,Rapeseed,430,115,115,20,3,15,4,2,31,3.6,Peaty,Premium canola oil with enhanced stability
-Hybrid Rapeseed,Rapeseed,460,125,105,1,4,25,4,1,33,4.1,Loamy,High-yielding hybrid canola with disease resistance
-Double-Low Rapeseed,Rapeseed,410,108,112,10,4,30,4,3,30,3.3,Clay,Canola with low erucic acid and glucosinolates
-Forage Rapeseed,Rapeseed,350,90,80,15,8,10,9,0,26,12.0,Rocky,Rapeseed grown for livestock grazing and forage
-Monogerm Sugar Beet,SugarBeet,650,180,170,1,4,20,4,5,28,65.0,Clay,Single-seed beets for mechanized planting
-Multigerm Sugar Beet,SugarBeet,620,170,165,10,4,25,4,6,30,62.0,Loamy,Traditional sugar beets requiring hand thinning
-High-Sugar Beet,SugarBeet,680,190,175,15,3,10,4,4,29,70.0,Silty,Premium sugar beets with elevated sucrose content
-Disease-Resistant Beet,SugarBeet,640,175,168,20,3,15,4,5,27,64.0,Sandy,Sugar beets with genetic resistance to common diseases
-Organic Sugar Beet,SugarBeet,600,120,172,1,4,30,4,6,28,58.0,Peaty,Certified organic sugar beets for natural sugar production
-Fodder Beet,SugarBeet,580,140,160,10,4,5,5,3,25,80.0,Clay,Large beets grown for livestock feed
-Red Sugar Beet,SugarBeet,630,165,170,15,4,20,4,4,26,60.0,Loamy,Specialty beets with red flesh for niche markets
-Cylindrical Beet,SugarBeet,610,155,165,20,4,25,4,5,29,63.0,Rocky,Long cylindrical beets for easier mechanical harvest
-Russet Potato,Potato,500,140,120,1,4,20,4,7,24,45.0,Sandy,High-starch potatoes ideal for french fries and baking
-Red Potato,Potato,480,130,110,10,4,25,4,8,26,38.0,Loamy,Waxy potatoes perfect for boiling and salads
-White Potato,Potato,460,125,115,15,4,5,5,6,25,42.0,Silty,All-purpose potatoes suitable for various cooking methods
-Yellow Potato,Potato,470,135,118,20,3,10,4,5,27,40.0,Clay,Creamy potatoes with naturally buttery flavor
-Purple Potato,Potato,490,140,125,1,4,30,4,7,23,35.0,Peaty,Antioxidant-rich potatoes with unique purple flesh
-Fingerling Potato,Potato,450,120,100,10,4,15,4,8,24,28.0,Sandy,Small elongated potatoes prized by gourmet chefs
-Sweet Potato,Potato,420,100,130,15,5,5,6,15,32,25.0,Loamy,Orange-fleshed tubers high in beta-carotene
-New Potato,Potato,440,115,90,20,5,10,6,10,28,30.0,Clay,Early harvest potatoes with tender thin skins
-Determinate Tomato,Tomato,600,160,75,15,5,5,6,15,30,55.0,Loamy,Compact tomatoes that ripen fruit all at once
-Indeterminate Tomato,Tomato,650,180,120,1,5,20,5,12,32,45.0,Clay,Vining tomatoes that produce fruit continuously
-Cherry Tomato,Tomato,520,140,85,10,5,25,5,16,28,25.0,Sandy,Small sweet tomatoes perfect for snacking
-Roma Tomato,Tomato,580,150,95,15,4,10,5,14,31,40.0,Silty,Paste tomatoes ideal for sauces and processing
-Beefsteak Tomato,Tomato,680,200,110,20,4,15,5,13,29,35.0,Peaty,Large slicing tomatoes for sandwiches and burgers
-Heirloom Tomato,Tomato,620,170,100,1,5,30,5,15,30,30.0,Loamy,Traditional varieties with superior flavor
-Green Tomato,Tomato,560,145,90,10,5,5,6,12,27,38.0,Clay,Tomatoes harvested green for frying and preserves
-Yellow Tomato,Tomato,590,155,95,15,5,10,6,14,31,32.0,Sandy,Low-acid tomatoes with mild sweet flavor
-Spelt Wheat,Wheat,480,115,145,1,4,15,4,4,27,5.5,Loamy,Ancient hulled wheat with high mineral content
-Emmer Wheat,Wheat,470,110,150,10,3,30,3,5,28,4.9,Clay,Heritage wheat suited to low input farming
-Khorasan Wheat,Wheat,500,120,155,15,3,10,4,6,30,5.2,Silty,Large golden kernels marketed as specialty grain
-Hard White Wheat,Wheat,510,125,135,20,3,5,4,4,29,6.9,Chalky,Bread making wheat with mild flavor
-Club Wheat,Wheat,430,100,120,5,4,20,4,6,28,5.8,Peaty,Soft wheat for cakes and pastry flour
-Black Barley,Barley,400,92,105,10,3,25,3,2,26,4.4,Loamy,Dark pigmented barley rich in antioxidants
-Himalaya Barley,Barley,410,95,110,15,3,5,4,1,27,4.6,Silty,Feed and malting barley from high altitude origin
-BetaGlucan Barley,Barley,390,90,100,20,3,15,4,3,25,4.2,Clay,Functional barley with elevated beta glucan content
-Forage Barley,Barley,370,85,95,25,3,10,4,4,24,9.0,Sandy,Barley selected for silage and grazing mass
-Naked Black Oats,Oats,350,78,95,1,4,15,4,2,24,3.1,Loamy,Hulless black oats with high antioxidant content
-Early Oats,Oats,310,70,80,5,4,25,4,3,23,3.6,Clay,Short season oats for cooler climates
-High Beta Oats,Oats,360,82,90,10,3,20,4,2,25,3.9,Silty,Oats selected for elevated beta glucan levels
-Forage Oats,Oats,380,85,100,15,3,5,4,1,26,8.2,Peaty,Oats grown for forage and hay production
-GlutenFree Oats,Oats,340,75,85,20,3,10,4,2,24,3.7,Sandy,Identity preserved oats for gluten sensitive markets
-Forage Rye,Rye,360,65,150,1,9,30,9,-4,24,10.5,Loamy,Rye grown for biomass and soil cover
-Organic Rye,Rye,330,55,125,10,9,25,9,-3,23,4.0,Peaty,Rye suited to organic rotations with low input
-Drought Tolerant Rye,Rye,300,50,115,15,3,5,4,0,28,3.5,Sandy,Rye selected for arid conditions resilience
-Blue Corn,Corn,560,140,105,5,5,25,5,9,33,7.5,Loamy,Anthocyanin rich corn for specialty food products
-Red Flint Corn,Corn,550,138,110,10,5,30,5,8,34,7.8,Clay,Colored flint corn for decorative and culinary use
-Baby Corn,Corn,500,125,60,15,5,10,6,12,32,2.0,Silty,Harvested immature for vegetable use
-DroughtGuard Corn,Corn,530,135,108,1,5,15,5,10,35,8.0,Sandy,Corn hybrid with drought tolerance trait
-StackedTrait Corn,Corn,600,155,112,5,5,20,5,9,36,9.5,Clay,Multiple trait corn for pest and herbicide resistance
-Giant Sunflower,Sunflower,470,105,110,1,4,15,4,7,34,3.0,Loamy,Tall sunflower used for bird seed and novelty
-Peredovik Sunflower,Sunflower,440,95,95,10,4,25,4,8,32,2.6,Sandy,Classic open pollinated oil sunflower
-Pollinator Sunflower,Sunflower,400,85,85,15,4,20,4,10,30,2.2,Silty,Sunflower planted to enhance bee forage
-Black Oil Sunflower,Sunflower,460,100,100,20,4,30,4,8,31,2.9,Clay,High oil black seeded sunflower for feed
-High Stearic Sunflower,Sunflower,480,110,105,5,4,25,4,9,33,2.5,Peaty,Sunflower producing stable frying oil
-Tofu Soy,Soy,500,88,125,1,5,15,5,11,30,3.1,Loamy,Soybeans selected for white hilum and tofu texture
-Natto Soy,Soy,460,75,110,5,5,20,5,10,29,2.6,Silty,Small seeded soy for fermented natto production
-Early Maturity Soy,Soy,440,70,105,10,5,25,5,9,31,2.9,Sandy,Earliest maturity group for northern latitude
-Late Maturity Soy,Soy,520,95,140,15,5,30,5,11,32,3.4,Clay,Long season soy for maximum yield potential
-Low Linolenic Soy,Soy,510,92,128,20,4,10,5,10,33,3.0,Chalky,Soy with improved frying oil stability
-Clearfield Rapeseed,Rapeseed,420,112,115,1,4,20,4,2,30,3.7,Clay,Herbicide tolerant canola for weed control
-Winter Canola,Rapeseed,430,115,245,15,8,10,9,1,28,4.0,Loamy,Winter sown canola with strong winter survival
-PodShatter Resistant Rapeseed,Rapeseed,440,120,118,10,3,25,3,3,31,3.9,Silty,Reduces losses at harvest from pod shatter
-Clearfield High Oleic Rapeseed,Rapeseed,450,125,120,15,3,30,3,2,32,4.2,Peaty,Combines herbicide tolerance and oil quality
-Early Maturity Sugar Beet,SugarBeet,600,170,155,1,4,15,4,6,27,55.0,Loamy,Sugar beet bred for early lifting
-Late Maturity Sugar Beet,SugarBeet,690,195,185,15,3,5,4,5,29,72.0,Clay,Extended season beet for high sugar accumulation
-High Dry Matter Beet,SugarBeet,640,178,175,10,4,20,4,4,28,68.0,Silty,Elevated dry matter for processing efficiency
-Nematode Resistant Beet,SugarBeet,620,175,170,20,3,25,4,5,27,63.0,Sandy,Resistance to soil nematodes
-Salinity Tolerant Beet,SugarBeet,650,185,172,25,3,10,4,6,28,61.0,Saline,Performs on moderately saline soils
-Yukon Gold Potato,Potato,480,132,110,1,4,25,4,8,24,37.0,Loamy,Yellow flesh potato for table use
-Kennebec Potato,Potato,490,138,115,5,4,30,4,7,25,42.0,Silty,Versatile potato good for frying and baking
-Maris Piper Potato,Potato,500,140,120,10,4,20,4,6,24,45.0,Clay,British variety favored for chips
-Red Norland Potato,Potato,470,125,95,15,4,15,4,8,26,30.0,Sandy,Early red skin potato
-Chip Processing Potato,Potato,520,145,125,20,3,10,4,7,23,46.0,Chalky,High dry matter for chip manufacturing
-Low Glycemic Potato,Potato,450,120,105,25,3,20,4,8,24,32.0,Peaty,Bred for lower starch digestion rate
-Grape Tomato,Tomato,540,150,90,1,5,25,5,15,29,24.0,Sandy,Small elongated sweet tomato
-San Marzano Tomato,Tomato,610,175,110,5,5,15,5,14,31,50.0,Loamy,Famous Italian paste tomato
-Oxheart Tomato,Tomato,630,185,115,10,5,20,5,13,30,40.0,Clay,Large heart shaped heirloom tomato
-Early Girl Tomato,Tomato,560,155,70,15,5,30,5,14,28,32.0,Silty,Early ripening slicing tomato
-Bush Tomato,Tomato,520,145,75,20,5,10,6,15,27,28.0,Loamy,Compact determinate plant habit
-Determinate Paste Tomato,Tomato,600,165,85,25,4,10,5,14,29,42.0,Clay,Concentrated fruit set for mechanized harvest
-Plum Tomato,Tomato,590,160,95,1,5,20,5,14,30,38.0,Silty,Thick walled fruits for sauces
-Spelt Alternative Wheat,Wheat,485,118,150,5,4,25,4,4,27,5.6,Loamy,Modern spelt selection for yield
-Low Input Wheat,Wheat,430,105,125,10,3,15,4,6,28,5.0,Sandy,Bred for reduced fertilizer systems
-High Zinc Wheat,Wheat,500,130,135,15,3,30,3,5,29,6.2,Silty,Biofortified grain with elevated zinc
-Salinity Tolerant Wheat,Wheat,520,135,140,20,3,10,4,5,30,5.8,Saline,Performs on moderate saline soils
-Chalky Soil Wheat,Wheat,470,122,128,25,3,20,4,6,28,5.4,Chalky,Adapted to alkaline chalk soils
-Drought Barley,Barley,320,80,90,1,4,10,4,2,27,3.9,Sandy,Drought adapted barley with stable yield
-High Protein Barley,Barley,400,98,105,5,3,15,4,3,26,4.7,Loamy,Selected for feed protein enhancement
-Salinity Barley,Barley,410,100,110,10,3,25,3,2,25,4.3,Saline,Better performance under saline irrigation
-Chalky Barley,Barley,390,92,100,15,3,30,3,2,24,4.1,Chalky,Adapted to alkaline soils
-Peaty Oats,Oats,350,78,90,10,3,10,4,1,23,3.4,Peaty,Oats tolerating high organic matter soil
-Salinity Oats,Oats,360,82,95,15,3,20,4,2,24,3.3,Saline,Oats with moderate salt tolerance
-Chalky Oats,Oats,340,75,85,20,3,30,3,3,23,3.2,Chalky,Performs on alkaline soil
-Quinoa Another,Another,420,60,140,1,4,30,4,2,30,2.5,Sandy,Andean pseudocereal tolerant to drought and frost
-White Quinoa Another,Another,430,62,145,5,4,15,4,3,29,2.6,Loamy,Light seed quinoa for processing
-Red Quinoa Another,Another,440,65,150,10,4,25,4,2,28,2.4,Silty,Colored quinoa for premium markets
-Black Quinoa Another,Another,450,68,155,15,4,20,4,1,27,2.3,Peaty,High antioxidant black quinoa
-Lentil Another,Another,320,35,105,1,3,31,3,4,30,2.0,Loamy,Cool season pulse with nitrogen fixation
-Large Green Lentil Another,Another,330,36,110,5,3,20,4,3,29,2.2,Silty,Market class large green lentil
-Red Lentil Another,Another,310,34,95,10,3,25,3,4,28,1.9,Sandy,Small red lentils for dehulling
-Chickpea Another,Another,360,40,120,15,3,31,3,8,32,2.4,Clay,Warm season pulse sensitive to frost
-Kabuli Chickpea Another,Another,370,42,125,1,4,15,4,9,33,2.5,Loamy,Large seeded kabuli type
-Desi Chickpea Another,Another,350,38,115,5,4,25,4,7,35,2.3,Sandy,Small seeded pigmented desi type
-Field Pea Another,Another,380,45,105,10,3,20,4,4,25,3.5,Loamy,Cool season legume for feed or food
-Yellow Pea Another,Another,370,44,100,15,3,30,3,3,26,3.2,Silty,Yellow cotyledon pea for fractionation
-Green Pea Another,Another,360,42,95,20,3,25,3,4,25,3.0,Clay,Green pea for processing
-Faba Bean Another,Another,450,55,140,1,3,31,3,2,27,4.2,Peaty,Large seeded bean with high protein
-Low Vicine Faba Bean Another,Another,440,53,135,5,3,20,4,3,26,4.0,Loamy,Reduced antinutritional factors
-Sorghum Grain Another,Another,450,70,115,10,4,15,4,10,36,5.5,Sandy,Drought tolerant cereal for hot regions
-Sweet Sorghum Another,Another,460,75,120,15,4,25,4,12,35,60.0,Clay,High sugar stalk used for syrup and ethanol
-Forage Sorghum Another,Another,480,80,130,20,4,30,4,11,34,40.0,Loamy,Biomass sorghum for silage
-Millet Pearl Another,Another,300,50,90,1,5,15,5,12,38,2.0,Sandy,Heat and drought hardy cereal
-Foxtail Millet Another,Another,290,48,85,5,5,25,5,10,36,1.8,Loamy,Short season millet for dryland
-Proso Millet Another,Another,280,45,75,10,5,30,5,9,34,1.6,Rocky,Millet thriving on light soils
-Finger Millet Another,Another,310,52,110,15,4,10,5,8,32,2.2,Peaty,Nutrient dense millet with calcium
-Buckwheat Another,Another,350,40,75,1,5,31,5,5,28,1.5,Loamy,Fast growing pseudocereal and cover crop
-Hemp Fiber Another,Another,520,90,130,10,4,25,4,5,30,8.0,Chalky,Fiber hemp for industrial uses
-Hemp Seed Another,Another,500,85,125,15,4,30,4,6,29,2.0,Loamy,Oilseed hemp for edible oil
-Flax Seed Another,Another,420,60,110,1,4,15,4,4,27,1.8,Silty,Oilseed flax producing linseed
-Linola Flax Another,Another,430,62,115,5,4,20,4,5,28,1.9,Loamy,Low linolenic flax for stable oil
-Sesame Another,Another,450,55,115,10,5,31,5,15,38,1.5,Sandy,Oilseed tolerant to drought and heat
-Peanut Runner Another,Another,500,70,140,15,5,20,5,16,35,3.2,Sandy,High yielding runner type peanut
-Peanut Virginia Another,Another,520,75,150,20,5,30,5,17,34,3.0,Loamy,Large kernel Virginia type
-Alfalfa Another,Another,650,120,365,1,3,30,9,-5,38,15.0,Loamy,Perennial forage legume multiple cuts
-Clover Red Another,Another,500,90,300,1,3,30,5,-3,32,8.0,Peaty,Perennial legume improving soil nitrogen
-Clover White Another,Another,480,85,300,1,3,30,5,-4,30,6.5,Silty,Low growing pasture clover
-Quail Millet Another,Another,300,48,80,5,5,10,6,11,37,1.7,Sandy,Small millet used in wildlife plots
-Teff Another,Another,400,65,100,1,6,30,6,12,35,1.5,Loamy,Small seeded cereal for injera flour
-Camelina Another,Another,350,55,95,15,3,20,4,2,29,2.0,Silty,Low input oilseed for biofuel
-Canary Seed Another,Another,380,60,110,10,4,30,4,4,30,2.4,Loamy,Birdseed crop with emerging food uses
-Chia Another,Another,360,58,120,1,5,25,5,10,34,1.2,Sandy,Oilseed rich in omega three
-Amaranth Another,Another,420,65,110,10,5,30,5,8,36,2.3,Clay,High protein pseudocereal
-High Lysine Corn,Corn,590,148,112,10,5,20,5,10,34,8.4,Loamy,Bred for improved amino acid balance
-Low Phytate Corn,Corn,600,150,115,15,5,25,5,9,35,8.7,Clay,Enhanced mineral availability in feed
-Heat Tolerant Soy,Soy,510,90,130,1,5,30,5,12,34,3.2,Sandy,Soy maintaining yield under heat stress
-Salinity Tolerant Soy,Soy,520,95,128,5,5,25,5,11,33,3.0,Saline,Soybeans bred for salt affected fields
-Chalky Soil Soy,Soy,500,92,122,10,5,20,5,10,32,3.1,Chalky,Adapted to alkaline soils
-Peaty Soil Soy,Soy,480,88,118,15,5,15,5,9,31,3.0,Peaty,Performs on high organic matter soils
-Low Linolenic Soy,Soy,500,90,125,20,5,10,6,10,32,3.2,Silty,Stable frying oil profile
-Ultra Early Corn,Corn,520,130,85,1,5,10,5,10,30,7.0,Sandy,Very short season corn hybrid
-Long Season Corn,Corn,650,170,135,10,4,5,5,9,36,10.2,Clay,Maximizes yield where frost free period long
-Cold Tolerant Corn,Corn,560,145,110,15,4,15,4,8,33,8.3,Loamy,Improved emergence in cool soils
-Salinity Corn,Corn,600,155,115,20,4,20,4,9,34,8.0,Saline,Tolerant to mild soil salinity
-Chalky Corn,Corn,580,150,112,25,4,30,4,8,33,7.9,Chalky,Performs on alkaline calcareous soils
-Rocky Field Corn,Corn,540,140,108,1,5,5,5,10,32,7.2,Rocky,Established root system for stony soils
-Peaty Corn,Corn,560,145,110,5,5,15,5,9,31,7.4,Peaty,Adapted to high organic matter soil
-Salinity Sunflower,Sunflower,460,100,100,10,4,20,4,8,31,2.6,Saline,Moderate saline soil tolerance
-Chalky Sunflower,Sunflower,440,95,95,15,4,25,4,9,30,2.5,Chalky,Performs on alkaline soils
-Peaty Sunflower,Sunflower,430,90,90,20,4,30,4,7,29,2.4,Peaty,Adapted to organic soils
-Rocky Sunflower,Sunflower,420,88,85,25,4,15,5,8,32,2.3,Rocky,Root strength for stony ground
-Salinity Rapeseed,Rapeseed,410,110,118,5,4,20,4,2,30,3.4,Saline,Moderate salt tolerance
-Chalky Rapeseed,Rapeseed,400,108,115,10,4,25,4,1,29,3.5,Chalky,Performs on calcareous soils
-Peaty Rapeseed,Rapeseed,420,112,120,15,3,30,3,2,28,3.6,Peaty,Adapted to organic peat soils
-Rocky Rapeseed,Rapeseed,430,115,125,20,3,20,4,3,27,3.7,Rocky,Strong anchoring root system
-Salinity Wheat,Wheat,510,132,140,1,4,15,4,5,28,5.7,Saline,Tolerant to mild salinity levels
-Chalky Barley Malt,Barley,395,92,105,5,3,20,4,2,26,4.5,Chalky,Malting barley suited to chalk soils
-Peaty Oats Feed,Oats,345,78,85,10,3,25,3,1,24,3.3,Peaty,Feed oats on organic soil
-Rocky Rye,Rye,310,58,105,15,3,10,4,-2,27,3.6,Rocky,Hardy rye for shallow stony soils
-Salinity Sugar Beet,SugarBeet,660,188,178,1,4,10,4,5,29,60.0,Saline,Sugar beet tolerant to soil salinity
-Chalky Sugar Beet,SugarBeet,640,182,172,5,4,20,4,4,28,59.0,Chalky,Performs on calcareous soil
-Peaty Sugar Beet,SugarBeet,620,178,170,10,4,25,4,5,27,58.5,Peaty,Suitable for reclaimed peatlands
-Rocky Sugar Beet,SugarBeet,600,170,168,15,3,30,3,6,26,55.0,Rocky,Beet selected for strong root penetration
-Salinity Potato,Potato,510,142,122,1,4,15,4,8,25,36.0,Saline,Moderate salt tolerance potato
-Chalky Potato,Potato,495,138,118,5,4,20,4,7,24,38.0,Chalky,Performs on alkaline soils
-Peaty Potato,Potato,470,130,115,10,4,25,4,6,23,34.0,Peaty,Suited to peat soils
-Rocky Potato,Potato,460,125,110,15,4,30,4,7,24,33.0,Rocky,Short stolons reduce damage on stones
-Salinity Tomato,Tomato,610,165,105,1,5,15,5,14,31,34.0,Saline,Improved fruit set under saline irrigation
-Chalky Tomato,Tomato,600,160,100,5,5,20,5,13,30,33.0,Chalky,Adapted to alkaline soil pH
-Peaty Tomato,Tomato,590,155,98,10,5,25,5,12,29,31.0,Peaty,Performs in organic peat substrate
-Rocky Tomato,Tomato,570,150,95,15,5,30,5,14,28,30.0,Rocky,Compact root system for shallow soils
+Name,CropType,WaterRequirement,FertilizerRequirement,GrowingDuration,LIni,LDev,LMid,LLate,SowingStartDay,SowingStartMonth,SowingEndDay,SowingEndMonth,MinTemperature,MaxTemperature,HarvestYield,OptimalSoilType,AdditionalNotes
+Winter Wheat,Wheat,520,130,240,30,60,100,50,15,9,30,9,3,28,7.2,Loamy,Cold-resistant winter wheat variety suitable for temperate climates
+Spring Wheat,Wheat,480,120,120,20,30,50,20,1,4,20,4,8,32,6.8,Loamy,High-protein spring wheat for northern regions
+Durum Wheat,Wheat,450,110,130,20,35,50,25,10,3,25,3,5,35,5.9,Clay,Premium durum wheat for pasta production
+Soft White Wheat,Wheat,400,100,125,20,30,50,25,20,3,10,4,6,30,6.1,Silty,Low-protein wheat ideal for pastries and cookies
+Hard Red Wheat,Wheat,500,125,135,20,35,55,25,5,4,25,4,4,29,7.0,Loamy,High-protein wheat excellent for bread making
+Two-Row Barley,Barley,380,90,100,20,25,35,20,15,3,5,4,2,25,4.8,Sandy,Malting barley with excellent enzyme content
+Six-Row Barley,Barley,350,85,95,15,25,35,20,1,4,15,4,3,27,4.5,Loamy,Feed barley with high protein content
+Hulless Barley,Barley,420,95,110,20,30,40,20,20,3,10,4,1,24,4.2,Silty,Food-grade barley without hull for human consumption
+Winter Barley,Barley,460,100,200,30,50,80,40,10,9,25,9,0,26,5.1,Clay,Cold-hardy winter barley for extended growing season
+Spring Barley,Barley,340,80,90,15,25,30,20,25,3,15,4,4,28,4.3,Sandy,Quick-maturing spring barley for short seasons
+White Oats,Oats,320,70,85,15,25,30,15,1,4,20,4,2,24,3.8,Peaty,High-quality oats for human consumption and livestock
+Red Oats,Oats,340,75,90,15,25,35,15,10,3,25,3,1,26,3.5,Silty,Hardy oats with good disease resistance
+Hulless Oats,Oats,360,80,95,15,30,35,15,15,3,5,4,3,25,3.2,Loamy,Naked oats ideal for processing and food production
+Feed Oats,Oats,300,65,80,15,20,30,15,20,3,15,4,4,27,4.1,Sandy,High-yielding oats primarily for animal feed
+Winter Oats,Oats,450,85,180,30,45,70,35,1,9,20,9,-2,23,3.9,Clay,Winter-hardy oats for mild winter regions
+Winter Rye,Rye,350,60,220,30,55,90,45,15,8,5,9,-5,25,4.2,Sandy,Extremely cold-hardy rye for harsh climates
+Spring Rye,Rye,320,55,100,20,25,35,20,1,4,20,4,0,28,3.8,Rocky,Quick-growing rye for marginal soils
+Hybrid Rye,Rye,380,70,130,25,35,45,25,10,3,25,3,-3,26,5.1,Loamy,High-yielding hybrid rye with improved lodging resistance
+Triticale,Rye,400,75,120,20,30,45,25,15,3,10,4,-2,29,4.8,Silty,Wheat-rye hybrid combining best traits of both cereals
+Ergot-Resistant Rye,Rye,340,58,110,20,30,40,20,20,8,10,9,-4,24,4.0,Peaty,Disease-resistant rye for organic production
+Dent Corn,Corn,600,150,110,20,30,40,20,1,5,15,5,10,35,9.2,Clay,High-starch field corn for animal feed and processing
+Flint Corn,Corn,580,140,105,20,25,40,20,10,5,25,5,8,33,8.5,Loamy,Hard-kerneled corn with excellent storage qualities
+Sweet Corn,Corn,520,120,80,15,20,30,15,15,5,5,6,12,32,12.5,Silty,Table corn with high sugar content for fresh consumption
+Popcorn,Corn,480,110,95,15,25,35,20,1,5,20,5,10,30,4.8,Sandy,Specialty corn that pops when heated
+Waxy Corn,Corn,620,160,115,20,30,45,20,5,5,20,5,9,36,8.8,Clay,Industrial corn with unique starch properties for food processing
+High-Oil Corn,Corn,590,145,108,18,30,40,20,10,5,25,5,11,34,8.1,Loamy,Specialty corn with elevated oil content for premium feed
+Silage Corn,Corn,640,170,120,20,35,45,20,15,4,5,5,8,37,15.2,Silty,Whole-plant corn harvested for livestock silage
+White Corn,Corn,570,135,100,20,25,35,20,20,5,10,6,9,31,8.9,Sandy,Food-grade corn for tortillas and other products
+Oil Sunflower,Sunflower,450,100,95,20,30,30,15,10,4,25,4,8,32,2.8,Sandy,High oil content sunflower for cooking oil production
+Confection Sunflower,Sunflower,420,90,90,20,25,30,15,15,4,5,5,10,30,2.1,Loamy,Large-seeded sunflower for snack food market
+High-Oleic Sunflower,Sunflower,480,110,100,20,30,35,15,1,4,20,4,7,33,2.5,Silty,Premium sunflower oil with extended shelf life
+NuSun Sunflower,Sunflower,460,95,92,18,28,31,15,5,4,25,4,9,31,2.7,Sandy,Mid-oleic sunflower oil for food service industry
+Ornamental Sunflower,Sunflower,380,70,75,15,20,25,15,15,5,10,6,12,28,1.8,Loamy,Decorative sunflowers for cut flower market
+Red Sunflower,Sunflower,440,85,88,18,25,30,15,20,4,15,5,8,29,2.3,Clay,Specialty sunflower with red-colored seeds
+Dwarf Sunflower,Sunflower,350,75,70,15,20,20,15,1,5,20,5,10,26,2.0,Rocky,Compact sunflower variety for small spaces and containers
+Striped Sunflower,Sunflower,430,88,85,15,25,30,15,10,4,30,4,9,30,2.4,Peaty,Bird food sunflower with distinctive striped seeds
+Food-Grade Soy,Soy,480,80,120,20,30,50,20,15,5,5,6,12,30,3.2,Loamy,High-protein soybeans for human food processing
+Oil Soy,Soy,520,90,125,20,35,50,20,1,5,20,5,10,32,3.0,Clay,High oil content soybeans for vegetable oil production
+Feed Soy,Soy,460,75,115,20,30,45,20,10,5,25,5,11,29,3.5,Silty,General purpose soybeans for livestock feed
+Non-GMO Soy,Soy,500,85,118,20,33,45,20,5,5,15,5,9,31,3.1,Sandy,Identity-preserved non-GMO soybeans for premium markets
+Edamame Soy,Soy,440,70,90,15,25,35,15,15,5,10,6,13,28,8.5,Loamy,Vegetable soybeans harvested green for fresh consumption
+Black Soy,Soy,510,88,122,20,32,50,20,20,4,10,5,8,30,2.9,Peaty,Specialty black soybeans for Asian food markets
+High-Protein Soy,Soy,490,95,127,20,35,52,20,1,5,25,5,10,33,3.3,Clay,Premium soybeans with elevated protein content
+Organic Soy,Soy,470,60,120,20,30,50,20,10,5,30,5,12,29,2.8,Silty,Certified organic soybeans for health food market
+Winter Rapeseed,Rapeseed,420,110,240,30,50,100,60,15,8,5,9,2,28,3.8,Loamy,Winter-hardy rapeseed for biodiesel and cooking oil
+Spring Rapeseed,Rapeseed,380,100,100,20,30,30,20,1,4,20,4,5,30,3.2,Clay,Quick-maturing canola for northern growing regions
+High-Erucic Rapeseed,Rapeseed,450,120,120,20,35,40,25,10,3,25,3,3,32,3.5,Silty,Industrial rapeseed for lubricants and surfactants
+Low-Erucic Rapeseed,Rapeseed,400,105,110,20,30,35,25,15,4,5,5,4,29,3.4,Sandy,Food-grade canola oil with improved nutritional profile
+High-Oleic Rapeseed,Rapeseed,430,115,115,20,35,35,25,20,3,15,4,2,31,3.6,Peaty,Premium canola oil with enhanced stability
+Hybrid Rapeseed,Rapeseed,460,125,105,20,25,35,25,1,4,25,4,1,33,4.1,Loamy,High-yielding hybrid canola with disease resistance
