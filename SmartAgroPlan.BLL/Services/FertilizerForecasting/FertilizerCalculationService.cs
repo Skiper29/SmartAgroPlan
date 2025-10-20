@@ -1,4 +1,5 @@
-﻿using SmartAgroPlan.BLL.Interfaces.FertilizerForecasting;
+﻿using SmartAgroPlan.BLL.DTO.Fields.Field;
+using SmartAgroPlan.BLL.Interfaces.FertilizerForecasting;
 using SmartAgroPlan.BLL.Models.FertilizerForecasting;
 using SmartAgroPlan.BLL.Models.Weather;
 using SmartAgroPlan.DAL.Entities.Crops;
@@ -44,10 +45,9 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         ["Late-Season"] = new NutrientUptakeTiming { N = 0.15, P = 0.15, K = 0.15 }
     };
 
-    public SeasonFertilizerPlan CalculateSeasonPlan(
-        CropVariety crop,
+    public SeasonFertilizerPlan CalculateSeasonPlan(CropVariety crop,
         Soil soil, FieldCondition currentCondition,
-        Field field,
+        FieldWithAreaDto field,
         double targetYield,
         DateTime sowingDate)
     {
@@ -57,7 +57,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             CropName = crop.Name,
             PlanGeneratedDate = DateTime.Now,
             ExpectedYield = targetYield,
-            FieldAreaHa = field.Boundary!.Area / 10000.0,
+            FieldAreaHa = field.AreaInHectares,
             Applications = []
         };
 

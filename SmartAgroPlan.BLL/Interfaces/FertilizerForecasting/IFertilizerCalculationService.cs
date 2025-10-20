@@ -1,4 +1,5 @@
-﻿using SmartAgroPlan.BLL.Models.FertilizerForecasting;
+﻿using SmartAgroPlan.BLL.DTO.Fields.Field;
+using SmartAgroPlan.BLL.Models.FertilizerForecasting;
 using SmartAgroPlan.BLL.Models.Weather;
 using SmartAgroPlan.DAL.Entities.Crops;
 using SmartAgroPlan.DAL.Entities.Fields;
@@ -12,7 +13,7 @@ public interface IFertilizerCalculationService
         CropVariety crop,
         Soil soil,
         FieldCondition currentCondition,
-        Field field,
+        FieldWithAreaDto field,
         double targetYield,
         DateTime sowingDate);
 

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
+using SmartAgroPlan.BLL.DTO.Fields.Field;
 using SmartAgroPlan.BLL.Interfaces.FertilizerForecasting;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
 
@@ -48,6 +49,14 @@ public class
             return Result.Fail(new Error(errorMsg));
         }
 
+        var fieldAreaDto = _mapper.Map<FieldWithAreaDto>(field);
+
+        var area = await _repositoryWrapper.FieldRepository.FindAll(f => f.Id == request.FieldId)
+            .Select(f => f.Boundary!.Area / 10000.0)
+            .FirstOrDefaultAsync(cancellationToken);
+
+        fieldAreaDto.AreaInHectares = area;
+
         var sowingDate = request.PlannedSowingDate ?? field.SowingDate;
 
         if (sowingDate is null)
@@ -73,7 +82,7 @@ public class
             field.CurrentCrop!,
             field.Soil!,
             latestCondition,
-            field,
+            fieldAreaDto,
             targetYield,
             sowingDate.Value
         );
