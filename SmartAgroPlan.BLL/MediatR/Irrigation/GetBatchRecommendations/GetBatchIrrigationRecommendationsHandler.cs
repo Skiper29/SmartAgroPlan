@@ -1,7 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using SmartAgroPlan.BLL.DTO.Irrigation;
+using SmartAgroPlan.BLL.DTO.Irrigation.Recommendations;
 using SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
 
 namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetBatchRecommendations;

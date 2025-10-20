@@ -1,4 +1,4 @@
-﻿namespace SmartAgroPlan.BLL.DTO.Irrigation;
+﻿namespace SmartAgroPlan.BLL.DTO.Irrigation.Forecasts;
 
 public class IrrigationForecastDto
 {

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using SmartAgroPlan.BLL.DTO.Irrigation;
+using SmartAgroPlan.BLL.DTO.Irrigation.Recommendations;
+using SmartAgroPlan.BLL.DTO.Irrigation.Weather;
 using SmartAgroPlan.BLL.Models.Weather;
 using SmartAgroPlan.DAL.Entities.Irrigation;
 

@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
-using SmartAgroPlan.BLL.DTO.Irrigation;
+using SmartAgroPlan.BLL.DTO.Irrigation.Recommendations;
 
 namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetBatchRecommendations;
 

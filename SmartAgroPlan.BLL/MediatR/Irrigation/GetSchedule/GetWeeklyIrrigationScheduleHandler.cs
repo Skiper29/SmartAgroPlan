@@ -3,7 +3,7 @@ using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SmartAgroPlan.BLL.DTO.Irrigation;
+using SmartAgroPlan.BLL.DTO.Irrigation.Schedule;
 using SmartAgroPlan.BLL.Interfaces.Crops;
 using SmartAgroPlan.BLL.Interfaces.Irrigation;
 using SmartAgroPlan.BLL.Interfaces.Weather;
@@ -104,7 +104,7 @@ public class
         {
             var rec = _calculator.CalculateIrrigationRequirement(field, definition, weather, soilMoisture);
 
-            if(rec.GrossIrrigationRequirement > MaxDailyIrrigation)
+            if (rec.GrossIrrigationRequirement > MaxDailyIrrigation)
                 rec.GrossIrrigationRequirement = MaxDailyIrrigation; // Cap to avoid excessive irrigation
 
             schedule.DailySchedule.Add(new DailyIrrigationDto

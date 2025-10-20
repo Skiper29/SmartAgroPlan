@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SmartAgroPlan.BLL.DTO.Irrigation;
+using SmartAgroPlan.BLL.DTO.Irrigation.Schedule;
 using SmartAgroPlan.BLL.MediatR.Irrigation.GetBatchRecommendations;
 using SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
 using SmartAgroPlan.BLL.MediatR.Irrigation.GetSchedule;
