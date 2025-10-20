@@ -48,5 +48,11 @@ public class FieldProfile : Profile
             .IncludeBase<Field, FieldCreateUpdateDto>()
             .ReverseMap()
             .IncludeBase<FieldCreateUpdateDto, Field>();
+
+        CreateMap<Field, FieldWithAreaDto>()
+            .IncludeBase<Field, FieldDto>()
+            .ForMember(dest => dest.AreaInHectares, opt => opt.Ignore())
+            .ReverseMap()
+            .IncludeBase<FieldDto, Field>();
     }
 }
