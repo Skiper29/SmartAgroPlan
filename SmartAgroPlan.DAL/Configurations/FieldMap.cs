@@ -27,5 +27,8 @@ public class FieldMap : IEntityTypeConfiguration<Field>
             .WithOne(fc => fc.Field)
             .HasForeignKey(fc => fc.FieldId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(f => f.Boundary)
+            .HasColumnType("geography(Polygon, 4326)");
     }
 }
