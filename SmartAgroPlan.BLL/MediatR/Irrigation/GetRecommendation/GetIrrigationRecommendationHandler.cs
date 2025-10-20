@@ -9,7 +9,7 @@ using SmartAgroPlan.BLL.DTO.Irrigation.Recommendations;
 using SmartAgroPlan.BLL.DTO.Irrigation.Weather;
 using SmartAgroPlan.BLL.Interfaces.Irrigation;
 using SmartAgroPlan.BLL.Interfaces.Weather;
-using SmartAgroPlan.BLL.Utils;
+using SmartAgroPlan.BLL.Utils.SoilMoisture;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
 
 namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;

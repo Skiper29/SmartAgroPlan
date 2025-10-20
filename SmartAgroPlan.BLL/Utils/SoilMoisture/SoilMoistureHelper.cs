@@ -1,7 +1,7 @@
 ﻿using SmartAgroPlan.BLL.Models.Weather;
 using SmartAgroPlan.DAL.Entities.Fields;
 
-namespace SmartAgroPlan.BLL.Utils;
+namespace SmartAgroPlan.BLL.Utils.SoilMoisture;
 
 public static class SoilMoistureHelper
 {

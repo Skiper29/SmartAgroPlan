@@ -8,7 +8,7 @@ using SmartAgroPlan.BLL.Interfaces.Crops;
 using SmartAgroPlan.BLL.Interfaces.Irrigation;
 using SmartAgroPlan.BLL.Interfaces.Weather;
 using SmartAgroPlan.BLL.Models.Weather;
-using SmartAgroPlan.BLL.Utils;
+using SmartAgroPlan.BLL.Utils.SoilMoisture;
 using SmartAgroPlan.DAL.Repositories.Repositories.Interfaces.Base;
 
 namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetSchedule;
