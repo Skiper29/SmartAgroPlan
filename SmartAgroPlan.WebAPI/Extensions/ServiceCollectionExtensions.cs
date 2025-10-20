@@ -3,11 +3,13 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SmartAgroPlan.BLL.Interfaces.Crops;
+using SmartAgroPlan.BLL.Interfaces.FertilizerForecasting;
 using SmartAgroPlan.BLL.Interfaces.Irrigation;
 using SmartAgroPlan.BLL.Interfaces.Recommendations;
 using SmartAgroPlan.BLL.Interfaces.Weather;
 using SmartAgroPlan.BLL.PipelineBehaviour;
 using SmartAgroPlan.BLL.Services.Crops;
+using SmartAgroPlan.BLL.Services.FertilizerForecasting;
 using SmartAgroPlan.BLL.Services.Irrigation;
 using SmartAgroPlan.BLL.Services.Recommendations;
 using SmartAgroPlan.BLL.Services.Weather;
@@ -36,6 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICropCoefficientService, CropCoefficientService>();
         services.AddScoped<IFAO56Calculator, FAO56Calculator>();
         services.AddScoped<ISoilWaterService, SoilWaterService>();
+        services.AddScoped<IFertilizerCalculationService, FertilizerCalculationService>();
         services.AddHttpClient<IWeatherService, OpenMeteoService>(client =>
         {
             client.Timeout = TimeSpan.FromSeconds(30);
