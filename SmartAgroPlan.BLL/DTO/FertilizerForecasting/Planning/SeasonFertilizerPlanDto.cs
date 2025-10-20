@@ -7,18 +7,18 @@ namespace SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 public class SeasonFertilizerPlanDto
 {
     public int FieldId { get; set; }
-    public string FieldName { get; set; }
-    public string CropName { get; set; }
+    public string? FieldName { get; set; }
+    public string? CropName { get; set; }
     public double FieldAreaHa { get; set; }
     public DateTime SowingDate { get; set; }
     public DateTime ExpectedHarvestDate { get; set; }
     public double ExpectedYield { get; set; }
 
-    public NutrientRequirementDto TotalSeasonRequirement { get; set; }
-    public NutrientRequirementDto SoilSupply { get; set; }
-    public NutrientRequirementDto RequiredFromFertilizer { get; set; }
+    public NutrientRequirementDto TotalSeasonRequirement { get; set; } = null!;
+    public NutrientRequirementDto SoilSupply { get; set; } = null!;
+    public NutrientRequirementDto RequiredFromFertilizer { get; set; } = null!;
 
-    public List<FertilizerApplicationDto> PlannedApplications { get; set; }
-    public FertilizerCostEstimateDto CostEstimate { get; set; }
-    public string Notes { get; set; }
+    public List<FertilizerApplicationDto> PlannedApplications { get; set; } = null!;
+    public FertilizerCostEstimateDto CostEstimate { get; set; } = null!;
+    public string Notes { get; set; } = null!;
 }
