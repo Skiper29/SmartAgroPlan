@@ -24,6 +24,11 @@ public class BaseFieldValidator : AbstractValidator<FieldCreateUpdateDto>
             .MaximumLength(MaxLocationLength)
             .WithMessage($"Location cannot exceed {MaxLocationLength} characters.");
 
+        RuleFor(f => f.SowingDate)
+            .LessThanOrEqualTo(DateTime.Now)
+            .When(f => f.SowingDate.HasValue)
+            .WithMessage("Sowing date cannot be in the future.");
+
         RuleFor(f => f.BoundaryGeoJson)
             .NotEmpty()
             .WithMessage("Boundary GeoJSON is required.")

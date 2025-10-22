@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
@@ -12,9 +13,11 @@ using SmartAgroPlan.DAL.Persistence;
 namespace SmartAgroPlan.DAL.Migrations
 {
     [DbContext(typeof(SmartAgroPlanDbContext))]
-    partial class SmartAgroPlanDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251022142255_AddSowingDateAndTimestampsToField")]
+    partial class AddSowingDateAndTimestampsToField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,14 +188,8 @@ namespace SmartAgroPlan.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<double?>("Calcium")
-                        .HasColumnType("double precision");
-
                     b.Property<int>("FieldId")
                         .HasColumnType("integer");
-
-                    b.Property<double?>("Magnesium")
-                        .HasColumnType("double precision");
 
                     b.Property<double?>("Nitrogen")
                         .HasColumnType("double precision");
@@ -217,9 +214,6 @@ namespace SmartAgroPlan.DAL.Migrations
                         .HasColumnType("double precision");
 
                     b.Property<double?>("SoilPh")
-                        .HasColumnType("double precision");
-
-                    b.Property<double?>("Sulfur")
                         .HasColumnType("double precision");
 
                     b.Property<double?>("Temperature")

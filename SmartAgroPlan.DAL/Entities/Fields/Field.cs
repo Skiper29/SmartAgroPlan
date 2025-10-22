@@ -21,8 +21,10 @@ public class Field
     [Required] public Polygon? Boundary { get; set; }
 
     public FieldType FieldType { get; set; }
-    public int CurrentCropId { get; set; }
+    public int? CurrentCropId { get; set; }
     public int SoilId { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime UpdatedAt { get; set; }
     public Soil? Soil { get; set; }
     public CropVariety? CurrentCrop { get; set; }
     public ICollection<FieldCropHistory>? CropHistories { get; set; } = new List<FieldCropHistory>();

@@ -41,11 +41,41 @@ public class UpdateFieldHandlerTests
     }
 
     [Fact]
+    public async Task Handle_ShouldReturnFail_WhenFieldNotFound()
+    {
+        // Arrange
+        var command = CreateUpdateCommand();
+        const string errorMsg = "Поле не знайдено";
+
+        _repositoryWrapperMock
+            .Setup(r => r.FieldRepository.GetFirstOrDefaultAsync(
+                It.IsAny<System.Linq.Expressions.Expression<Func<FieldEntity, bool>>>(),
+                It.IsAny<Func<IQueryable<FieldEntity>, Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<FieldEntity, object>>>()))
+            .ReturnsAsync((FieldEntity?)null);
+
+        // Act
+        var result = await _handler.Handle(command, CancellationToken.None);
+
+        // Assert
+        result.IsFailed.Should().BeTrue();
+        result.Errors.Should().ContainSingle(e => e.Message == errorMsg);
+        VerifyNoRepositoryInteractions();
+        VerifyLoggerErrorCalled(errorMsg);
+    }
+
+    [Fact]
     public async Task Handle_ShouldReturnFail_WhenMappingReturnsNull()
     {
         // Arrange
         var command = CreateUpdateCommand();
         const string errorMsg = "Не вдалося відобразити DTO в сутність поля";
+
+        var existingField = new FieldEntity { Id = 1, CreatedAt = DateTime.UtcNow };
+        _repositoryWrapperMock
+            .Setup(r => r.FieldRepository.GetFirstOrDefaultAsync(
+                It.IsAny<System.Linq.Expressions.Expression<Func<FieldEntity, bool>>>(),
+                It.IsAny<Func<IQueryable<FieldEntity>, Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<FieldEntity, object>>>()))
+            .ReturnsAsync(existingField);
 
         _mapperMock.Setup(m => m.Map<FieldEntity>(command.UpdatedField)).Returns((FieldEntity)null!);
 
@@ -137,6 +167,25 @@ public class UpdateFieldHandlerTests
     private void SetupSuccessfulUpdateScenarioMocks(UpdateFieldCommand command, FieldEntity fieldEntity,
         FieldDto fieldDto)
     {
+        // Mock GetFirstOrDefaultAsync to return existing field
+        var existingField = new FieldEntity
+        {
+            Id = command.UpdatedField.Id,
+            Name = "Old Name",
+            CreatedAt = DateTime.UtcNow.AddDays(-10),
+            UpdatedAt = DateTime.UtcNow.AddDays(-5),
+            CurrentCropId = fieldEntity.CurrentCropId,
+            SoilId = fieldEntity.SoilId,
+            Location = "Old Location",
+            FieldType = fieldEntity.FieldType
+        };
+
+        _repositoryWrapperMock
+            .Setup(r => r.FieldRepository.GetFirstOrDefaultAsync(
+                It.IsAny<System.Linq.Expressions.Expression<Func<FieldEntity, bool>>>(),
+                It.IsAny<Func<IQueryable<FieldEntity>, Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<FieldEntity, object>>>()))
+            .ReturnsAsync(existingField);
+
         _mapperMock.Setup(m => m.Map<FieldEntity>(command.UpdatedField)).Returns(fieldEntity);
         _repositoryWrapperMock.Setup(r => r.FieldRepository.Update(fieldEntity));
         _repositoryWrapperMock.Setup(r => r.SaveChangesAsync()).ReturnsAsync(1);
@@ -166,7 +215,6 @@ public class UpdateFieldHandlerTests
             Name = "Complete Updated Field",
             SoilId = 3,
             Location = "New Complete Location",
-            BoundaryGeoJson = "{\"type\":\"Polygon\",\"coordinates\":[[[0,0],[1,0],[1,1],[0,1],[0,0]]]}",
             FieldType = FieldType.Orchard,
             CurrentCropId = 3
         };
@@ -187,7 +235,9 @@ public class UpdateFieldHandlerTests
             SowingDate = null,
             Boundary = null,
             FieldType = FieldType.Pasture,
-            CurrentCropId = 2
+            CurrentCropId = 2,
+            CreatedAt = DateTime.UtcNow.AddDays(-10),
+            UpdatedAt = DateTime.UtcNow
         };
     }
 
@@ -205,7 +255,9 @@ public class UpdateFieldHandlerTests
             SowingDate = null,
             Boundary = null,
             FieldType = FieldType.Orchard,
-            CurrentCropId = 3
+            CurrentCropId = 3,
+            CreatedAt = DateTime.UtcNow.AddDays(-10),
+            UpdatedAt = DateTime.UtcNow
         };
     }
 
@@ -219,7 +271,9 @@ public class UpdateFieldHandlerTests
             CurrentCrop = null,
             Location = "Updated Location",
             BoundaryGeoJson = null,
-            FieldType = FieldType.Pasture
+            FieldType = FieldType.Pasture,
+            CreatedAt = DateTime.UtcNow.AddDays(-10),
+            UpdatedAt = DateTime.UtcNow
         };
     }
 
@@ -233,7 +287,9 @@ public class UpdateFieldHandlerTests
             CurrentCrop = null,
             Location = "New Complete Location",
             BoundaryGeoJson = "{\"type\":\"Polygon\",\"coordinates\":[[[0,0],[1,0],[1,1],[0,1],[0,0]]]}",
-            FieldType = FieldType.Orchard
+            FieldType = FieldType.Orchard,
+            CreatedAt = DateTime.UtcNow.AddDays(-10),
+            UpdatedAt = DateTime.UtcNow
         };
     }
 
