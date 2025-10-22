@@ -201,6 +201,7 @@ public static class SeedingDataExtension
                 {
                     Name = "Сад під Черешнею",
                     Location = "Україна, с. Реклинець",
+                    SowingDate = DateTime.UtcNow.AddDays(-60),
                     Boundary = new Polygon(new LinearRing([
                         new Coordinate(24.225911, 50.217076),
                         new Coordinate(24.228916, 50.21698),
@@ -215,12 +216,15 @@ public static class SeedingDataExtension
                     ])),
                     FieldType = FieldType.Arable,
                     CurrentCropId = 2,
-                    SoilId = 3
+                    SoilId = 3,
+                    CreatedAt = DateTime.UtcNow.AddDays(-100),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-60)
                 },
                 new()
                 {
                     Name = "За лугом",
                     Location = "Реклинець",
+                    SowingDate = DateTime.UtcNow.AddDays(-45),
                     Boundary = new Polygon(new LinearRing([
                         new Coordinate(24.193461, 50.222225),
                         new Coordinate(24.193955, 50.221291),
@@ -262,7 +266,9 @@ public static class SeedingDataExtension
                     ])),
                     FieldType = FieldType.Arable,
                     CurrentCropId = 49,
-                    SoilId = 1
+                    SoilId = 1,
+                    CreatedAt = DateTime.UtcNow.AddDays(-90),
+                    UpdatedAt = DateTime.UtcNow.AddDays(-45)
                 }
             };
             dbContext.Fields.AddRange(fields);
