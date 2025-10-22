@@ -317,6 +317,9 @@ public static class SeedingDataExtension
                     Nitrogen = 100,
                     Phosphorus = 50,
                     Potassium = 70,
+                    Sulfur = 15,
+                    Calcium = 200,
+                    Magnesium = 50,
                     Temperature = 22.5,
                     Rainfall = 15.0,
                     Notes = "Normal conditions."
@@ -327,6 +330,9 @@ public static class SeedingDataExtension
                     RecordedAt = DateTime.UtcNow.AddDays(-5),
                     SoilMoisture = 0.28,
                     SoilPh = 6.7,
+                    Sulfur = 14,
+                    Calcium = 190,
+                    Magnesium = 48,
                     Nitrogen = 95,
                     Phosphorus = 48,
                     Potassium = 68,
@@ -337,6 +343,9 @@ public static class SeedingDataExtension
                 new()
                 {
                     FieldId = 2,
+                    Sulfur = 18,
+                    Calcium = 220,
+                    Magnesium = 55,
                     RecordedAt = DateTime.UtcNow.AddDays(-7),
                     SoilMoisture = 0.35,
                     SoilPh = 7.0,

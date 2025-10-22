@@ -54,6 +54,21 @@ public class BaseFieldConditionValidator : AbstractValidator<FieldConditionCreat
             .When(fc => fc.Potassium.HasValue)
             .WithMessage($"Potassium must be greater than or equal to {MinNutrient} kg/ha.");
 
+        RuleFor(fc => fc.Sulfur)
+            .GreaterThanOrEqualTo(MinNutrient)
+            .When(fc => fc.Sulfur.HasValue)
+            .WithMessage($"Sulfur must be greater than or equal to {MinNutrient} kg/ha.");
+
+        RuleFor(fc => fc.Calcium)
+            .GreaterThanOrEqualTo(MinNutrient)
+            .When(fc => fc.Calcium.HasValue)
+            .WithMessage($"Calcium must be greater than or equal to {MinNutrient} kg/ha.");
+
+        RuleFor(fc => fc.Magnesium)
+            .GreaterThanOrEqualTo(MinNutrient)
+            .When(fc => fc.Magnesium.HasValue)
+            .WithMessage($"Magnesium must be greater than or equal to {MinNutrient} kg/ha.");
+
         RuleFor(fc => fc.Temperature)
             .InclusiveBetween(MinTemperature, MaxTemperature)
             .When(fc => fc.Temperature.HasValue)
