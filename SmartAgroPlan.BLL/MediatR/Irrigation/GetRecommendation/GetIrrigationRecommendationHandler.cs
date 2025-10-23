@@ -54,17 +54,6 @@ public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationR
             return Result.Fail(new Error(errorMsg));
         }
 
-        var definition = _repositoryWrapper.CropCoefficientDefinitionRepository
-            .GetFirstOrDefaultAsync(ccd => ccd.CropType == field.CurrentCrop!.CropType).Result;
-
-        if (definition == null)
-        {
-            var errorMsg =
-                $"Не вдалося знайти визначення коефіцієнта культури для типу культури {field.CurrentCrop!.CropType}";
-            _logger.LogError(errorMsg);
-            throw new ArgumentException(errorMsg);
-        }
-
         // Get field coordinates (assuming you have a method to extract from Polygon)
         var coords = GetFieldCoordinates(field.Boundary!
         );
@@ -74,7 +63,41 @@ public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationR
             coords.Latitude,
             coords.Longitude);
 
+        var weatherDto = _mapper.Map<WeatherConditionsDto>(currentWeather);
+
         var soilMoisture = SoilMoistureHelper.GetSoilMoisture(field.Conditions, currentWeather);
+
+        if (field.CurrentCrop == null)
+        {
+            _logger.LogInformation("Поле з Id = {FieldId} не засіяне. Рекомендація не потрібна.", request.FieldId);
+
+            var emptyRecommendationDto = new IrrigationRecommendationDto
+            {
+                FieldId = field.Id,
+                FieldName = field.Name!,
+                WeatherConditions = weatherDto,
+                RecommendedAction = "Поле не засіяне. Рекомендація щодо поливу не надається.",
+                NetIrrigationRequirement = 0,
+                GrossIrrigationRequirement = 0,
+                ETc = 0,
+                ET0 = 0,
+                CurrentSoilMoisture = soilMoisture,
+                Notes = "Поле не засіяне."
+            };
+
+            return Result.Ok(emptyRecommendationDto);
+        }
+
+        var definition = await _repositoryWrapper.CropCoefficientDefinitionRepository
+            .GetFirstOrDefaultAsync(ccd => ccd.CropType == field.CurrentCrop!.CropType);
+
+        if (definition == null)
+        {
+            var errorMsg =
+                $"Не вдалося знайти визначення коефіцієнта культури для типу культури {field.CurrentCrop!.CropType}";
+            _logger.LogError(errorMsg);
+            return Result.Fail(new Error(errorMsg));
+        }
 
         // Calculate irrigation recommendation
         var recommendation = _fao56Calculator.CalculateIrrigationRequirement(
@@ -82,8 +105,6 @@ public class GetIrrigationRecommendationHandler : IRequestHandler<GetIrrigationR
             definition,
             currentWeather,
             soilMoisture);
-
-        var weatherDto = _mapper.Map<WeatherConditionsDto>(currentWeather);
 
         var recommendationDto = _mapper.Map<IrrigationRecommendationDto>(recommendation);
         recommendationDto.WeatherConditions = weatherDto;

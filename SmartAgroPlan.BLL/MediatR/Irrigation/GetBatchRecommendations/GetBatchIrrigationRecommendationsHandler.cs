@@ -1,6 +1,7 @@
 ﻿using FluentResults;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SmartAgroPlan.BLL.DTO.Irrigation.Recommendations;
 using SmartAgroPlan.BLL.MediatR.Irrigation.GetRecommendation;
 
@@ -9,15 +10,14 @@ namespace SmartAgroPlan.BLL.MediatR.Irrigation.GetBatchRecommendations;
 public class GetBatchIrrigationRecommendationsHandler : IRequestHandler<GetBatchIrrigationRecommendationsCommand,
     Result<List<IrrigationRecommendationDto>>>
 {
-    private readonly IMediator _mediator;
+    private readonly ILogger<GetBatchIrrigationRecommendationsHandler> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
     public GetBatchIrrigationRecommendationsHandler(
-        IMediator mediator,
-        IServiceScopeFactory serviceScopeFactory)
+        IServiceScopeFactory serviceScopeFactory, ILogger<GetBatchIrrigationRecommendationsHandler> logger)
     {
-        _mediator = mediator;
         _serviceScopeFactory = serviceScopeFactory;
+        _logger = logger;
     }
 
     public async Task<Result<List<IrrigationRecommendationDto>>> Handle(
@@ -36,10 +36,19 @@ public class GetBatchIrrigationRecommendationsHandler : IRequestHandler<GetBatch
         });
 
         var results = await Task.WhenAll(tasks);
+
         var successfulResults = results.Where(r => r.IsSuccess).Select(r => r.Value).ToList();
         var failedResults = results.Where(r => r.IsFailed).SelectMany(r => r.Errors).ToList();
-        return failedResults.Count != 0
-            ? Result.Fail<List<IrrigationRecommendationDto>>(failedResults)
-            : Result.Ok(successfulResults);
+        if (failedResults.Count != 0)
+        {
+            _logger.LogWarning(
+                "Під час пакетного розрахунку рекомендацій {FailedCount} з {TotalCount} полів не вдалося обробити.",
+                failedResults.Count, request.FieldIds.Count);
+
+            foreach (var error in failedResults)
+                _logger.LogWarning("Помилка пакетної обробки: {ErrorMessage}", error.Message);
+        }
+
+        return Result.Ok(successfulResults);
     }
 }
