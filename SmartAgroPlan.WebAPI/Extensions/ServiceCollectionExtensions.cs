@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Text;
+using System.Text.Json.Serialization;
 using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -84,5 +85,7 @@ public static class ServiceCollectionExtensions
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
+
+        Console.OutputEncoding = Encoding.UTF8;
     }
 }
