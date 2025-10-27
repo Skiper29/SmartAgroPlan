@@ -6,13 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using SmartAgroPlan.BLL.Interfaces.Crops;
 using SmartAgroPlan.BLL.Interfaces.FertilizerForecasting;
 using SmartAgroPlan.BLL.Interfaces.Irrigation;
-using SmartAgroPlan.BLL.Interfaces.Recommendations;
 using SmartAgroPlan.BLL.Interfaces.Weather;
 using SmartAgroPlan.BLL.PipelineBehaviour;
 using SmartAgroPlan.BLL.Services.Crops;
 using SmartAgroPlan.BLL.Services.FertilizerForecasting;
 using SmartAgroPlan.BLL.Services.Irrigation;
-using SmartAgroPlan.BLL.Services.Recommendations;
 using SmartAgroPlan.BLL.Services.Weather;
 using SmartAgroPlan.BLL.Validators.Crops;
 using SmartAgroPlan.DAL.Persistence;
@@ -34,8 +32,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddValidatorsFromAssemblyContaining<BaseCropVarietyValidator>();
 
-        services.AddScoped<IGrowthStageService, GrowthStageService>();
-        services.AddScoped<IRecommendationService, RecommendationService>();
         services.AddScoped<ICropCoefficientService, CropCoefficientService>();
         services.AddScoped<IFAO56Calculator, FAO56Calculator>();
         services.AddScoped<ISoilWaterService, SoilWaterService>();
