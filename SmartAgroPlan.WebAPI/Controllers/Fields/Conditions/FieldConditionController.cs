@@ -3,6 +3,7 @@ using SmartAgroPlan.BLL.DTO.Fields.FieldConditions;
 using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.Create;
 using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.Delete;
 using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.GetAll;
+using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.GetByField;
 using SmartAgroPlan.BLL.MediatR.Fields.FieldConditions.GetById;
 
 namespace SmartAgroPlan.WebAPI.Controllers.Fields.Conditions;
@@ -23,6 +24,14 @@ public class FieldConditionController : BaseApiController
     public async Task<IActionResult> GetById(int id)
     {
         return HandleResult(await Mediator.Send(new GetFieldConditionByIdQuery(id)));
+    }
+
+    [HttpGet("{fieldId:int}")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<FieldConditionDto>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetByFieldId(int fieldId)
+    {
+        return HandleResult(await Mediator.Send(new GetFieldConditionByFieldIdQuery(fieldId)));
     }
 
     [HttpPost]
