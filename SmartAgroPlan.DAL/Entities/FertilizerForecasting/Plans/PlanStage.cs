@@ -10,9 +10,9 @@ public class PlanStage
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required] public string? StageName { get; set; }
+    [Required] [StringLength(100)] public string? StageName { get; set; }
 
-    [Required] public string? Rationale { get; set; }
+    [StringLength(500)] public string? Rationale { get; set; }
 
     public int FertilizationPlanId { get; set; }
     public FertilizationPlan? FertilizationPlan { get; set; }

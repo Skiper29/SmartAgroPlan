@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using SmartAgroPlan.DAL.Entities.Crops;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Plans;
 using SmartAgroPlan.DAL.Entities.Fields;
 
 namespace SmartAgroPlan.DAL.Persistence;
@@ -17,6 +19,9 @@ public class SmartAgroPlanDbContext : DbContext
     public DbSet<CropVariety> Crops { get; set; }
     public DbSet<FieldCondition> FieldConditions { get; set; }
     public DbSet<CropCoefficientDefinition> CropCoefficientDefinitions { get; set; }
+    public DbSet<FertilizationPlan> FertilizationPlans { get; set; }
+    public DbSet<PlanStage> PlanStages { get; set; }
+    public DbSet<ApplicationMethod> ApplicationMethods { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

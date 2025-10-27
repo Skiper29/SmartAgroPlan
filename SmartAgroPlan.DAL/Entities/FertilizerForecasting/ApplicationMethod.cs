@@ -10,9 +10,9 @@ public class ApplicationMethod
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Id { get; set; }
 
-    [Required] public string? Name { get; set; }
+    [Required] [StringLength(100)] public string? Name { get; set; }
 
-    [Required] public string? Description { get; set; }
+    [StringLength(500)] public string? Description { get; set; }
 
     public ICollection<PlanStage> PlanStages { get; set; } = new List<PlanStage>();
 }
