@@ -4,6 +4,8 @@ using NetTopologySuite.Geometries;
 using SmartAgroPlan.DAL.Entities.Calendar;
 using SmartAgroPlan.DAL.Entities.Crops;
 using SmartAgroPlan.DAL.Entities.Fields;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Plans;
 using SmartAgroPlan.DAL.Enums;
 using SmartAgroPlan.DAL.Helpers;
 using SmartAgroPlan.DAL.Persistence;
@@ -507,6 +509,47 @@ public static class SeedingDataExtension
             };
             dbContext.CropCoefficientDefinitions.AddRange(definitions);
             await dbContext.SaveChangesAsync();
+        }
+
+        // Seed FertilizationPlans and PlanStages
+        if (!dbContext.FertilizationPlans.Any())
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = assembly.GetManifestResourceNames()
+                .FirstOrDefault(name =>
+                    name.EndsWith("fertilizer_plans_dataset.csv", StringComparison.OrdinalIgnoreCase));
+
+            if (resourceName != null)
+            {
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                if (stream != null)
+                {
+                    using var reader = new StreamReader(stream);
+                    var csvContent = await reader.ReadToEndAsync();
+                    var parsedData = FertilizerPlansCsvParser.Parse(csvContent);
+
+                    // First, add ApplicationMethods
+                    if (parsedData.ApplicationMethods.Any() && !dbContext.ApplicationMethods.Any())
+                    {
+                        dbContext.ApplicationMethods.AddRange(parsedData.ApplicationMethods);
+                        await dbContext.SaveChangesAsync();
+                    }
+
+                    // Then, add FertilizationPlans
+                    if (parsedData.Plans.Any())
+                    {
+                        dbContext.FertilizationPlans.AddRange(parsedData.Plans);
+                        await dbContext.SaveChangesAsync();
+                    }
+
+                    // Finally, add PlanStages
+                    if (parsedData.Stages.Any())
+                    {
+                        dbContext.PlanStages.AddRange(parsedData.Stages);
+                        await dbContext.SaveChangesAsync();
+                    }
+                }
+            }
         }
     }
 }

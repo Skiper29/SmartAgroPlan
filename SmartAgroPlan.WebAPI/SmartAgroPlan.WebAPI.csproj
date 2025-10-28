@@ -9,10 +9,12 @@
 
   <ItemGroup>
     <None Remove="Data\crop_varieties_dataset.csv" />
+    <None Remove="Data\fertilizer_plans_dataset.csv" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Data\crop_varieties_dataset.csv" />
+    <EmbeddedResource Include="Data\fertilizer_plans_dataset.csv" />
   </ItemGroup>
 
   <ItemGroup>
