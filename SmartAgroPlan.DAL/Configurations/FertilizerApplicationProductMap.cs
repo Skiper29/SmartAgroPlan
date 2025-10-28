@@ -14,7 +14,7 @@ public class FertilizerApplicationProductMap : IEntityTypeConfiguration<Fertiliz
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.FertilizerProduct)
-            .WithMany()
+            .WithMany(fp => fp.ApplicationProducts)
             .HasForeignKey(x => x.FertilizerProductId)
             .OnDelete(DeleteBehavior.Restrict);
     }

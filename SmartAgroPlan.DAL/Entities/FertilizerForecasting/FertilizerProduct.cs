@@ -42,6 +42,6 @@ public class FertilizerProduct
     public ICollection<FertilizerApplicationProduct> ApplicationProducts { get; set; } =
         new List<FertilizerApplicationProduct>();
 
-    public ICollection<FertilizerApplicationRecord> ApplicationRecords { get; set; } =
-        new List<FertilizerApplicationRecord>();
+    public ICollection<FertilizerApplicationRecordProduct> RecordProducts { get; set; } =
+        new List<FertilizerApplicationRecordProduct>();
 }

@@ -4,8 +4,6 @@ using NetTopologySuite.Geometries;
 using SmartAgroPlan.DAL.Entities.Calendar;
 using SmartAgroPlan.DAL.Entities.Crops;
 using SmartAgroPlan.DAL.Entities.Fields;
-using SmartAgroPlan.DAL.Entities.FertilizerForecasting;
-using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Plans;
 using SmartAgroPlan.DAL.Enums;
 using SmartAgroPlan.DAL.Helpers;
 using SmartAgroPlan.DAL.Persistence;

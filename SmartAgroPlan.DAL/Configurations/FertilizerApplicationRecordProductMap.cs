@@ -9,12 +9,12 @@ public class FertilizerApplicationRecordProductMap : IEntityTypeConfiguration<Fe
     public void Configure(EntityTypeBuilder<FertilizerApplicationRecordProduct> builder)
     {
         builder.HasOne(x => x.FertilizerProduct)
-            .WithMany()
+            .WithMany(fp => fp.RecordProducts)
             .HasForeignKey(x => x.FertilizerProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(x => x.ApplicationRecord)
-            .WithMany()
+            .WithMany(ar => ar.ProductsUsed)
             .HasForeignKey(x => x.ApplicationRecordId)
             .OnDelete(DeleteBehavior.Cascade);
     }
