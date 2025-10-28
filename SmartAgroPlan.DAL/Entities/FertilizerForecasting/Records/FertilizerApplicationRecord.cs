@@ -19,8 +19,6 @@ public class FertilizerApplicationRecord
 
     [Required] public DateTime RecordedDate { get; set; }
 
-    [Required] [StringLength(100)] public string RecordedBy { get; set; }
-
     // Actual nutrients applied (kg/ha)
     public double AppliedNitrogen { get; set; }
     public double AppliedPhosphorus { get; set; }
@@ -35,11 +33,9 @@ public class FertilizerApplicationRecord
     public double AppliedIron { get; set; }
     public double AppliedMolybdenum { get; set; }
 
-    [StringLength(100)] public string ApplicationMethod { get; set; }
+    [Required] public int ApplicationMethodId { get; set; }
 
-    public double? CostTotal { get; set; }
-
-    [StringLength(1000)] public string Notes { get; set; }
+    [StringLength(1000)] public string? Notes { get; set; }
 
     // Weather conditions during application
     public double? TemperatureC { get; set; }
@@ -49,6 +45,7 @@ public class FertilizerApplicationRecord
     // Navigation properties
     public Field? Field { get; set; }
     public FertilizerApplicationPlan? ApplicationPlan { get; set; }
+    public ApplicationMethod? ApplicationMethod { get; set; }
 
     public ICollection<FertilizerApplicationRecordProduct> ProductsUsed { get; set; } =
         new List<FertilizerApplicationRecordProduct>();
