@@ -36,4 +36,12 @@ public class PlanStage
     public double SulfurPercent { get; set; }
     public double CalciumPercent { get; set; }
     public double MagnesiumPercent { get; set; }
+
+    // Додаткові мікроелементи
+    public double BoronPercent { get; set; }
+    public double ZincPercent { get; set; }
+    public double ManganesePercent { get; set; }
+    public double CopperPercent { get; set; }
+    public double IronPercent { get; set; }
+    public double MolybdenumPercent { get; set; }
 }
