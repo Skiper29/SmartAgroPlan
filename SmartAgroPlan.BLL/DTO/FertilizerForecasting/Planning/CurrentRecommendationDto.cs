@@ -1,24 +1,23 @@
 ﻿using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Nutrients;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Products;
-using SmartAgroPlan.BLL.DTO.FertilizerForecasting.SoilConditions;
-using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Weather;
 
 namespace SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 
 public class CurrentRecommendationDto
 {
     public int FieldId { get; set; }
-    public DateTime GeneratedDate { get; set; }
-    public string CurrentGrowthStage { get; set; }
+    public string? FieldName { get; set; }
+    public DateTime Date { get; set; }
+    public string CurrentStage { get; set; } = null!;
     public int DaysAfterPlanting { get; set; }
-    public bool ActionRequired { get; set; }
-    public string Priority { get; set; }
-
-    public NutrientRequirementDto RecommendedNutrients { get; set; }
-    public List<FertilizerProductDto> RecommendedProducts { get; set; }
-
-    public string Reasoning { get; set; }
-    public List<string> Warnings { get; set; }
-    public SoilConditionSummaryDto CurrentSoilCondition { get; set; }
-    public WeatherImpactDto WeatherImpact { get; set; }
+    public int DaysToHarvest { get; set; }
+    public bool ShouldApplyNow { get; set; }
+    public NutrientRequirementDto RecommendedNutrients { get; set; } = null!;
+    public List<FertilizerProductDto> Products { get; set; } = new();
+    public string ApplicationMethod { get; set; } = null!;
+    public string Priority { get; set; } = null!;
+    public string Reasoning { get; set; } = null!;
+    public List<string> Warnings { get; set; } = new();
+    public string? WeatherConsiderations { get; set; }
+    public DateTime? NextRecommendedDate { get; set; }
 }

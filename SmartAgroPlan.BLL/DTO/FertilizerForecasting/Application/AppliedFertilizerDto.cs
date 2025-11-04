@@ -1,4 +1,4 @@
-﻿namespace SmartAgroPlan.BLL.DTO.FertilizerForecasting.Application;
+﻿namespace SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 
 public class AppliedFertilizerDto
 {
