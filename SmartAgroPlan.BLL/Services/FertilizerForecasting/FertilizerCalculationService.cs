@@ -369,7 +369,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         );
 
         if (field == null)
-            throw new ArgumentException($"Field with ID {fieldId} not found");
+            throw new ArgumentException($"Поле з ID {fieldId} не знайдено");
 
         var sowingDate = field.SowingDate ?? DateTime.Now.AddDays(-30);
         var daysAfterPlanting = (DateTime.Now - sowingDate).Days;
@@ -557,7 +557,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             .GetAllAsync(r =>
                 r.FieldId == fieldId &&
                 r.ApplicationDate >= sowingDate &&
-                r.ApplicationDate <= DateTime.Now);
+                r.ApplicationDate <= DateTime.UtcNow);
 
         var totalApplied = new NutrientRequirement();
 
