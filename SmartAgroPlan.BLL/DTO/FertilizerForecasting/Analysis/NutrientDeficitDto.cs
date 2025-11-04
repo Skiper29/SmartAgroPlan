@@ -2,9 +2,8 @@
 
 public class NutrientDeficitDto
 {
-    public double CurrentLevel { get; set; }
-    public double RequiredLevel { get; set; }
-    public double Deficit { get; set; }
-    public double DeficitPercentage { get; set; }
-    public string Status { get; set; } // "Sufficient", "Marginal", "Deficient", "Severely Deficient"
+    public string NutrientName { get; set; } = null!;
+    public double DeficitAmount { get; set; } // in kg/ha
+    public string Urgency { get; set; } = null!; // Low, Medium, High
+    public string Symptoms { get; set; } = null!;
 }

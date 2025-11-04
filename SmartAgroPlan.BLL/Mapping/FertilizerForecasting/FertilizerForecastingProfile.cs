@@ -1,9 +1,10 @@
 ﻿using AutoMapper;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Analysis;
-using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Nutrients;
+using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Products;
 using SmartAgroPlan.BLL.Models.FertilizerForecasting;
+using SmartAgroPlan.BLL.Models.FertilizerForecasting.Nutrients;
 using SmartAgroPlan.DAL.Entities.FertilizerForecasting;
 
 namespace SmartAgroPlan.BLL.Mapping.FertilizerForecasting;
@@ -24,6 +25,9 @@ public class FertilizerForecastingProfile : Profile
         CreateMap<NutrientBalance, NutrientBalanceDto>();
         CreateMap<NutrientApplicationSummary, NutrientApplicationSummaryDto>()
             .ForMember(dest => dest.Applications, opt => opt.MapFrom(src => src.Applications));
+
+        CreateMap<NutrientDeficitAnalysis, NutrientDeficitAnalysisDto>();
+        CreateMap<NutrientDeficit, NutrientDeficitDto>();
 
         CreateMap<ApplicationSummaryItem, ApplicationSummaryItemDto>();
     }
