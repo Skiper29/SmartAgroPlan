@@ -1,4 +1,3 @@
-using System.Globalization;
 using SmartAgroPlan.DAL.Entities.Calendar;
 using SmartAgroPlan.DAL.Entities.Crops;
 using SmartAgroPlan.DAL.Entities.Fields;
@@ -12,32 +11,44 @@ public static class CropVarietyCsvParser
     {
         var result = new List<CropVariety>();
         var soilTypeToId = soils.ToDictionary(s => s.Type, s => s.Id);
-        var lines = csvContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-        if (lines.Length < 2) return result;
+        var lines = BaseCsvParser.GetCsvLines(csvContent);
 
+        if (lines.Length < 2)
+            return result;
+
+        // Skip header row
         for (var i = 1; i < lines.Length; i++)
         {
-            var fields = SplitCsvLine(lines[i]);
-            if (fields.Length < 14) continue;
+            var fields = BaseCsvParser.SplitCsvLine(lines[i]);
+            if (fields.Length < 14)
+                continue;
+
             try
             {
                 var name = fields[0];
-                var cropType = Enum.Parse<CropType>(fields[1]);
-                var waterRequirement = double.Parse(fields[2], CultureInfo.InvariantCulture);
-                var fertilizerRequirement = double.Parse(fields[3], CultureInfo.InvariantCulture);
-                var growingDuration = int.Parse(fields[4], CultureInfo.InvariantCulture);
-                var lIni = int.Parse(fields[5], CultureInfo.InvariantCulture);
-                var lDev = int.Parse(fields[6], CultureInfo.InvariantCulture);
-                var lMid = int.Parse(fields[7], CultureInfo.InvariantCulture);
-                var lLate = int.Parse(fields[8], CultureInfo.InvariantCulture);
-                var sowingStart = new DayMonth(int.Parse(fields[9]), int.Parse(fields[10]));
-                var sowingEnd = new DayMonth(int.Parse(fields[11]), int.Parse(fields[12]));
-                var minTemperature = double.Parse(fields[13], CultureInfo.InvariantCulture);
-                var maxTemperature = double.Parse(fields[14], CultureInfo.InvariantCulture);
-                var harvestYield = double.Parse(fields[15], CultureInfo.InvariantCulture);
-                var optimalSoilType = Enum.Parse<SoilType>(fields[16]);
+                var cropType = BaseCsvParser.ParseEnumOrDefault<CropType>(fields[1]);
+                var waterRequirement = BaseCsvParser.ParseDoubleOrDefault(fields[2]);
+                var fertilizerRequirement = BaseCsvParser.ParseDoubleOrDefault(fields[3]);
+                var growingDuration = BaseCsvParser.ParseIntOrDefault(fields[4]);
+                var lIni = BaseCsvParser.ParseIntOrDefault(fields[5]);
+                var lDev = BaseCsvParser.ParseIntOrDefault(fields[6]);
+                var lMid = BaseCsvParser.ParseIntOrDefault(fields[7]);
+                var lLate = BaseCsvParser.ParseIntOrDefault(fields[8]);
+                var sowingStart = new DayMonth(
+                    BaseCsvParser.ParseIntOrDefault(fields[9]),
+                    BaseCsvParser.ParseIntOrDefault(fields[10])
+                );
+                var sowingEnd = new DayMonth(
+                    BaseCsvParser.ParseIntOrDefault(fields[11]),
+                    BaseCsvParser.ParseIntOrDefault(fields[12])
+                );
+                var minTemperature = BaseCsvParser.ParseDoubleOrDefault(fields[13]);
+                var maxTemperature = BaseCsvParser.ParseDoubleOrDefault(fields[14]);
+                var harvestYield = BaseCsvParser.ParseDoubleOrDefault(fields[15]);
+                var optimalSoilType = BaseCsvParser.ParseEnumOrDefault<SoilType>(fields[16]);
                 var additionalNotes = fields[17];
                 var optimalSoilId = soilTypeToId.TryGetValue(optimalSoilType, out var id) ? id : 0;
+
                 var cropVariety = new CropVariety
                 {
                     Name = name,
@@ -66,34 +77,5 @@ public static class CropVarietyCsvParser
         }
 
         return result;
-    }
-
-    // Handles quoted fields and commas inside quotes
-    private static string[] SplitCsvLine(string line)
-    {
-        var fields = new List<string>();
-        var inQuotes = false;
-        var start = 0;
-        for (var i = 0; i < line.Length; i++)
-            if (line[i] == '"')
-            {
-                inQuotes = !inQuotes;
-            }
-            else if (line[i] == ',' && !inQuotes)
-            {
-                fields.Add(GetField(line, start, i));
-                start = i + 1;
-            }
-
-        fields.Add(GetField(line, start, line.Length));
-        return fields.ToArray();
-    }
-
-    private static string GetField(string line, int start, int end)
-    {
-        var field = line.Substring(start, end - start);
-        if (field.StartsWith("\"") && field.EndsWith("\""))
-            field = field.Substring(1, field.Length - 2).Replace("\"\"", "\"");
-        return field;
     }
 }
