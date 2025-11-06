@@ -13,8 +13,8 @@ using SmartAgroPlan.DAL.Persistence;
 namespace SmartAgroPlan.DAL.Migrations
 {
     [DbContext(typeof(SmartAgroPlanDbContext))]
-    [Migration("20251105183027_Add_ProductForm")]
-    partial class Add_ProductForm
+    [Migration("20251106181036_Add_FertilizerProduct")]
+    partial class Add_FertilizerProduct
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -369,7 +369,7 @@ namespace SmartAgroPlan.DAL.Migrations
 
                     b.HasIndex("Type");
 
-                    b.ToTable("FertilizerProduct");
+                    b.ToTable("FertilizerProducts");
                 });
 
             modelBuilder.Entity("SmartAgroPlan.DAL.Entities.FertilizerForecasting.Plans.FertilizationPlan", b =>

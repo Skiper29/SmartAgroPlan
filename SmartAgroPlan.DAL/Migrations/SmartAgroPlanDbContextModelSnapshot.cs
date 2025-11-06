@@ -366,7 +366,7 @@ namespace SmartAgroPlan.DAL.Migrations
 
                     b.HasIndex("Type");
 
-                    b.ToTable("FertilizerProduct");
+                    b.ToTable("FertilizerProducts");
                 });
 
             modelBuilder.Entity("SmartAgroPlan.DAL.Entities.FertilizerForecasting.Plans.FertilizationPlan", b =>

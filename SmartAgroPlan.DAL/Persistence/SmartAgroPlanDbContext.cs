@@ -22,6 +22,7 @@ public class SmartAgroPlanDbContext : DbContext
     public DbSet<FertilizationPlan> FertilizationPlans { get; set; }
     public DbSet<PlanStage> PlanStages { get; set; }
     public DbSet<ApplicationMethod> ApplicationMethods { get; set; }
+    public DbSet<FertilizerProduct> FertilizerProducts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
