@@ -509,6 +509,32 @@ public static class SeedingDataExtension
             await dbContext.SaveChangesAsync();
         }
 
+        // Seed FertilizerProducts
+        if (!dbContext.FertilizerProducts.Any())
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = assembly.GetManifestResourceNames()
+                .FirstOrDefault(name =>
+                    name.EndsWith("fertilizer_products_dataset.csv", StringComparison.OrdinalIgnoreCase));
+
+            if (resourceName != null)
+            {
+                using var stream = assembly.GetManifestResourceStream(resourceName);
+                if (stream != null)
+                {
+                    using var reader = new StreamReader(stream);
+                    var csvContent = await reader.ReadToEndAsync();
+                    var products = FertilizerProductCsvParser.Parse(csvContent);
+
+                    if (products.Any())
+                    {
+                        dbContext.FertilizerProducts.AddRange(products);
+                        await dbContext.SaveChangesAsync();
+                    }
+                }
+            }
+        }
+
         // Seed FertilizationPlans and PlanStages
         if (!dbContext.FertilizationPlans.Any())
         {
