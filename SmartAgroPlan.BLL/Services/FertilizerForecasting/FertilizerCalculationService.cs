@@ -94,13 +94,13 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         );
 
         if (field == null)
-            throw new ArgumentException($"Field with ID {fieldId} not found");
+            throw new ArgumentException($"Поле з ID {fieldId} не знайдено");
 
         if (field.CurrentCrop == null)
-            throw new InvalidOperationException($"Field {fieldId} has no current crop assigned");
+            throw new InvalidOperationException($"Поле з ID {fieldId} не має поточної культури");
 
         var sowingDate = customSowingDate ??
-                         field.SowingDate ?? throw new InvalidOperationException("Sowing date not specified");
+                         field.SowingDate ?? throw new InvalidOperationException("Дата сівби не встановлена");
         var latestCondition = field.Conditions?.FirstOrDefault();
 
         // Calculate field area
