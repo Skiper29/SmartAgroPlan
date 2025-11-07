@@ -3,6 +3,8 @@ using System.Reflection;
 using NetTopologySuite.Geometries;
 using SmartAgroPlan.DAL.Entities.Calendar;
 using SmartAgroPlan.DAL.Entities.Crops;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Applications;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Records;
 using SmartAgroPlan.DAL.Entities.Fields;
 using SmartAgroPlan.DAL.Enums;
 using SmartAgroPlan.DAL.Helpers;
@@ -142,7 +144,7 @@ public static class SeedingDataExtension
                             MaxTemperature = 30,
                             HarvestYield = 6.5,
                             OptimalSoilId = soilLoamy.Id,
-                            AdditionalNotes = "Common wheat variety."
+                            AdditionalNotes = "Звичайний сорт пшениці."
                         },
                         new()
                         {
@@ -157,7 +159,7 @@ public static class SeedingDataExtension
                             MaxTemperature = 35,
                             HarvestYield = 8.0,
                             OptimalSoilId = soilClay.Id,
-                            AdditionalNotes = "High-yield corn."
+                            AdditionalNotes = "Високоврожайна кукурудза."
                         },
                         new()
                         {
@@ -172,7 +174,7 @@ public static class SeedingDataExtension
                             MaxTemperature = 32,
                             HarvestYield = 3.2,
                             OptimalSoilId = soilSandy.Id,
-                            AdditionalNotes = "Oilseed sunflower."
+                            AdditionalNotes = "Олійний соняшник."
                         }
                     };
                 }
@@ -293,7 +295,7 @@ public static class SeedingDataExtension
                     PlantedDate = new DateOnly(2022, 9, 20),
                     HarvestedDate = new DateOnly(2022, 7, 10),
                     Yield = 6.2,
-                    Notes = "Good season."
+                    Notes = "Гарний сезон."
                 },
                 new()
                 {
@@ -302,7 +304,7 @@ public static class SeedingDataExtension
                     PlantedDate = new DateOnly(2023, 5, 5),
                     HarvestedDate = new DateOnly(2023, 9, 1),
                     Yield = 7.8,
-                    Notes = "Average yield."
+                    Notes = "Середня врожайність."
                 }
             };
             dbContext.FieldCropHistories.AddRange(histories);
@@ -328,7 +330,7 @@ public static class SeedingDataExtension
                     Magnesium = 50,
                     Temperature = 22.5,
                     Rainfall = 15.0,
-                    Notes = "Normal conditions."
+                    Notes = "Нормальні умови."
                 },
                 new()
                 {
@@ -344,7 +346,7 @@ public static class SeedingDataExtension
                     Potassium = 68,
                     Temperature = 24.0,
                     Rainfall = 5.0,
-                    Notes = "Slightly dry."
+                    Notes = "Трохи сухо."
                 },
                 new()
                 {
@@ -360,7 +362,7 @@ public static class SeedingDataExtension
                     Potassium = 75,
                     Temperature = 20.0,
                     Rainfall = 20.0,
-                    Notes = "Good moisture levels."
+                    Notes = "Хороший рівень вологи."
                 }
             };
             dbContext.FieldConditions.AddRange(conditions);
@@ -574,6 +576,302 @@ public static class SeedingDataExtension
                     }
                 }
             }
+        }
+
+        // Seed FertilizerApplicationPlans
+        if (!dbContext.FertilizerApplicationPlans.Any())
+        {
+            var applicationPlans = new List<FertilizerApplicationPlan>
+            {
+                new()
+                {
+                    FieldId = 1,
+                    FertilizationPlanId = 1,
+                    PlanStageId = 1,
+                    CreatedDate = DateTime.UtcNow.AddDays(-30),
+                    PlannedApplicationDate = DateTime.UtcNow.AddDays(-25),
+                    DaysAfterPlanting = 0,
+                    PlannedNitrogen = 40,
+                    PlannedPhosphorus = 60,
+                    PlannedPotassium = 40,
+                    PlannedSulfur = 10,
+                    PlannedCalcium = 0,
+                    PlannedMagnesium = 0,
+                    PlannedBoron = 0,
+                    PlannedZinc = 0,
+                    PlannedManganese = 0,
+                    PlannedCopper = 0,
+                    PlannedIron = 0,
+                    PlannedMolybdenum = 0,
+                    IsCompleted = true,
+                    ActualApplicationDate = DateTime.UtcNow.AddDays(-25),
+                    Notes = "Передпосівне внесення добрив виконано"
+                },
+                new()
+                {
+                    FieldId = 1,
+                    FertilizationPlanId = 1,
+                    PlanStageId = 2,
+                    CreatedDate = DateTime.UtcNow.AddDays(-30),
+                    PlannedApplicationDate = DateTime.UtcNow.AddDays(5),
+                    DaysAfterPlanting = 30,
+                    PlannedNitrogen = 60,
+                    PlannedPhosphorus = 0,
+                    PlannedPotassium = 40,
+                    PlannedSulfur = 15,
+                    PlannedCalcium = 0,
+                    PlannedMagnesium = 0,
+                    PlannedBoron = 0,
+                    PlannedZinc = 0,
+                    PlannedManganese = 0,
+                    PlannedCopper = 0,
+                    PlannedIron = 0,
+                    PlannedMolybdenum = 0,
+                    IsCompleted = false,
+                    Notes = "Перше підживлення заплановано"
+                },
+                new()
+                {
+                    FieldId = 1,
+                    FertilizationPlanId = 1,
+                    PlanStageId = 3,
+                    CreatedDate = DateTime.UtcNow.AddDays(-30),
+                    PlannedApplicationDate = DateTime.UtcNow.AddDays(35),
+                    DaysAfterPlanting = 60,
+                    PlannedNitrogen = 50,
+                    PlannedPhosphorus = 0,
+                    PlannedPotassium = 0,
+                    PlannedSulfur = 0,
+                    PlannedCalcium = 0,
+                    PlannedMagnesium = 0,
+                    PlannedBoron = 0.5,
+                    PlannedZinc = 0,
+                    PlannedManganese = 0,
+                    PlannedCopper = 0,
+                    PlannedIron = 0,
+                    PlannedMolybdenum = 0,
+                    IsCompleted = false,
+                    Notes = "Друге підживлення з мікроелементами"
+                },
+                new()
+                {
+                    FieldId = 2,
+                    FertilizationPlanId = 2,
+                    PlanStageId = 4,
+                    CreatedDate = DateTime.UtcNow.AddDays(-20),
+                    PlannedApplicationDate = DateTime.UtcNow.AddDays(-15),
+                    DaysAfterPlanting = 0,
+                    PlannedNitrogen = 30,
+                    PlannedPhosphorus = 50,
+                    PlannedPotassium = 50,
+                    PlannedSulfur = 8,
+                    PlannedCalcium = 0,
+                    PlannedMagnesium = 0,
+                    PlannedBoron = 0,
+                    PlannedZinc = 0,
+                    PlannedManganese = 0,
+                    PlannedCopper = 0,
+                    PlannedIron = 0,
+                    PlannedMolybdenum = 0,
+                    IsCompleted = true,
+                    ActualApplicationDate = DateTime.UtcNow.AddDays(-15),
+                    Notes = "Основне внесення добрив під пшеницю"
+                },
+                new()
+                {
+                    FieldId = 2,
+                    FertilizationPlanId = 2,
+                    PlanStageId = 5,
+                    CreatedDate = DateTime.UtcNow.AddDays(-20),
+                    PlannedApplicationDate = DateTime.UtcNow.AddDays(10),
+                    DaysAfterPlanting = 25,
+                    PlannedNitrogen = 70,
+                    PlannedPhosphorus = 0,
+                    PlannedPotassium = 0,
+                    PlannedSulfur = 10,
+                    PlannedCalcium = 0,
+                    PlannedMagnesium = 0,
+                    PlannedBoron = 0,
+                    PlannedZinc = 0,
+                    PlannedManganese = 0,
+                    PlannedCopper = 0,
+                    PlannedIron = 0,
+                    PlannedMolybdenum = 0,
+                    IsCompleted = false,
+                    Notes = "Весняне внесення азоту"
+                }
+            };
+            dbContext.FertilizerApplicationPlans.AddRange(applicationPlans);
+            await dbContext.SaveChangesAsync();
+        }
+
+        // Seed FertilizerApplicationProducts
+        if (!dbContext.FertilizerApplicationProducts.Any())
+        {
+            var applicationProducts = new List<FertilizerApplicationProduct>
+            {
+                new()
+                {
+                    ApplicationPlanId = 1,
+                    FertilizerProductId = 1, // NPK 16-16-16
+                    QuantityKgPerHa = 250,
+                    TotalQuantityKg = 2500
+                },
+                new()
+                {
+                    ApplicationPlanId = 2,
+                    FertilizerProductId = 2, // Urea 46-0-0
+                    QuantityKgPerHa = 130,
+                    TotalQuantityKg = 1300
+                },
+                new()
+                {
+                    ApplicationPlanId = 2,
+                    FertilizerProductId = 3, // Potassium sulfate
+                    QuantityKgPerHa = 80,
+                    TotalQuantityKg = 800
+                },
+                new()
+                {
+                    ApplicationPlanId = 3,
+                    FertilizerProductId = 4, // Ammonium nitrate
+                    QuantityKgPerHa = 150,
+                    TotalQuantityKg = 1500
+                },
+                new()
+                {
+                    ApplicationPlanId = 3,
+                    FertilizerProductId = 5, // Boron fertilizer
+                    QuantityKgPerHa = 5,
+                    TotalQuantityKg = 50
+                },
+                new()
+                {
+                    ApplicationPlanId = 4,
+                    FertilizerProductId = 6, // NPK 10-20-20
+                    QuantityKgPerHa = 200,
+                    TotalQuantityKg = 3000
+                },
+                new()
+                {
+                    ApplicationPlanId = 5,
+                    FertilizerProductId = 2, // Urea 46-0-0
+                    QuantityKgPerHa = 150,
+                    TotalQuantityKg = 2250
+                }
+            };
+            dbContext.FertilizerApplicationProducts.AddRange(applicationProducts);
+            await dbContext.SaveChangesAsync();
+        }
+
+        // Seed FertilizerApplicationRecords
+        if (!dbContext.FertilizerApplicationRecords.Any())
+        {
+            var applicationRecords = new List<FertilizerApplicationRecord>
+            {
+                new()
+                {
+                    FieldId = 1,
+                    ApplicationPlanId = 1,
+                    ApplicationDate = DateTime.UtcNow.AddDays(-25),
+                    RecordedDate = DateTime.UtcNow.AddDays(-25),
+                    AppliedNitrogen = 40,
+                    AppliedPhosphorus = 60,
+                    AppliedPotassium = 40,
+                    AppliedSulfur = 10,
+                    AppliedCalcium = 0,
+                    AppliedMagnesium = 0,
+                    AppliedBoron = 0,
+                    AppliedZinc = 0,
+                    AppliedManganese = 0,
+                    AppliedCopper = 0,
+                    AppliedIron = 0,
+                    AppliedMolybdenum = 0,
+                    ApplicationMethodId = 1,
+                    Notes = "Передпосівне внесення добрив з загортанням дисковою бороною",
+                    TemperatureC = 12.5,
+                    WindSpeedKmh = 8.0,
+                    Humidity = 65.0
+                },
+                new()
+                {
+                    FieldId = 2,
+                    ApplicationPlanId = 4,
+                    ApplicationDate = DateTime.UtcNow.AddDays(-15),
+                    RecordedDate = DateTime.UtcNow.AddDays(-15),
+                    AppliedNitrogen = 30,
+                    AppliedPhosphorus = 50,
+                    AppliedPotassium = 50,
+                    AppliedSulfur = 8,
+                    AppliedCalcium = 0,
+                    AppliedMagnesium = 0,
+                    AppliedBoron = 0,
+                    AppliedZinc = 0,
+                    AppliedManganese = 0,
+                    AppliedCopper = 0,
+                    AppliedIron = 0,
+                    AppliedMolybdenum = 0,
+                    ApplicationMethodId = 2,
+                    Notes = "Розкидне внесення перед оранкою",
+                    TemperatureC = 14.0,
+                    WindSpeedKmh = 5.5,
+                    Humidity = 70.0
+                },
+                new()
+                {
+                    FieldId = 1,
+                    ApplicationPlanId = null,
+                    ApplicationDate = DateTime.UtcNow.AddDays(-50),
+                    RecordedDate = DateTime.UtcNow.AddDays(-49),
+                    AppliedNitrogen = 20,
+                    AppliedPhosphorus = 30,
+                    AppliedPotassium = 20,
+                    AppliedSulfur = 5,
+                    AppliedCalcium = 0,
+                    AppliedMagnesium = 0,
+                    AppliedBoron = 0,
+                    AppliedZinc = 0,
+                    AppliedManganese = 0,
+                    AppliedCopper = 0,
+                    AppliedIron = 0,
+                    AppliedMolybdenum = 0,
+                    ApplicationMethodId = 3,
+                    Notes = "Позапланове позакореневе підживлення через симптоми дефіциту поживних речовин",
+                    TemperatureC = 18.0,
+                    WindSpeedKmh = 3.0,
+                    Humidity = 55.0
+                }
+            };
+            dbContext.FertilizerApplicationRecords.AddRange(applicationRecords);
+            await dbContext.SaveChangesAsync();
+        }
+
+        // Seed FertilizerApplicationRecordProducts
+        if (!dbContext.FertilizerApplicationRecordProducts.Any())
+        {
+            var recordProducts = new List<FertilizerApplicationRecordProduct>
+            {
+                new()
+                {
+                    ApplicationRecordId = 1,
+                    FertilizerProductId = 1,
+                    QuantityUsedKg = 2500
+                },
+                new()
+                {
+                    ApplicationRecordId = 2,
+                    FertilizerProductId = 6,
+                    QuantityUsedKg = 3000
+                },
+                new()
+                {
+                    ApplicationRecordId = 3,
+                    FertilizerProductId = 7,
+                    QuantityUsedKg = 500
+                }
+            };
+            dbContext.FertilizerApplicationRecordProducts.AddRange(recordProducts);
+            await dbContext.SaveChangesAsync();
         }
     }
 }
