@@ -2,7 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using SmartAgroPlan.DAL.Entities.Crops;
 using SmartAgroPlan.DAL.Entities.FertilizerForecasting;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Applications;
 using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Plans;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Records;
 using SmartAgroPlan.DAL.Entities.Fields;
 
 namespace SmartAgroPlan.DAL.Persistence;
@@ -23,6 +25,10 @@ public class SmartAgroPlanDbContext : DbContext
     public DbSet<PlanStage> PlanStages { get; set; }
     public DbSet<ApplicationMethod> ApplicationMethods { get; set; }
     public DbSet<FertilizerProduct> FertilizerProducts { get; set; }
+    public DbSet<FertilizerApplicationProduct> FertilizerApplicationProducts { get; set; }
+    public DbSet<FertilizerApplicationRecordProduct> FertilizerApplicationRecordProducts { get; set; }
+    public DbSet<FertilizerApplicationPlan> FertilizerApplicationPlans { get; set; }
+    public DbSet<FertilizerApplicationRecord> FertilizerApplicationRecords { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
