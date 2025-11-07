@@ -126,7 +126,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         var remainingToApply = SubtractNutrients(requiredFromFertilizer, alreadyApplied);
 
         // Generate applications based on plan stages
-        var applications = await GenerateApplicationScheduleAsync(
+        var applications = GenerateApplicationScheduleAsync(
             field.CurrentCrop,
             fertPlan,
             remainingToApply,
@@ -163,10 +163,10 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         );
 
         if (field == null)
-            throw new ArgumentException($"Field with ID {fieldId} not found");
+            throw new ArgumentException($"Поле з ID {fieldId} не знайдено");
 
         if (field.SowingDate == null)
-            throw new InvalidOperationException("Field has no sowing date");
+            throw new InvalidOperationException("Дата сівби не встановлена");
 
         var now = DateTime.Now;
         var daysAfterPlanting = (now - field.SowingDate.Value).Days;
@@ -580,7 +580,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return totalApplied;
     }
 
-    private async Task<List<FertilizerApplication>> GenerateApplicationScheduleAsync(
+    private List<FertilizerApplication> GenerateApplicationScheduleAsync(
         CropVariety crop,
         FertilizationPlan? fertPlan,
         NutrientRequirement remainingToApply,
