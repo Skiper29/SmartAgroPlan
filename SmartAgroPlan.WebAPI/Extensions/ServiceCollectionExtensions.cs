@@ -32,10 +32,18 @@ public static class ServiceCollectionExtensions
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
         services.AddValidatorsFromAssemblyContaining<BaseCropVarietyValidator>();
 
+        // Crop and Irrigation Services
         services.AddScoped<ICropCoefficientService, CropCoefficientService>();
         services.AddScoped<IFAO56Calculator, FAO56Calculator>();
         services.AddScoped<ISoilWaterService, SoilWaterService>();
+
+        // Fertilizer Forecasting Services
         services.AddScoped<IFertilizerCalculationService, FertilizerCalculationService>();
+        services.AddScoped<IFertilizerPlanManagementService, FertilizerPlanManagementService>();
+        services.AddScoped<IFertilizerApplicationRecordService, FertilizerApplicationRecordService>();
+        services.AddScoped<IFertilizerProductService, FertilizerProductService>();
+
+        // Weather Service
         services.AddHttpClient<IWeatherService, OpenMeteoService>(client =>
         {
             client.Timeout = TimeSpan.FromSeconds(30);
