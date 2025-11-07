@@ -30,14 +30,14 @@ public class FertilizerPlanManagementService : IFertilizerPlanManagementService
             f => f.Include(x => x.CurrentCrop)!);
 
         if (field?.CurrentCrop == null)
-            throw new InvalidOperationException("Field or crop not found");
+            throw new InvalidOperationException("Поле або поточна культура не знайдені");
 
         var fertPlan = await _repository.FertilizationPlanRepository
             .GetFirstOrDefaultAsync(fp => fp.CropType == field.CurrentCrop.CropType,
                 fp => fp.Include(p => p.Stages));
 
         if (fertPlan == null)
-            throw new InvalidOperationException("No fertilization plan template found for this crop type");
+            throw new InvalidOperationException("План удобрення для цього типу культури не знайдено");
 
         // Save each application as a plan
         foreach (var application in plan.Applications)
@@ -169,7 +169,7 @@ public class FertilizerPlanManagementService : IFertilizerPlanManagementService
             .GetFirstOrDefaultAsync(p => p.Id == applicationPlanId);
 
         if (plan == null)
-            throw new ArgumentException($"Application plan {applicationPlanId} not found");
+            throw new ArgumentException($"План внесення з ID {applicationPlanId} не знайдено");
 
         plan.PlannedApplicationDate = updatedApplication.RecommendedDate;
         plan.PlannedNitrogen = updatedApplication.NutrientsToApply.Nitrogen;
@@ -195,7 +195,7 @@ public class FertilizerPlanManagementService : IFertilizerPlanManagementService
             .GetFirstOrDefaultAsync(p => p.Id == applicationPlanId);
 
         if (plan == null)
-            throw new ArgumentException($"Application plan {applicationPlanId} not found");
+            throw new ArgumentException($"План внесення з ID {applicationPlanId} не знайдено");
 
         plan.IsCompleted = true;
         plan.ActualApplicationDate = actualDate;
@@ -210,7 +210,7 @@ public class FertilizerPlanManagementService : IFertilizerPlanManagementService
             .GetFirstOrDefaultAsync(p => p.Id == applicationPlanId);
 
         if (plan == null)
-            throw new ArgumentException($"Application plan {applicationPlanId} not found");
+            throw new ArgumentException($"План внесення з ID {applicationPlanId} не знайдено");
 
         _repository.FertilizerApplicationPlanRepository.Delete(plan);
         await _repository.SaveChangesAsync();
