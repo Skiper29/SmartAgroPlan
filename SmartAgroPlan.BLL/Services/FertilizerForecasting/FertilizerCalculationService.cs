@@ -101,6 +101,12 @@ public class FertilizerCalculationService : IFertilizerCalculationService
 
         var sowingDate = customSowingDate ??
                          field.SowingDate ?? throw new InvalidOperationException("Дата сівби не встановлена");
+
+        // Check if crop is already harvested
+        var expectedHarvestDate = sowingDate.AddDays(field.CurrentCrop.GrowingDuration);
+        if (DateTime.UtcNow > expectedHarvestDate)
+            throw new InvalidOperationException($"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Створення плану удобрення неможливе.");
+
         var latestCondition = field.Conditions?.FirstOrDefault();
 
         // Calculate field area
@@ -172,6 +178,28 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         var daysAfterPlanting = (now - field.SowingDate.Value).Days;
         var currentStage = DetermineGrowthStage(field.CurrentCrop!, daysAfterPlanting);
         var daysToHarvest = field.CurrentCrop!.GrowingDuration - daysAfterPlanting;
+
+        // Check if crop is already harvested
+        if (currentStage == "Після збору врожаю" || daysToHarvest < 0)
+        {
+            return new CurrentRecommendation
+            {
+                FieldId = fieldId,
+                FieldName = field.Name,
+                Date = now,
+                CurrentStage = currentStage,
+                DaysAfterPlanting = daysAfterPlanting,
+                DaysToHarvest = daysToHarvest,
+                ShouldApplyNow = false,
+                RecommendedNutrients = new NutrientRequirement(),
+                Products = new List<FertilizerProductDto>(),
+                ApplicationMethod = "Не застосовується",
+                Priority = "Низький",
+                Reasoning = "Культура вже зібрана. Внесення добрив не рекомендується.",
+                Warnings = new List<string> { "Культура вже зібрана. Внесення добрив не рекомендується для поточної культури." },
+                NextRecommendedDate = null
+            };
+        }
 
         // Get upcoming planned applications
         var upcomingApplications = await _repository.FertilizerApplicationPlanRepository
@@ -306,11 +334,22 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         if (field == null)
             throw new ArgumentException($"Поле з ID {fieldId} не знайдено");
 
+        if (field.CurrentCrop == null)
+            throw new InvalidOperationException($"Поле з ID {fieldId} не має поточної культури");
+
+        // Check if crop is already harvested
+        if (field.SowingDate.HasValue)
+        {
+            var expectedHarvestDate = field.SowingDate.Value.AddDays(field.CurrentCrop.GrowingDuration);
+            if (DateTime.UtcNow > expectedHarvestDate)
+                throw new InvalidOperationException($"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Аналіз дефіциту поживних речовин не має сенсу.");
+        }
+
         var latestCondition = field.Conditions?.FirstOrDefault();
         if (latestCondition == null)
             throw new InvalidOperationException("Немає даних про стан ґрунту");
 
-        var targetYield = field.CurrentCrop!.HarvestYield;
+        var targetYield = field.CurrentCrop.HarvestYield;
         var fieldAreaHa = await _repository.FieldRepository.FindAll(f => f.Id == fieldId)
             .Select(f => f.Boundary!.Area / 10000.0)
             .FirstOrDefaultAsync();
@@ -371,9 +410,19 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         if (field == null)
             throw new ArgumentException($"Поле з ID {fieldId} не знайдено");
 
+        if (field.CurrentCrop == null)
+            throw new InvalidOperationException($"Поле з ID {fieldId} не має поточної культури");
+
         var sowingDate = field.SowingDate ?? DateTime.UtcNow.AddDays(-30);
         var daysAfterPlanting = (DateTime.UtcNow - sowingDate).Days;
-        var daysToHarvest = field.CurrentCrop!.GrowingDuration - daysAfterPlanting;
+        var daysToHarvest = field.CurrentCrop.GrowingDuration - daysAfterPlanting;
+
+        // Check if crop is already harvested
+        if (daysToHarvest < 0)
+        {
+            var expectedHarvestDate = sowingDate.AddDays(field.CurrentCrop.GrowingDuration);
+            throw new InvalidOperationException($"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Баланс поживних речовин більше не актуальний.");
+        }
 
         var fieldAreaHa = await _repository.FieldRepository.FindAll(f => f.Id == fieldId)
             .Select(f => f.Boundary!.Area / 10000.0)
@@ -750,6 +799,12 @@ public class FertilizerCalculationService : IFertilizerCalculationService
     private List<string> GenerateWarnings(Field field, string currentStage, int daysToHarvest)
     {
         var warnings = new List<string>();
+
+        if (currentStage == "Після збору врожаю" || daysToHarvest < 0)
+        {
+            warnings.Add("Культура вже зібрана. Внесення добрив не рекомендується для поточної культури.");
+            return warnings;
+        }
 
         if (daysToHarvest < 14)
             warnings.Add("Близько до збору врожаю. Уникайте внесення азоту.");
