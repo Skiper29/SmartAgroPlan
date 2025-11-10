@@ -105,7 +105,8 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         // Check if crop is already harvested
         var expectedHarvestDate = sowingDate.AddDays(field.CurrentCrop.GrowingDuration);
         if (DateTime.UtcNow > expectedHarvestDate)
-            throw new InvalidOperationException($"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Створення плану удобрення неможливе.");
+            throw new InvalidOperationException(
+                $"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Створення плану удобрення неможливе.");
 
         var latestCondition = field.Conditions?.FirstOrDefault();
 
@@ -181,7 +182,6 @@ public class FertilizerCalculationService : IFertilizerCalculationService
 
         // Check if crop is already harvested
         if (currentStage == "Після збору врожаю" || daysToHarvest < 0)
-        {
             return new CurrentRecommendation
             {
                 FieldId = fieldId,
@@ -196,10 +196,10 @@ public class FertilizerCalculationService : IFertilizerCalculationService
                 ApplicationMethod = "Не застосовується",
                 Priority = "Низький",
                 Reasoning = "Культура вже зібрана. Внесення добрив не рекомендується.",
-                Warnings = new List<string> { "Культура вже зібрана. Внесення добрив не рекомендується для поточної культури." },
+                Warnings = new List<string>
+                    { "Культура вже зібрана. Внесення добрив не рекомендується для поточної культури." },
                 NextRecommendedDate = null
             };
-        }
 
         // Get upcoming planned applications
         var upcomingApplications = await _repository.FertilizerApplicationPlanRepository
@@ -342,7 +342,8 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         {
             var expectedHarvestDate = field.SowingDate.Value.AddDays(field.CurrentCrop.GrowingDuration);
             if (DateTime.UtcNow > expectedHarvestDate)
-                throw new InvalidOperationException($"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Аналіз дефіциту поживних речовин не має сенсу.");
+                throw new InvalidOperationException(
+                    $"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Аналіз дефіциту поживних речовин не має сенсу.");
         }
 
         var latestCondition = field.Conditions?.FirstOrDefault();
@@ -354,9 +355,12 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             .Select(f => f.Boundary!.Area / 10000.0)
             .FirstOrDefaultAsync();
 
+        var sowingDate = field.SowingDate ?? DateTime.UtcNow.AddDays(-30);
+
         var totalRequired = CalculateTotalNutrientRequirement(field.CurrentCrop, targetYield, fieldAreaHa);
         var soilSupply = CalculateSoilNutrientSupply(field.Soil!, latestCondition, field.CurrentCrop);
-        var deficit = SubtractNutrients(totalRequired, soilSupply);
+        var alreadyApplied = await CalculateAlreadyAppliedNutrientsAsync(fieldId, sowingDate);
+        var deficit = SubtractNutrients(SubtractNutrients(totalRequired, soilSupply), alreadyApplied);
 
         var deficits = new List<NutrientDeficit>();
 
@@ -421,7 +425,8 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         if (daysToHarvest < 0)
         {
             var expectedHarvestDate = sowingDate.AddDays(field.CurrentCrop.GrowingDuration);
-            throw new InvalidOperationException($"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Баланс поживних речовин більше не актуальний.");
+            throw new InvalidOperationException(
+                $"Культура вже зібрана (очікувана дата збору: {expectedHarvestDate:yyyy-MM-dd}). Баланс поживних речовин більше не актуальний.");
         }
 
         var fieldAreaHa = await _repository.FieldRepository.FindAll(f => f.Id == fieldId)
@@ -497,7 +502,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         var mgSupply = latestCondition?.Magnesium ?? 0;
 
         // Add mineralization contribution (organic matter releases nutrients)
-        var mineralizationRate = soil.OrganicMatter * 20.0; // kg N/ha per season
+        var mineralizationRate = soil.OrganicMatter / 100 * 20.0; // kg N/ha per season
         nSupply += mineralizationRate * (crop.GrowingDuration / 120.0);
 
         // Adjust for soil type efficiency
