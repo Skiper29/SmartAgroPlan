@@ -219,7 +219,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             products = _mapper.Map<List<FertilizerProductDto>>(recommendation.Products.Select(p => p.FertilizerProduct!)
                 .ToList());
             applicationMethod = recommendation.PlanStage?.ApplicationMethod?.Name ?? "Не визначено";
-            priority = DeterminePriority(daysAfterPlanting, currentStage, field.CurrentCrop);
+            priority = DeterminePriority(currentStage);
             reasoning = recommendation.PlanStage?.Rationale ?? "Згідно з планом підживлення";
         }
         else
@@ -591,7 +591,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
 
         if (fertPlan == null || !fertPlan.Stages.Any())
             // Fallback to default schedule if no plan exists
-            return GenerateDefaultSchedule(crop, remainingToApply, sowingDate, fieldAreaHa);
+            return GenerateDefaultSchedule(crop, remainingToApply, sowingDate);
 
         foreach (var stage in fertPlan.Stages.OrderBy(s => s.TimingFactor))
         {
@@ -632,8 +632,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
     private List<FertilizerApplication> GenerateDefaultSchedule(
         CropVariety crop,
         NutrientRequirement totalNeeded,
-        DateTime sowingDate,
-        double fieldAreaHa)
+        DateTime sowingDate)
     {
         var applications = new List<FertilizerApplication>();
 
@@ -739,7 +738,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return "Після збору врожаю";
     }
 
-    private string DeterminePriority(int daysAfterPlanting, string currentStage, CropVariety crop)
+    private string DeterminePriority(string currentStage)
     {
         if (currentStage == "Розвиток" || currentStage == "Середина сезону")
             return "Високий";
