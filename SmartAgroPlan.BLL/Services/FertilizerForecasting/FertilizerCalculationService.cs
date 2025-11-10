@@ -140,7 +140,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             CropName = field.CurrentCrop.Name,
             SowingDate = sowingDate,
             ExpectedHarvestDate = sowingDate.AddDays(field.CurrentCrop.GrowingDuration),
-            PlanGeneratedDate = DateTime.Now,
+            PlanGeneratedDate = DateTime.UtcNow,
             TotalSeasonRequirement = totalRequirement,
             SoilSupply = soilSupply,
             RequiredFromFertilizer = requiredFromFertilizer,
@@ -168,7 +168,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         if (field.SowingDate == null)
             throw new InvalidOperationException("Дата сівби не встановлена");
 
-        var now = DateTime.Now;
+        var now = DateTime.UtcNow;
         var daysAfterPlanting = (now - field.SowingDate.Value).Days;
         var currentStage = DetermineGrowthStage(field.CurrentCrop!, daysAfterPlanting);
         var daysToHarvest = field.CurrentCrop!.GrowingDuration - daysAfterPlanting;
@@ -225,7 +225,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         else
         {
             recommendedNutrients = new NutrientRequirement();
-            priority = "Low";
+            priority = "Низький";
             reasoning = "Немає запланованих внесень на найближчий час";
         }
 
@@ -352,7 +352,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         {
             FieldId = fieldId,
             FieldName = field.Name!,
-            AnalysisDate = DateTime.Now,
+            AnalysisDate = DateTime.UtcNow,
             Deficits = deficits,
             OverallStatus = deficits.Any(d => d.Urgency == "High") ? "Critical" : "Moderate",
             Recommendations = GenerateDeficitRecommendations(deficits)
@@ -371,8 +371,8 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         if (field == null)
             throw new ArgumentException($"Поле з ID {fieldId} не знайдено");
 
-        var sowingDate = field.SowingDate ?? DateTime.Now.AddDays(-30);
-        var daysAfterPlanting = (DateTime.Now - sowingDate).Days;
+        var sowingDate = field.SowingDate ?? DateTime.UtcNow.AddDays(-30);
+        var daysAfterPlanting = (DateTime.UtcNow - sowingDate).Days;
         var daysToHarvest = field.CurrentCrop!.GrowingDuration - daysAfterPlanting;
 
         var fieldAreaHa = await _repository.FieldRepository.FindAll(f => f.Id == fieldId)
@@ -397,7 +397,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             FieldId = fieldId,
             FieldName = field.Name,
             CropName = field.CurrentCrop.Name,
-            AnalysisDate = DateTime.Now,
+            AnalysisDate = DateTime.UtcNow,
             DaysAfterPlanting = daysAfterPlanting,
             DaysToHarvest = daysToHarvest,
             RequiredForTargetYield = totalRequired,
@@ -731,21 +731,21 @@ public class FertilizerCalculationService : IFertilizerCalculationService
 
     private string DetermineGrowthStage(CropVariety crop, int daysAfterPlanting)
     {
-        if (daysAfterPlanting < 0) return "Pre-planting";
-        if (daysAfterPlanting <= crop.LIni) return "Initial";
-        if (daysAfterPlanting <= crop.LIni + crop.LDev) return "Development";
-        if (daysAfterPlanting <= crop.LIni + crop.LDev + crop.LMid) return "Mid-Season";
-        if (daysAfterPlanting <= crop.GrowingDuration) return "Late-Season";
-        return "Post-harvest";
+        if (daysAfterPlanting < 0) return "Передпосівна";
+        if (daysAfterPlanting <= crop.LIni) return "Початкова";
+        if (daysAfterPlanting <= crop.LIni + crop.LDev) return "Розвиток";
+        if (daysAfterPlanting <= crop.LIni + crop.LDev + crop.LMid) return "Середина сезону";
+        if (daysAfterPlanting <= crop.GrowingDuration) return "Пізній сезон";
+        return "Після збору врожаю";
     }
 
     private string DeterminePriority(int daysAfterPlanting, string currentStage, CropVariety crop)
     {
-        if (currentStage == "Development" || currentStage == "Mid-Season")
-            return "High";
-        if (currentStage == "Initial")
-            return "Medium";
-        return "Low";
+        if (currentStage == "Розвиток" || currentStage == "Середина сезону")
+            return "Високий";
+        if (currentStage == "Початкова")
+            return "Середній";
+        return "Низький";
     }
 
     private List<string> GenerateWarnings(Field field, string currentStage, int daysToHarvest)
@@ -774,10 +774,10 @@ public class FertilizerCalculationService : IFertilizerCalculationService
     private string DetermineOverallNutrientStatus(NutrientRequirement deficit)
     {
         if (deficit.Nitrogen > 50 || deficit.Phosphorus > 30 || deficit.Potassium > 40)
-            return "Deficient";
+            return "Дефіцитний";
         if (deficit.Nitrogen < 10 && deficit.Phosphorus < 5 && deficit.Potassium < 10)
-            return "Optimal";
-        return "Moderate";
+            return "Збалансований";
+        return "Помірний дефіцит";
     }
 
     private List<string> GenerateBalanceRecommendations(NutrientRequirement deficit, int daysToHarvest)

@@ -39,7 +39,7 @@ public class
                 request.FieldId,
                 request.DaysAhead);
 
-            var startDate = DateTime.Now;
+            var startDate = DateTime.UtcNow;
             var endDate = startDate.AddDays(request.DaysAhead);
 
             var plans = await _repository.FertilizerApplicationPlanRepository.FindAll(

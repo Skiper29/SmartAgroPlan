@@ -39,8 +39,8 @@ public class
 
             var applications = await _calculationService.GetApplicationsForDateRangeAsync(
                 request.FieldId,
-                request.StartDate,
-                request.EndDate);
+                DateTime.SpecifyKind(request.StartDate, DateTimeKind.Utc),
+                DateTime.SpecifyKind(request.EndDate, DateTimeKind.Utc));
 
             var applicationsDto = _mapper.Map<List<FertilizerApplicationDto>>(applications);
 

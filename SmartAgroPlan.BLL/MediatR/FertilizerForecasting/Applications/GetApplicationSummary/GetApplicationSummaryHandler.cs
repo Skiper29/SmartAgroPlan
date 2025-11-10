@@ -38,8 +38,8 @@ public class
 
             var summary = await _managementService.GetApplicationSummaryAsync(
                 request.FieldId,
-                request.FromDate,
-                request.ToDate);
+                DateTime.SpecifyKind(request.FromDate, DateTimeKind.Utc),
+                DateTime.SpecifyKind(request.ToDate, DateTimeKind.Utc));
 
             var summaryDto = _mapper.Map<NutrientApplicationSummaryDto>(summary);
 

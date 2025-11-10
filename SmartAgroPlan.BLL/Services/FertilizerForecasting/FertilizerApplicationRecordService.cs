@@ -33,7 +33,7 @@ public class FertilizerApplicationRecordService : IFertilizerApplicationRecordSe
             FieldId = fieldId,
             ApplicationPlanId = applicationPlanId,
             ApplicationDate = applicationDate,
-            RecordedDate = DateTime.Now,
+            RecordedDate = DateTime.UtcNow,
             AppliedNitrogen = totalNutrients.Nitrogen,
             AppliedPhosphorus = totalNutrients.Phosphorus,
             AppliedPotassium = totalNutrients.Potassium,

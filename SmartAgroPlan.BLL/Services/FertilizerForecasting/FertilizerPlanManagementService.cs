@@ -51,7 +51,7 @@ public class FertilizerPlanManagementService : IFertilizerPlanManagementService
                 FieldId = fieldId,
                 FertilizationPlanId = fertPlan.Id,
                 PlanStageId = planStage?.Id ?? fertPlan.Stages.First().Id,
-                CreatedDate = DateTime.Now,
+                CreatedDate = DateTime.UtcNow,
                 PlannedApplicationDate = application.RecommendedDate,
                 DaysAfterPlanting = application.DaysAfterPlanting,
                 PlannedNitrogen = application.NutrientsToApply.Nitrogen,
@@ -121,7 +121,7 @@ public class FertilizerPlanManagementService : IFertilizerPlanManagementService
 
     public async Task<List<FertilizerApplication>> GetUpcomingApplicationsAsync(int fieldId, int daysAhead = 14)
     {
-        var startDate = DateTime.Now;
+        var startDate = DateTime.UtcNow;
         var endDate = startDate.AddDays(daysAhead);
 
         var plans = await _repository.FertilizerApplicationPlanRepository
