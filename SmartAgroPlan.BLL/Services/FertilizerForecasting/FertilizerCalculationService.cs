@@ -4,6 +4,7 @@ using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Products;
 using SmartAgroPlan.BLL.Interfaces.FertilizerForecasting;
 using SmartAgroPlan.BLL.Models.FertilizerForecasting;
 using SmartAgroPlan.BLL.Models.FertilizerForecasting.Nutrients;
+using SmartAgroPlan.BLL.Utils;
 using SmartAgroPlan.DAL.Entities.Crops;
 using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Applications;
 using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Plans;
@@ -442,9 +443,19 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         var deficit = SubtractNutrients(SubtractNutrients(totalRequired, soilSupply), alreadyApplied);
         var surplus = new NutrientRequirement(); // Calculate if over-applied
 
+        var currentGrowthStage = DetermineGrowthStageEnum(field.CurrentCrop, daysAfterPlanting);
         var overallStatus = DetermineOverallNutrientStatus(deficit);
-        var recommendations = GenerateBalanceRecommendations(deficit, daysToHarvest);
-        var warnings = GenerateBalanceWarnings(deficit, surplus);
+        var recommendations = GenerateBalanceRecommendations(
+            deficit,
+            daysToHarvest,
+            field.CurrentCrop.CropType,
+            fieldAreaHa,
+            currentGrowthStage,
+            field.Soil?.Acidity);
+        var warnings = FertilizerWarningGenerator.GenerateNutrientBalanceWarnings(
+            deficit,
+            surplus,
+            field.Soil?.OrganicMatter);
 
         return new NutrientBalance
         {
@@ -792,6 +803,16 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return "Після збору врожаю";
     }
 
+    private GrowthStage DetermineGrowthStageEnum(CropVariety crop, int daysAfterPlanting)
+    {
+        if (daysAfterPlanting < 0) return GrowthStage.PreSowing;
+        if (daysAfterPlanting <= crop.LIni) return GrowthStage.Initial;
+        if (daysAfterPlanting <= crop.LIni + crop.LDev) return GrowthStage.Development;
+        if (daysAfterPlanting <= crop.LIni + crop.LDev + crop.LMid) return GrowthStage.MidSeason;
+        if (daysAfterPlanting <= crop.GrowingDuration) return GrowthStage.LateSeason;
+        return GrowthStage.LateSeason; // After harvest, but using LateSeason as fallback
+    }
+
     private string DeterminePriority(string currentStage)
     {
         if (currentStage == "Розвиток" || currentStage == "Середина сезону")
@@ -803,31 +824,20 @@ public class FertilizerCalculationService : IFertilizerCalculationService
 
     private List<string> GenerateWarnings(Field field, string currentStage, int daysToHarvest)
     {
-        var warnings = new List<string>();
+        var latestCondition = field.Conditions?.FirstOrDefault();
 
-        if (currentStage == "Після збору врожаю" || daysToHarvest < 0)
-        {
-            warnings.Add("Культура вже зібрана. Внесення добрив не рекомендується для поточної культури.");
-            return warnings;
-        }
-
-        if (daysToHarvest < 14)
-            warnings.Add("Близько до збору врожаю. Уникайте внесення азоту.");
-
-        if (field.Conditions?.FirstOrDefault()?.SoilMoisture < 0.2)
-            warnings.Add("Низька вологість грунту може знизити ефективність добрив.");
-
-        return warnings;
+        return FertilizerWarningGenerator.GenerateFieldWarnings(
+            field,
+            currentStage,
+            daysToHarvest,
+            latestCondition?.SoilMoisture,
+            field.Soil?.Acidity,
+            latestCondition?.Temperature);
     }
 
     private List<string> GenerateDeficitRecommendations(List<NutrientDeficit> deficits)
     {
-        var recommendations = new List<string>();
-
-        foreach (var deficit in deficits.Where(d => d.Urgency == "High"))
-            recommendations.Add($"Терміново внести {deficit.DeficitAmount:F1} кг/га {deficit.NutrientName}");
-
-        return recommendations;
+        return FertilizerRecommendationGenerator.GenerateDeficitRecommendations(deficits);
     }
 
     private string DetermineOverallNutrientStatus(NutrientRequirement deficit)
@@ -839,34 +849,24 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return "Помірний дефіцит";
     }
 
-    private List<string> GenerateBalanceRecommendations(NutrientRequirement deficit, int daysToHarvest)
+    private List<string> GenerateBalanceRecommendations(
+        NutrientRequirement deficit,
+        int daysToHarvest,
+        CropType? cropType = null,
+        double? fieldAreaHa = null,
+        GrowthStage? currentStage = null,
+        double? soilPh = null)
     {
-        var recommendations = new List<string>();
-
-        if (deficit.Nitrogen > 20 && daysToHarvest > 30)
-            recommendations.Add($"Рекомендується додаткове внесення азоту: {deficit.Nitrogen:F1} кг/га");
-
-        if (deficit.Phosphorus > 15)
-            recommendations.Add($"Недостатньо фосфору: {deficit.Phosphorus:F1} кг/га P2O5");
-
-        if (deficit.Potassium > 20)
-            recommendations.Add($"Недостатньо калію: {deficit.Potassium:F1} кг/га K2O");
-
-        return recommendations;
+        return FertilizerRecommendationGenerator.GenerateBalanceRecommendations(
+            deficit,
+            daysToHarvest,
+            cropType,
+            fieldAreaHa,
+            currentStage,
+            soilPh);
     }
 
-    private List<string> GenerateBalanceWarnings(NutrientRequirement deficit, NutrientRequirement surplus)
-    {
-        var warnings = new List<string>();
 
-        if (surplus.Nitrogen > 30)
-            warnings.Add("Надлишок азоту може призвести до вилягання культури");
-
-        if (deficit.Phosphorus > 50)
-            warnings.Add("Критичний дефіцит фосфору може знизити врожайність на 20-30%");
-
-        return warnings;
-    }
 
     private NutrientRequirement SubtractNutrients(NutrientRequirement from, NutrientRequirement subtract)
     {
