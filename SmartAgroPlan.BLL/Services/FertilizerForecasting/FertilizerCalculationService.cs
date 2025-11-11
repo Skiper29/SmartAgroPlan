@@ -103,6 +103,9 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         var sowingDate = customSowingDate ??
                          field.SowingDate ?? throw new InvalidOperationException("Дата сівби не встановлена");
 
+        // Use default yield if target not specified
+        targetYield = targetYield > 0 ? targetYield : field.CurrentCrop.HarvestYield;
+
         // Check if crop is already harvested
         var expectedHarvestDate = sowingDate.AddDays(field.CurrentCrop.GrowingDuration);
         if (DateTime.UtcNow > expectedHarvestDate)
