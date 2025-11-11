@@ -443,8 +443,14 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             CalculateSoilNutrientSupply(field.Soil!, field.Conditions?.FirstOrDefault(), field.CurrentCrop);
         var alreadyApplied = await CalculateAlreadyAppliedNutrientsAsync(fieldId, sowingDate);
 
-        var deficit = SubtractNutrients(SubtractNutrients(totalRequired, soilSupply), alreadyApplied);
-        var surplus = new NutrientRequirement(); // Calculate if over-applied
+        // Calculate available nutrients (soil + applied)
+        var totalAvailable = AddNutrients(soilSupply, alreadyApplied);
+
+        // Calculate deficit (what's still needed)
+        var deficit = SubtractNutrients(totalRequired, totalAvailable);
+
+        // Calculate surplus (what's excessive)
+        var surplus = SubtractNutrients(totalAvailable, totalRequired);
 
         var currentGrowthStage = DetermineGrowthStageEnum(field.CurrentCrop, daysAfterPlanting);
         var overallStatus = DetermineOverallNutrientStatus(deficit);
@@ -458,7 +464,8 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         var warnings = FertilizerWarningGenerator.GenerateNutrientBalanceWarnings(
             deficit,
             surplus,
-            field.Soil?.OrganicMatter);
+            field.Soil?.OrganicMatter,
+            field.Soil?.Acidity);
 
         return new NutrientBalance
         {
@@ -697,7 +704,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return applications;
     }
 
-    private List<FertilizerApplication> GenerateDefaultSchedule(
+    private static List<FertilizerApplication> GenerateDefaultSchedule(
         CropVariety crop,
         NutrientRequirement totalNeeded,
         DateTime sowingDate)
@@ -779,7 +786,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return applications;
     }
 
-    private DateTime CalculateApplicationDate(
+    private static DateTime CalculateApplicationDate(
         CropVariety crop,
         PlanStage stage,
         DateTime sowingDate)
@@ -796,7 +803,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         };
     }
 
-    private string DetermineGrowthStage(CropVariety crop, int daysAfterPlanting)
+    private static string DetermineGrowthStage(CropVariety crop, int daysAfterPlanting)
     {
         if (daysAfterPlanting < 0) return "Передпосівна";
         if (daysAfterPlanting <= crop.LIni) return "Початкова";
@@ -806,7 +813,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return "Після збору врожаю";
     }
 
-    private GrowthStage DetermineGrowthStageEnum(CropVariety crop, int daysAfterPlanting)
+    private static GrowthStage DetermineGrowthStageEnum(CropVariety crop, int daysAfterPlanting)
     {
         if (daysAfterPlanting < 0) return GrowthStage.PreSowing;
         if (daysAfterPlanting <= crop.LIni) return GrowthStage.Initial;
@@ -816,7 +823,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return GrowthStage.LateSeason; // After harvest, but using LateSeason as fallback
     }
 
-    private string DeterminePriority(string currentStage)
+    private static string DeterminePriority(string currentStage)
     {
         if (currentStage == "Розвиток" || currentStage == "Середина сезону")
             return "Високий";
@@ -825,7 +832,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return "Низький";
     }
 
-    private List<string> GenerateWarnings(Field field, string currentStage, int daysToHarvest)
+    private static List<string> GenerateWarnings(Field field, string currentStage, int daysToHarvest)
     {
         var latestCondition = field.Conditions?.FirstOrDefault();
 
@@ -838,12 +845,12 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             latestCondition?.Temperature);
     }
 
-    private List<string> GenerateDeficitRecommendations(List<NutrientDeficit> deficits)
+    private static List<string> GenerateDeficitRecommendations(List<NutrientDeficit> deficits)
     {
         return FertilizerRecommendationGenerator.GenerateDeficitRecommendations(deficits);
     }
 
-    private string DetermineOverallNutrientStatus(NutrientRequirement deficit)
+    private static string DetermineOverallNutrientStatus(NutrientRequirement deficit)
     {
         if (deficit.Nitrogen > 50 || deficit.Phosphorus > 30 || deficit.Potassium > 40)
             return "Дефіцитний";
@@ -852,7 +859,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
         return "Помірний дефіцит";
     }
 
-    private List<string> GenerateBalanceRecommendations(
+    private static List<string> GenerateBalanceRecommendations(
         NutrientRequirement deficit,
         int daysToHarvest,
         CropType? cropType = null,
@@ -870,8 +877,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
     }
 
 
-
-    private NutrientRequirement SubtractNutrients(NutrientRequirement from, NutrientRequirement subtract)
+    private static NutrientRequirement SubtractNutrients(NutrientRequirement from, NutrientRequirement subtract)
     {
         return new NutrientRequirement
         {
@@ -887,6 +893,25 @@ public class FertilizerCalculationService : IFertilizerCalculationService
             Copper = Math.Max(0, from.Copper - subtract.Copper),
             Iron = Math.Max(0, from.Iron - subtract.Iron),
             Molybdenum = Math.Max(0, from.Molybdenum - subtract.Molybdenum)
+        };
+    }
+
+    private static NutrientRequirement AddNutrients(NutrientRequirement first, NutrientRequirement second)
+    {
+        return new NutrientRequirement
+        {
+            Nitrogen = first.Nitrogen + second.Nitrogen,
+            Phosphorus = first.Phosphorus + second.Phosphorus,
+            Potassium = first.Potassium + second.Potassium,
+            Sulfur = first.Sulfur + second.Sulfur,
+            Calcium = first.Calcium + second.Calcium,
+            Magnesium = first.Magnesium + second.Magnesium,
+            Boron = first.Boron + second.Boron,
+            Zinc = first.Zinc + second.Zinc,
+            Manganese = first.Manganese + second.Manganese,
+            Copper = first.Copper + second.Copper,
+            Iron = first.Iron + second.Iron,
+            Molybdenum = first.Molybdenum + second.Molybdenum
         };
     }
 
