@@ -7,6 +7,7 @@ public class FertilizerProductDto
     public int Id { get; set; }
     public string? Name { get; set; }
     public FertilizerType Type { get; set; }
+    public ProductForm Form { get; set; }
     public double NitrogenContent { get; set; }
     public double PhosphorusContent { get; set; }
     public double PotassiumContent { get; set; }

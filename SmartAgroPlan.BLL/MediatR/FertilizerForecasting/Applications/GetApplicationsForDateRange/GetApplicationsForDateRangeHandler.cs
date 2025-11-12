@@ -2,6 +2,7 @@
 using FluentResults;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Application;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 using SmartAgroPlan.BLL.Interfaces.FertilizerForecasting;
 

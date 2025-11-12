@@ -1,5 +1,6 @@
 ﻿using FluentResults;
 using MediatR;
+using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Application;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 
 namespace SmartAgroPlan.BLL.MediatR.FertilizerForecasting.Applications.GetApplicationsForDateRange;

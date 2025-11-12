@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Analysis;
+using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Application;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Nutrients;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Products;
@@ -14,11 +15,9 @@ public class FertilizerForecastingProfile : Profile
     public FertilizerForecastingProfile()
     {
         CreateMap<NutrientRequirement, NutrientRequirementDto>().ReverseMap();
-        CreateMap<FertilizerProduct
-            , FertilizerProductDto>().ReverseMap();
+        CreateMap<FertilizerProduct, FertilizerProductDto>().ReverseMap();
 
-        CreateMap<FertilizerApplication, FertilizerApplicationDto>()
-            .ForMember(dest => dest.Products, opt => opt.Ignore());
+        CreateMap<FertilizerApplication, FertilizerApplicationDto>();
 
         CreateMap<SeasonFertilizerPlan, SeasonFertilizerPlanDto>();
         CreateMap<CurrentRecommendation, CurrentRecommendationDto>();

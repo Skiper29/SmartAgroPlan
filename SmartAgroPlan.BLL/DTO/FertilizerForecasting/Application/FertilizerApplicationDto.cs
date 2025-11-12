@@ -1,7 +1,7 @@
 ﻿using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Nutrients;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Products;
 
-namespace SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
+namespace SmartAgroPlan.BLL.DTO.FertilizerForecasting.Application;
 
 public class FertilizerApplicationDto
 {

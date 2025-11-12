@@ -1,4 +1,5 @@
 ﻿using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Products;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting;
 
 namespace SmartAgroPlan.BLL.Models.FertilizerForecasting;
 
@@ -9,7 +10,7 @@ public class FertilizerApplication
     public string CropStage { get; set; } = null!;
     public int DaysAfterPlanting { get; set; }
     public NutrientRequirement NutrientsToApply { get; set; } = null!;
-    public List<FertilizerProductDto> Products { get; set; } = new();
+    public List<FertilizerProduct> Products { get; set; } = new();
     public string ApplicationMethod { get; set; } = null!;
     public string Rationale { get; set; } = null!;
     public string? WeatherConsiderations { get; set; }

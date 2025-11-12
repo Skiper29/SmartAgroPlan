@@ -6,6 +6,7 @@ using SmartAgroPlan.BLL.Models.FertilizerForecasting;
 using SmartAgroPlan.BLL.Models.FertilizerForecasting.Nutrients;
 using SmartAgroPlan.BLL.Utils;
 using SmartAgroPlan.DAL.Entities.Crops;
+using SmartAgroPlan.DAL.Entities.FertilizerForecasting;
 using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Applications;
 using SmartAgroPlan.DAL.Entities.FertilizerForecasting.Plans;
 using SmartAgroPlan.DAL.Entities.Fields;
@@ -318,7 +319,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
                 Iron = a.PlannedIron,
                 Molybdenum = a.PlannedMolybdenum
             },
-            Products = _mapper.Map<List<FertilizerProductDto>>(a.Products.Select(p => p.FertilizerProduct!).ToList()),
+            Products = a.Products.Select(p => p.FertilizerProduct!).ToList(),
             ApplicationMethod = a.PlanStage?.ApplicationMethod?.Name ?? "N/A",
             Rationale = a.PlanStage?.Rationale ?? "",
             IsCompleted = a.IsCompleted,
@@ -697,7 +698,7 @@ public class FertilizerCalculationService : IFertilizerCalculationService
                 NutrientsToApply = nutrientsForStage,
                 ApplicationMethod = stage.ApplicationMethod?.Name ?? "Не визначено",
                 Rationale = stage.Rationale ?? "",
-                Products = new List<FertilizerProductDto>()
+                Products = new List<FertilizerProduct>()
             });
         }
 

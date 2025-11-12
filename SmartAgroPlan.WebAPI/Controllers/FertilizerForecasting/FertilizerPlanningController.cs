@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Analysis;
+using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Application;
 using SmartAgroPlan.BLL.DTO.FertilizerForecasting.Planning;
 using SmartAgroPlan.BLL.MediatR.FertilizerForecasting.Analysis.AnalyzeNutrientDeficit;
 using SmartAgroPlan.BLL.MediatR.FertilizerForecasting.Analysis.GetNutrientBalance;

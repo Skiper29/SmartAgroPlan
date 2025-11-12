@@ -111,7 +111,7 @@ public class FertilizerPlanManagementService : IFertilizerPlanManagementService
                 Iron = p.PlannedIron,
                 Molybdenum = p.PlannedMolybdenum
             },
-            Products = _mapper.Map<List<FertilizerProductDto>>(p.Products.Select(pr => pr.FertilizerProduct!).ToList()),
+            Products = p.Products.Select(pr => pr.FertilizerProduct!).ToList(),
             ApplicationMethod = p.PlanStage?.ApplicationMethod?.Name ?? "N/A",
             Rationale = p.PlanStage?.Rationale ?? "",
             IsCompleted = p.IsCompleted,
@@ -156,7 +156,7 @@ public class FertilizerPlanManagementService : IFertilizerPlanManagementService
                 Iron = p.PlannedIron,
                 Molybdenum = p.PlannedMolybdenum
             },
-            Products = _mapper.Map<List<FertilizerProductDto>>(p.Products.Select(pr => pr.FertilizerProduct!).ToList()),
+            Products = p.Products.Select(pr => pr.FertilizerProduct!).ToList(),
             ApplicationMethod = p.PlanStage?.ApplicationMethod?.Name ?? "N/A",
             Rationale = p.PlanStage?.Rationale ?? "",
             IsCompleted = p.IsCompleted
